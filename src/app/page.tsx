@@ -1,5 +1,6 @@
 import Image from "next/image";
 import styles from "./page.module.css";
+import IconMenu from "@/components/icon-menu";
 
 export default function Home() {
   return (
@@ -27,6 +28,24 @@ export default function Home() {
         </div>
       </div>
       {/* 카테고리 */}
+      <div className={styles.categoryContainer}>
+        <IconMenu
+          svgPath="/icons/magic.svg"
+          description="교열"
+        />
+        <IconMenu
+          svgPath="/icons/write.svg"
+          description="창작하기"
+        />
+        <IconMenu
+          svgPath="/icons/book-open.svg"
+          description="소설"
+        />
+        <IconMenu
+          svgPath="/icons/question-circle.svg"
+          description="FAQ"
+        />
+      </div>
       <div></div>
       {/* 소설 목록 */}
       <div>
