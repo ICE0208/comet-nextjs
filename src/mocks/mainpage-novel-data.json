@@ -1,0 +1,78 @@
+{
+  "top10": [
+    {
+      "title": "칼의 여왕",
+      "author": "김철검",
+      "description": "검술의 세계에서 최고가 되기 위한 한 여성의 불굴의 여정",
+      "thumbnail": "/images/novel-temp-thumbnail/n-1.png"
+    },
+    {
+      "title": "행복의 비밀",
+      "author": "이웃집작가",
+      "description": "평범한 소녀가 발견한 삶의 작은 기쁨들에 관한 감동 스토리",
+      "thumbnail": "/images/novel-temp-thumbnail/n-2.png"
+    },
+    {
+      "title": "붉은 행성의 비밀",
+      "author": "우주탐험가",
+      "description": "화성에서 발견된 고대 문명의 흔적과 인류의 운명을 바꿀 발견",
+      "thumbnail": "/images/novel-temp-thumbnail/n-3.png"
+    },
+    {
+      "title": "맛의 전설",
+      "author": "최미식",
+      "description": "요리 대회에서 우승을 향해 도전하는 젊은 요리사의 열정 넘치는 이야기",
+      "thumbnail": "/images/novel-temp-thumbnail/n-4.png"
+    },
+    {
+      "title": "달콤한 인생",
+      "author": "박빵집",
+      "description": "할머니의 레시피로 시작한 작은 베이커리가 마을을 변화시키는 따뜻한 이야기",
+      "thumbnail": "/images/novel-temp-thumbnail/n-5.png"
+    },
+    {
+      "title": "비오는 날의 약속",
+      "author": "정우산",
+      "description": "우연히 만난 두 사람이 비 오는 날마다 재회하며 펼쳐지는 로맨틱 스토리",
+      "thumbnail": "/images/novel-temp-thumbnail/n-6.png"
+    }
+  ],
+  "recommend": [
+    {
+      "title": "그림자 검사",
+      "author": "한그림자",
+      "description": "어둠 속에서 정의를 실현하는 비밀 조직의 암살자 이야기",
+      "thumbnail": "/images/novel-temp-thumbnail/n-7.png"
+    },
+    {
+      "title": "꿈꾸는 소녀의 일기",
+      "author": "문학소녀",
+      "description": "현실과 환상을 넘나드는 소녀의 마법 같은 성장 이야기",
+      "thumbnail": "/images/novel-temp-thumbnail/n-8.png"
+    },
+    {
+      "title": "별의 항해",
+      "author": "강우주",
+      "description": "미지의 행성을 탐험하는 우주 탐사대의 모험과 발견",
+      "thumbnail": "/images/novel-temp-thumbnail/n-9.png"
+    },
+    {
+      "title": "맛의 전쟁",
+      "author": "이셰프",
+      "description": "세계 최고의 요리사 타이틀을 두고 벌어지는 치열한 경쟁과 우정",
+      "thumbnail": "/images/novel-temp-thumbnail/n-10.png"
+    },
+    {
+      "title": "파티시에의 꿈",
+      "author": "윤디저트",
+      "description": "파리에서 디저트로 세상을 달콤하게 만들고 싶은 청년의 도전기",
+      "thumbnail": "/images/novel-temp-thumbnail/n-11.png"
+    },
+    {
+      "title": "빗소리 심포니",
+      "author": "조비",
+      "description": "비 오는 날 우연히 만난 음악가와 화가의 예술적 교감과 사랑",
+      "thumbnail": "/images/novel-temp-thumbnail/n-12.png"
+    }
+  ]
+}
