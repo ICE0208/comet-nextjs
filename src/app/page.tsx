@@ -1,8 +1,12 @@
 import Image from "next/image";
 import styles from "./page.module.css";
 import IconMenu from "@/components/icon-menu";
+import NovelThumbnailList from "@/components/novel-thumbnail-list";
+import { getMainPageNovelData } from "./actions";
 
-export default function Home() {
+export default async function Home() {
+  const mainPageNovelData = await getMainPageNovelData();
+
   return (
     <div>
       {/* 메인 이미지 */}
@@ -50,9 +54,17 @@ export default function Home() {
       {/* 소설 목록 */}
       <div>
         {/* Top 10 */}
-        <div></div>
+        <NovelThumbnailList
+          title="TOP 10"
+          data={mainPageNovelData.top10}
+        />
+        <div style={{ marginBottom: "40px" }} />
         {/* 추천 */}
-        <div></div>
+        <NovelThumbnailList
+          title="추천"
+          data={mainPageNovelData.recommend}
+        />
+        <div style={{ marginBottom: "360px" }} />
       </div>
     </div>
   );
