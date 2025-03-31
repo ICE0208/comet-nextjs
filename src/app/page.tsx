@@ -50,7 +50,6 @@ export default async function Home() {
           description="FAQ"
         />
       </div>
-      <div></div>
       {/* 소설 목록 */}
       <div>
         {/* Top 10 */}

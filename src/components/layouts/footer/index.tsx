@@ -7,7 +7,12 @@ export default function Footer() {
     <footer className={styles.footer}>
       <div className={styles.divider} />
       <div className={styles.title}>
-        <Image src="/icons/footer-logo.svg" alt="logo" width={24} height={24} />
+        <Image
+          src="/icons/footer-logo.svg"
+          alt="logo"
+          width={24}
+          height={24}
+        />
         COMET
       </div>
       <div className={styles.description}>
