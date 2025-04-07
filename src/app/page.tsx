@@ -3,6 +3,7 @@ import styles from "./page.module.css";
 import IconMenu from "@/components/icon-menu";
 import NovelThumbnailList from "@/components/novel-thumbnail-list";
 import { getMainPageNovelData } from "./actions";
+import Link from "next/link";
 
 export default async function Home() {
   const mainPageNovelData = await getMainPageNovelData();
@@ -41,10 +42,12 @@ export default async function Home() {
           svgPath="/icons/write.svg"
           description="창작하기"
         />
-        <IconMenu
-          svgPath="/icons/book-open.svg"
-          description="소설"
-        />
+        <Link href={"/novel"}>
+          <IconMenu
+            svgPath="/icons/book-open.svg"
+            description="소설"
+          />
+        </Link>
         <IconMenu
           svgPath="/icons/question-circle.svg"
           description="FAQ"
