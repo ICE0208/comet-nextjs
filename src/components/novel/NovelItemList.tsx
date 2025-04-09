@@ -3,6 +3,7 @@ import NovelItem from "./NovelItem";
 import styles from "./NovelItemList.module.css";
 
 type Novel = {
+  id: string;
   title: string;
   author: string;
   description: string;

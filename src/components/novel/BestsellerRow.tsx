@@ -12,7 +12,7 @@ type Novel = {
   coverImage: string;
   rating?: number;
   genre?: string;
-  description?: string;
+  description: string;
 };
 
 interface BestsellerRowProps {
@@ -24,7 +24,7 @@ interface ScrollState {
   bestsellerAutoScrollTimeout?: NodeJS.Timeout;
 }
 
-// Create a singleton object to store interval and timeout IDs
+// 인터벌과 타임아웃 ID를 저장하기 위한 싱글톤 객체 생성
 const scrollState: ScrollState = {};
 
 const BestsellerRow: React.FC<BestsellerRowProps> = ({ novels }) => {
@@ -37,25 +37,25 @@ const BestsellerRow: React.FC<BestsellerRowProps> = ({ novels }) => {
     let cardWidth = 0;
     const firstCard = scrollContainer.querySelector(`.${styles.novelCard}`);
     if (firstCard) {
-      // Get the width of a card plus its margin/gap
-      cardWidth = firstCard.getBoundingClientRect().width + 16; // 16px for the gap
+      // 카드의 너비와 마진/간격을 포함한 전체 너비 계산
+      cardWidth = firstCard.getBoundingClientRect().width + 16; // 16px는 간격
     }
 
-    // Auto-scroll every 3 seconds
+    // 3초마다 자동 스크롤
     const interval = setInterval(() => {
       if (scrollContainer) {
         const maxScrollLeft =
           scrollContainer.scrollWidth - scrollContainer.clientWidth;
 
-        // Calculate the next scroll position
+        // 다음 스크롤 위치 계산
         let nextScrollPosition = scrollContainer.scrollLeft + cardWidth;
 
-        // If we're at the end, reset to the beginning
+        // 끝에 도달하면 처음으로 돌아가기
         if (nextScrollPosition >= maxScrollLeft) {
           nextScrollPosition = 0;
         }
 
-        // Scroll to the next position with smooth animation
+        // 부드러운 애니메이션으로 다음 위치로 스크롤
         scrollContainer.scrollTo({
           left: nextScrollPosition,
           behavior: "smooth",
@@ -63,13 +63,13 @@ const BestsellerRow: React.FC<BestsellerRowProps> = ({ novels }) => {
       }
     }, 3000);
 
-    // Pause auto-scroll when user interacts with the carousel
+    // 사용자가 캐러셀과 상호작용할 때 자동 스크롤 일시 중지
     const handleInteraction = () => {
       clearInterval(interval);
 
-      // Resume auto-scroll after 5 seconds of inactivity
+      // 5초 동안 사용자 활동이 없으면 자동 스크롤 재개
       const timeout = setTimeout(() => {
-        // We need to recreate the interval
+        // 새로운 인터벌 생성
         const newInterval = setInterval(() => {
           if (scrollContainer) {
             const maxScrollLeft =
@@ -85,18 +85,18 @@ const BestsellerRow: React.FC<BestsellerRowProps> = ({ novels }) => {
           }
         }, 3000);
 
-        // Store the new interval ID in a properly typed variable
+        // 새 인터벌 ID를 타입이 지정된 변수에 저장
         scrollState.bestsellerAutoScrollInterval = newInterval;
       }, 5000);
 
-      // Store the timeout ID for cleanup
+      // 타임아웃 ID를 정리를 위해 저장
       scrollState.bestsellerAutoScrollTimeout = timeout;
     };
 
     scrollContainer.addEventListener("mousedown", handleInteraction);
     scrollContainer.addEventListener("touchstart", handleInteraction);
 
-    // Clean up event listeners and intervals on unmount
+    // 컴포넌트 언마운트 시 이벤트 리스너와 인터벌 정리
     return () => {
       clearInterval(interval);
       if (scrollState.bestsellerAutoScrollTimeout) {

@@ -15,7 +15,7 @@ type NovelProps = {
 
 const NovelItem: React.FC<NovelProps> = ({ novel }) => (
   <Link
-    href={`/nophel/${novel.id}`}
+    href={`/novel/${novel.id}`}
     className={styles.card}
   >
     <div className={styles.imageContainer}>
