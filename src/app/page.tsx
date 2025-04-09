@@ -2,13 +2,11 @@ import Image from "next/image";
 import styles from "./page.module.css";
 import IconMenu from "@/components/icon-menu";
 import NovelThumbnailList from "@/components/novel-thumbnail-list";
-import { getMainPageNovelData, getBestsellersData } from "@/app/actions";
+import { getMainPageNovelData } from "@/app/actions";
 import Link from "next/link";
-import BestsellerRow from "@/components/novel/BestsellerRow";
 
 export default async function Home() {
   const novelData = await getMainPageNovelData();
-  const bestsellersData = await getBestsellersData();
 
   return (
     <main>
@@ -70,8 +68,6 @@ export default async function Home() {
         />
         <div style={{ marginBottom: "360px" }} />
       </div>
-      {/* If you're showing bestsellers on the homepage: */}
-      <BestsellerRow novels={bestsellersData.bestsellers} />
     </main>
   );
 }
