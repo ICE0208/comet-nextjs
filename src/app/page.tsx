@@ -2,14 +2,16 @@ import Image from "next/image";
 import styles from "./page.module.css";
 import IconMenu from "@/components/icon-menu";
 import NovelThumbnailList from "@/components/novel-thumbnail-list";
-import { getMainPageNovelData } from "./actions";
+import { getMainPageNovelData, getBestsellersData } from "@/app/actions";
 import Link from "next/link";
+import BestsellerRow from "@/components/novel/BestsellerRow";
 
 export default async function Home() {
-  const mainPageNovelData = await getMainPageNovelData();
+  const novelData = await getMainPageNovelData();
+  const bestsellersData = await getBestsellersData();
 
   return (
-    <div>
+    <main>
       {/* 메인 이미지 */}
       <div className={styles.mainImage}>
         <Image
@@ -58,16 +60,18 @@ export default async function Home() {
         {/* Top 10 */}
         <NovelThumbnailList
           title="TOP 10"
-          data={mainPageNovelData.top10}
+          data={novelData.top10}
         />
         <div style={{ marginBottom: "40px" }} />
         {/* 추천 */}
         <NovelThumbnailList
           title="추천"
-          data={mainPageNovelData.recommend}
+          data={novelData.recommend}
         />
         <div style={{ marginBottom: "360px" }} />
       </div>
-    </div>
+      {/* If you're showing bestsellers on the homepage: */}
+      <BestsellerRow novels={bestsellersData.bestsellers} />
+    </main>
   );
 }

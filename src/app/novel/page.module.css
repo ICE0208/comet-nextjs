@@ -1,24 +1,25 @@
 .container {
-  margin: 70px 0 0 0;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 2rem 1rem;
+  margin-top: 100px;
 }
-.eventArea {
-  display: flex;
-  gap: 16px;
-  justify-content: center;
-  padding: 100px 0 100px 0;
+
+.header {
+  margin-bottom: 3rem;
+  text-align: center;
 }
-.itemsArea {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
+
+.title {
+  font-size: 2.5rem;
+  font-weight: 700;
+  color: #333;
+  margin-bottom: 0.5rem;
 }
-.navbar {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  min-width: 1000px;
-}
-.categories {
-  display: flex;
-  gap: 16px;
+
+.subtitle {
+  font-size: 1.2rem;
+  color: #666;
+  max-width: 600px;
+  margin: 0 auto;
 }

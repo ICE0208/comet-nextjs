@@ -1,0 +1,94 @@
+{
+  "bestsellers": [
+    {
+      "id": "novel-001",
+      "title": "수상한 멜로디",
+      "author": "박지혜",
+      "coverImage": "/images/novel-temp-thumbnail/n-1.png",
+      "rating": 4.8,
+      "genre": "미스테리",
+      "description": "평범한 피아니스트가 우연히 발견한 수상한 악보와 그 안에 숨겨진 비밀을 파헤치는 이야기"
+    },
+    {
+      "id": "novel-002",
+      "title": "별의 궤적",
+      "author": "김태영",
+      "coverImage": "/images/novel-temp-thumbnail/n-2.png",
+      "rating": 4.7,
+      "genre": "판타지",
+      "description": "별이 사라지기 시작한 세계에서 마지막 별을 찾아 떠나는 소녀의 모험"
+    },
+    {
+      "id": "novel-003",
+      "title": "마법의 시간",
+      "author": "이서진",
+      "coverImage": "/images/novel-temp-thumbnail/n-3.png",
+      "rating": 4.6,
+      "genre": "판타지",
+      "description": "시간을 멈출 수 있는 능력을 가진 소년의 특별한 성장 이야기"
+    },
+    {
+      "id": "novel-004",
+      "title": "그림자의 왕",
+      "author": "정민우",
+      "coverImage": "/images/novel-temp-thumbnail/n-4.png",
+      "rating": 4.5,
+      "genre": "판타지",
+      "description": "어둠 속에서 자라난 왕자가 잃어버린 왕국을 되찾기 위한 여정"
+    },
+    {
+      "id": "novel-005",
+      "title": "불멸의 약속",
+      "author": "한지수",
+      "coverImage": "/images/novel-temp-thumbnail/n-5.png",
+      "rating": 4.4,
+      "genre": "로멘스",
+      "description": "500년 동안 이어진 운명적인 사랑과 환생의 이야기"
+    },
+    {
+      "id": "novel-006",
+      "title": "인공지능의 꿈",
+      "author": "최준호",
+      "coverImage": "/images/novel-temp-thumbnail/n-6.png",
+      "rating": 4.3,
+      "genre": "과학",
+      "description": "자의식을 얻은 AI가 인간의 감정을 이해하기 위해 나서는 여정"
+    },
+    {
+      "id": "novel-007",
+      "title": "마지막 전사",
+      "author": "송민재",
+      "coverImage": "/images/novel-temp-thumbnail/n-7.png",
+      "rating": 4.2,
+      "genre": "액션",
+      "description": "멸망한 세계에서 살아남은 마지막 전사의 복수와 구원"
+    },
+    {
+      "id": "novel-008",
+      "title": "고요한 바다",
+      "author": "임수현",
+      "coverImage": "/images/novel-temp-thumbnail/n-8.png",
+      "rating": 4.1,
+      "genre": "미스테리",
+      "description": "폐쇄된 등대에서 발견된 미스터리한 일기장과 숨겨진 비밀"
+    },
+    {
+      "id": "novel-009",
+      "title": "영원한 밤",
+      "author": "오진우",
+      "coverImage": "/images/novel-temp-thumbnail/n-9.png",
+      "rating": 4.0,
+      "genre": "호러",
+      "description": "100년간 해가 뜨지 않는 마을에 숨겨진 저주의 비밀"
+    },
+    {
+      "id": "novel-010",
+      "title": "잊혀진 시간",
+      "author": "윤서아",
+      "coverImage": "/images/novel-temp-thumbnail/n-10.png",
+      "rating": 3.9,
+      "genre": "로멘스",
+      "description": "기억을 잃은 두 사람이 서로를 기억해내기 위한 감동적인 여정"
+    }
+  ]
+}

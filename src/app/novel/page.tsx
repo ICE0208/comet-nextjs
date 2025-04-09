@@ -1,49 +1,39 @@
-import React from "react";
-import { getNovelData, getMainPageNovelData } from "@/app/actions";
+import { getNovelData, getBestsellersData } from "@/app/actions";
+import NovelItemList from "@/components/novel/NovelItemList";
+import NovelCategories from "@/components/novel/NovelCategories";
+import BestsellerRow from "@/components/novel/BestsellerRow";
 import styles from "./page.module.css";
-import NovelThumbnailList from "@/components/novel-thumbnail-list";
-import NovelItemList from "@/components/novel-item-list";
-import Image from "next/image";
 
-const NovelPageCards = async () => {
+export default async function NovelPage() {
   const novelData = await getNovelData();
-  const mainPageNovelData = await getMainPageNovelData();
+  const bestsellersData = await getBestsellersData();
+
+  // You would typically fetch these categories from your API
+  const categories = [
+    { id: "all", name: "전체" },
+    { id: "fantasy", name: "판타지" },
+    { id: "romance", name: "로멘스" },
+    { id: "scifi", name: "과학" },
+    { id: "action", name: "액션" },
+    { id: "mystery", name: "미스테리" },
+    { id: "horror", name: "호러" },
+  ];
 
   return (
     <div className={styles.container}>
-      <NovelThumbnailList
-        title="TOP 10"
-        data={mainPageNovelData.top10}
+      <div className={styles.header}>
+        <h1 className={styles.title}>Our Web Novel Collection</h1>
+        <p className={styles.subtitle}>Discover your next favorite story</p>
+      </div>
+
+      <BestsellerRow novels={bestsellersData.bestsellers} />
+
+      <NovelCategories
+        categories={categories}
+        activeCategory="all"
       />
-      <div className={styles.eventArea}>
-        <Image
-          src="/images/main-image.webp"
-          alt="no--image"
-          width={10000}
-          height={390}
-        />
-      </div>
-      <div className={styles.itemsArea}>
-        <div className={styles.navbar}>
-          <div className={styles.categories}>
-            <span>전체</span>
-            <span>판타지</span>
-            <span>로멘스</span>
-            <span>스릴러</span>
-            <span>코미디</span>
-            <span>엑션</span>
-            <span>스포츠</span>
-            <span>드라마</span>
-            <span>성인</span>
-          </div>
-          <div>
-            <input />
-          </div>
-        </div>
-        <NovelItemList data={novelData.novelAll} />
-      </div>
+
+      <NovelItemList data={novelData.novelAll} />
     </div>
   );
-};
-
-export default NovelPageCards;
+}
