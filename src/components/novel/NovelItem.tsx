@@ -5,6 +5,7 @@ import styles from "./NovelItem.module.css";
 
 type NovelProps = {
   novel: {
+    id: string;
     title: string;
     author: string;
     description?: string;
