@@ -19,30 +19,31 @@ const NovelItemList = ({ data }: NovelItemListProps) => {
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 8;
 
-  // Calculate total pages
+  // 전체 페이지 수 계산
   const totalPages = Math.ceil(data.length / itemsPerPage);
 
-  // Get current items
+  // 현재 페이지에 해당하는 아이템을 가져오기
   const indexOfLastItem = currentPage * itemsPerPage;
   const indexOfFirstItem = indexOfLastItem - itemsPerPage;
   const currentItems = data.slice(indexOfFirstItem, indexOfLastItem);
 
-  // Change page
+  // 페이지 이동
   const goToPage = (pageNumber: number) => {
     if (pageNumber >= 1 && pageNumber <= totalPages) {
       setCurrentPage(pageNumber);
     }
   };
 
-  // Generate page numbers to display
+  /* 페이지네이션 번호 생성 */
   const getPageNumbers = () => {
     const pageNumbers = [];
 
-    // Show up to 5 pages (current page in the middle when possible)
+    /* 현재페이지를 중앙에 표시 >>> 현재 페이지가 7이면 startPage는 5 */
     let startPage = Math.max(1, currentPage - 2);
+    /* +4해서 총 5개의 페이지 보여줌 */
     const endPage = Math.min(totalPages, startPage + 4);
 
-    // Adjust start page if end page is maxed out
+    // Adjust start page if end page is maxed out 모르겠다
     if (endPage === totalPages) {
       startPage = Math.max(1, endPage - 4);
     }
@@ -55,7 +56,7 @@ const NovelItemList = ({ data }: NovelItemListProps) => {
   };
 
   useEffect(() => {
-    // Reset to first page when data changes
+    // 데이터( 선택된 장르 )가 바뀔때마다 페이지를 1로 초기화
     setCurrentPage(1);
   }, [data]);
 

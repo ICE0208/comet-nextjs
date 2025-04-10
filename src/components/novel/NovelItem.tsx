@@ -13,7 +13,7 @@ type NovelProps = {
   };
 };
 
-const NovelItem: React.FC<NovelProps> = ({ novel }) => (
+const NovelItem = ({ novel }: NovelProps) => (
   <Link
     href={`/novel/${novel.id}`}
     className={styles.card}
