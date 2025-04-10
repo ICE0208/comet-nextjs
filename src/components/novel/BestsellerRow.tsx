@@ -22,7 +22,6 @@ interface BestsellerRowProps {
 
 interface ScrollState {
   bestsellerAutoScrollInterval?: NodeJS.Timeout;
-  bestsellerAutoScrollTimeout?: NodeJS.Timeout;
 }
 
 // 베스트셀러 viewCount 기준으로 정렬
@@ -76,9 +75,6 @@ const BestsellerRow: React.FC<BestsellerRowProps> = ({ novels }) => {
       clearInterval(interval);
 
       // 기존 타임아웃이 있다면 정리
-      if (scrollState.bestsellerAutoScrollTimeout) {
-        clearTimeout(scrollState.bestsellerAutoScrollTimeout);
-      }
       if (scrollState.bestsellerAutoScrollInterval) {
         clearInterval(scrollState.bestsellerAutoScrollInterval);
       }
@@ -127,9 +123,6 @@ const BestsellerRow: React.FC<BestsellerRowProps> = ({ novels }) => {
     // 컴포넌트 언마운트 시 이벤트 리스너와 인터벌 정리
     return () => {
       clearInterval(interval);
-      if (scrollState.bestsellerAutoScrollTimeout) {
-        clearTimeout(scrollState.bestsellerAutoScrollTimeout);
-      }
       if (scrollState.bestsellerAutoScrollInterval) {
         clearInterval(scrollState.bestsellerAutoScrollInterval);
       }
