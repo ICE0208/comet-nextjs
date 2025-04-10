@@ -149,7 +149,7 @@ const BestsellerRow: React.FC<BestsellerRowProps> = ({ novels }) => {
         ref={scrollContainerRef}
       >
         <div className={styles.row}>
-          {sortedNovels.map((novel, index) => (
+          {sortedNovels.slice(0, 10).map((novel, index) => (
             <Link
               href={`/novel/${novel.id}`}
               key={novel.id}
