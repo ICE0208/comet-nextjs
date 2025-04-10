@@ -20,16 +20,12 @@ interface BestsellerRowProps {
   novels: Novel[];
 }
 
-interface ScrollState {
-  bestsellerAutoScrollInterval?: NodeJS.Timeout;
-}
-
 // 베스트셀러 viewCount 기준으로 정렬
 const sortNovelsByViewCount = (novels: Novel[]): Novel[] =>
   [...novels].sort((a, b) => b.viewCount - a.viewCount);
 
-// 인터벌과 타임아웃 ID를 저장하기 위한 싱글톤 객체 생성
-const scrollState: ScrollState = {};
+// 인터벌 ID 저장할 변수
+let intervalState: NodeJS.Timeout;
 
 const BestsellerRow: React.FC<BestsellerRowProps> = ({ novels }) => {
   // viewCount 기준으로 소설 정렬
@@ -70,31 +66,26 @@ const BestsellerRow: React.FC<BestsellerRowProps> = ({ novels }) => {
       });
     };
 
-    // 3초마다 자동 스크롤
-    const interval = setInterval(scrollToNextItem, 3000);
-
     // 사용자가 캐러셀과 상호작용할 때 자동 스크롤 일시 중지
     const pauseAutoScroll = () => {
-      clearInterval(interval);
-
       // 기존 타임아웃이 있다면 정리
-      if (scrollState.bestsellerAutoScrollInterval) {
-        clearInterval(scrollState.bestsellerAutoScrollInterval);
+      if (intervalState) {
+        clearInterval(intervalState);
       }
     };
 
-    // 자동 스크롤 재개
-    const resumeAutoScroll = () => {
+    // 자동 스크롤 시작
+    const playAutoScroll = () => {
       // 기존 인터벌이나 타임아웃이 있다면 정리
-      if (scrollState.bestsellerAutoScrollInterval) {
-        clearInterval(scrollState.bestsellerAutoScrollInterval);
+      if (intervalState) {
+        clearInterval(intervalState);
       }
 
       // 새로운 인터벌 생성
       const newInterval = setInterval(scrollToNextItem, 3000);
 
       // 새 인터벌 ID를 타입이 지정된 변수에 저장
-      scrollState.bestsellerAutoScrollInterval = newInterval;
+      intervalState = newInterval;
     };
 
     // 마우스가 들어오면 자동 스크롤 멈춤
@@ -104,17 +95,19 @@ const BestsellerRow: React.FC<BestsellerRowProps> = ({ novels }) => {
 
     // 마우스가 나가면 자동 스크롤 재개
     const handleMouseLeave = () => {
-      resumeAutoScroll();
+      playAutoScroll();
     };
 
     scrollContainer.addEventListener("mouseenter", handleMouseEnter);
     scrollContainer.addEventListener("mouseleave", handleMouseLeave);
 
+    // 처음 렌더링 시 자동 스크롤 시작!
+    playAutoScroll();
+
     // 컴포넌트 언마운트 시 이벤트 리스너와 인터벌 정리
     return () => {
-      clearInterval(interval);
-      if (scrollState.bestsellerAutoScrollInterval) {
-        clearInterval(scrollState.bestsellerAutoScrollInterval);
+      if (intervalState) {
+        clearInterval(intervalState);
       }
       scrollContainer.removeEventListener("mouseenter", handleMouseEnter);
       scrollContainer.removeEventListener("mouseleave", handleMouseLeave);
