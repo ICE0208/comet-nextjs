@@ -20,9 +20,37 @@
   height: "auto";
 }
 
+.logoImage {
+  width: 100%;
+  height: auto;
+}
+
 .profile {
   width: 40px;
   aspect-ratio: 1/1;
   border-radius: 50%;
   overflow: hidden;
+}
+
+.profileImage {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.userSection {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.userInfo {
+  display: flex;
+  align-items: center;
+}
+
+.userName {
+  color: #fff;
+  font-size: 14px;
+  font-weight: 500;
 }
