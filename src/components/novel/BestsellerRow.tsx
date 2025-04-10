@@ -34,10 +34,14 @@ const BestsellerRow: React.FC<BestsellerRowProps> = ({ novels }) => {
   const scrollContainerRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
+    if (!novels.length) return;
+    // 데이터가 있을 때만 실행
+
     const scrollContainer = scrollContainerRef.current;
     if (!scrollContainer) return;
 
     let cardWidth = 0;
+
     const firstCard = scrollContainer.querySelector(`.${styles.novelCard}`);
     if (firstCard) {
       // 카드의 너비와 마진/간격을 포함한 전체 너비 계산
@@ -50,7 +54,6 @@ const BestsellerRow: React.FC<BestsellerRowProps> = ({ novels }) => {
 
       const maxScrollLeft =
         scrollContainer.scrollWidth - scrollContainer.clientWidth;
-
       // 다음 스크롤 위치 계산
       let nextScrollPosition = scrollContainer.scrollLeft + cardWidth;
 
@@ -112,7 +115,7 @@ const BestsellerRow: React.FC<BestsellerRowProps> = ({ novels }) => {
       scrollContainer.removeEventListener("mouseenter", handleMouseEnter);
       scrollContainer.removeEventListener("mouseleave", handleMouseLeave);
     };
-  }, []);
+  }, [novels]);
 
   return (
     <div className={styles.container}>

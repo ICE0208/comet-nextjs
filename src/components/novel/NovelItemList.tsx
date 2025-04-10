@@ -1,5 +1,5 @@
 "use client";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import NovelItem from "./NovelItem";
 import styles from "./NovelItemList.module.css";
 
@@ -53,6 +53,11 @@ const NovelItemList = ({ data }: NovelItemListProps) => {
 
     return pageNumbers;
   };
+
+  useEffect(() => {
+    // Reset to first page when data changes
+    setCurrentPage(1);
+  }, [data]);
 
   return (
     <div className={styles.container}>

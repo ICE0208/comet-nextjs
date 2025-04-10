@@ -1,11 +1,44 @@
+"use client";
+
 import { getNovelData } from "@/app/actions";
 import NovelItemList from "@/components/novel/NovelItemList";
-import NovelCategories from "@/components/novel/NovelCategories";
 import BestsellerRow from "@/components/novel/BestsellerRow";
 import styles from "./page.module.css";
+import { useState, useEffect } from "react";
 
-export default async function NovelPage() {
-  const novelData = await getNovelData();
+type Novel = {
+  id: string;
+  title: string;
+  author: string;
+  description: string;
+  thumbnail: string;
+  genre: string;
+  viewCount: number;
+  rating: number;
+};
+
+type NovelData = {
+  novelAll: Novel[];
+};
+
+// type Category = {
+//   id: string;
+//   name: string;
+// };
+
+// interface NovelCategoriesProps {
+//   categories: Category[];
+//   activeCategory: string;
+// }
+
+const NovelPage = () => {
+  const [novelData, setNovelData] = useState<NovelData>({ novelAll: [] });
+  const [selectedCategory, setSelectedCategory] = useState("all");
+  const [filtered, setFiltered] = useState<Novel[]>(novelData.novelAll);
+
+  const handleCategoryClick = (categoryId: string) => {
+    setSelectedCategory(categoryId);
+  };
 
   // You would typically fetch these categories from your API
   const categories = [
@@ -17,6 +50,24 @@ export default async function NovelPage() {
     { id: "mystery", name: "미스테리" },
   ];
 
+  useEffect(() => {
+    const fetchData = async () => {
+      const data = await getNovelData();
+      setNovelData(data);
+    };
+    fetchData();
+  }, []);
+
+  useEffect(() => {
+    if (selectedCategory === "all") {
+      setFiltered(novelData.novelAll);
+    } else {
+      setFiltered(
+        novelData.novelAll.filter((item) => item.genre === selectedCategory)
+      );
+    }
+  }, [selectedCategory, novelData.novelAll]);
+
   return (
     <div className={styles.container}>
       <div className={styles.header}>
@@ -26,12 +77,23 @@ export default async function NovelPage() {
 
       <BestsellerRow novels={novelData.novelAll} />
 
-      <NovelCategories
-        categories={categories}
-        activeCategory="all"
-      />
+      <div className={styles.categoriesContainer}>
+        <div className={styles.categories}>
+          {categories.map((category) => (
+            <div
+              key={category.id}
+              className={`${styles.categoryItem} ${selectedCategory === category.id ? styles.active : ""}`}
+              onClick={() => handleCategoryClick(category.id)}
+            >
+              {category.name}
+            </div>
+          ))}
+        </div>
+      </div>
 
-      <NovelItemList data={novelData.novelAll} />
+      {/* <NovelItemList data={novelData.novelAll} /> */}
+      <NovelItemList data={filtered} />
     </div>
   );
-}
+};
+export default NovelPage;
