@@ -1,5 +1,4 @@
 {
-  "category": "all",
   "novelAll": [
     {
       "id": "1",
@@ -7,7 +6,7 @@
       "author": "김철검",
       "description": "검술의 세계에서 최고가 되기 위한 한 여성의 불굴의 여정",
       "thumbnail": "/images/novel-temp-thumbnail/n-1.png",
-      "category": "판타지",
+      "genre": "판타지",
       "viewCount": 1542,
       "rating": 4.8
     },
@@ -17,7 +16,7 @@
       "author": "이웃집작가",
       "description": "평범한 소녀가 발견한 삶의 작은 기쁨들에 관한 감동 스토리",
       "thumbnail": "/images/novel-temp-thumbnail/n-2.png",
-      "category": "로맨스",
+      "genre": "로맨스",
       "viewCount": 982,
       "rating": 4.2
     },
@@ -27,7 +26,7 @@
       "author": "우주탐험가",
       "description": "화성에서 발견된 고대 문명의 흔적과 인류의 운명을 바꿀 발견",
       "thumbnail": "/images/novel-temp-thumbnail/n-3.png",
-      "category": "SF",
+      "genre": "SF",
       "viewCount": 1203,
       "rating": 4.5
     },
@@ -37,7 +36,7 @@
       "author": "최미식",
       "description": "요리 대회에서 우승을 향해 도전하는 젊은 요리사의 열정 넘치는 이야기",
       "thumbnail": "/images/novel-temp-thumbnail/n-4.png",
-      "category": "생활",
+      "genre": "생활",
       "viewCount": 876,
       "rating": 4.1
     },
@@ -47,7 +46,7 @@
       "author": "박빵집",
       "description": "할머니의 레시피로 시작한 작은 베이커리가 마을을 변화시키는 따뜻한 이야기",
       "thumbnail": "/images/novel-temp-thumbnail/n-5.png",
-      "category": "생활",
+      "genre": "생활",
       "viewCount": 1345,
       "rating": 4.7
     },
@@ -57,7 +56,7 @@
       "author": "정우산",
       "description": "우연히 만난 두 사람이 비 오는 날마다 재회하며 펼쳐지는 로맨틱 스토리",
       "thumbnail": "/images/novel-temp-thumbnail/n-6.png",
-      "category": "로맨스",
+      "genre": "로맨스",
       "viewCount": 2103,
       "rating": 4.9
     },
@@ -67,7 +66,7 @@
       "author": "한그림자",
       "description": "어둠 속에서 정의를 실현하는 비밀 조직의 암살자 이야기",
       "thumbnail": "/images/novel-temp-thumbnail/n-7.png",
-      "category": "미스터리",
+      "genre": "미스터리",
       "viewCount": 1876,
       "rating": 4.6
     },
@@ -77,7 +76,7 @@
       "author": "문학소녀",
       "description": "현실과 환상을 넘나드는 소녀의 마법 같은 성장 이야기",
       "thumbnail": "/images/novel-temp-thumbnail/n-8.png",
-      "category": "판타지",
+      "genre": "판타지",
       "viewCount": 743,
       "rating": 4.0
     },
@@ -87,7 +86,7 @@
       "author": "강우주",
       "description": "미지의 행성을 탐험하는 우주 탐사대의 모험과 발견",
       "thumbnail": "/images/novel-temp-thumbnail/n-9.png",
-      "category": "SF",
+      "genre": "SF",
       "viewCount": 958,
       "rating": 4.3
     },
@@ -97,7 +96,7 @@
       "author": "이셰프",
       "description": "세계 최고의 요리사 타이틀을 두고 벌어지는 치열한 경쟁과 우정",
       "thumbnail": "/images/novel-temp-thumbnail/n-10.png",
-      "category": "생활",
+      "genre": "생활",
       "viewCount": 1432,
       "rating": 4.4
     },
@@ -107,7 +106,7 @@
       "author": "윤디저트",
       "description": "파리에서 디저트로 세상을 달콤하게 만들고 싶은 청년의 도전기",
       "thumbnail": "/images/novel-temp-thumbnail/n-11.png",
-      "category": "생활",
+      "genre": "생활",
       "viewCount": 1123,
       "rating": 4.2
     },
@@ -117,7 +116,7 @@
       "author": "조비",
       "description": "비 오는 날 우연히 만난 음악가와 화가의 예술적 교감과 사랑",
       "thumbnail": "/images/novel-temp-thumbnail/n-12.png",
-      "category": "로맨스",
+      "genre": "로맨스",
       "viewCount": 1642,
       "rating": 4.5
     },
@@ -126,8 +125,8 @@
       "title": "미스터리 호텔",
       "author": "김수수께끼",
       "description": "투숙객들이 자신의 가장 큰 비밀과 마주하게 되는 호텔에서의 기묘한 이야기",
-      "thumbnail": "/images/novel-temp-thumbnail/n-13.png",
-      "category": "미스터리",
+      "thumbnail": "/images/novel-temp-thumbnail/n.png",
+      "genre": "미스터리",
       "viewCount": 1765,
       "rating": 4.7
     },
@@ -136,8 +135,8 @@
       "title": "시간 여행자의 노트",
       "author": "이타임",
       "description": "다양한 시대를 여행하며 역사의 미스터리를 풀어나가는 시간 여행자의 기록",
-      "thumbnail": "/images/novel-temp-thumbnail/n-14.png",
-      "category": "SF",
+      "thumbnail": "/images/novel-temp-thumbnail/n.png",
+      "genre": "SF",
       "viewCount": 1245,
       "rating": 4.5
     },
@@ -146,8 +145,8 @@
       "title": "전설의 마법사",
       "author": "박마법",
       "description": "잊혀진 마법을 되찾아 세계의 균형을 지키려는 마법사의 여정",
-      "thumbnail": "/images/novel-temp-thumbnail/n-15.png",
-      "category": "판타지",
+      "thumbnail": "/images/novel-temp-thumbnail/n.png",
+      "genre": "판타지",
       "viewCount": 2234,
       "rating": 4.8
     },
@@ -156,8 +155,8 @@
       "title": "거울 속 세계",
       "author": "정거울",
       "description": "거울을 통해 들어간 평행세계에서 자신의 또 다른 모습을 만난 소녀의 모험",
-      "thumbnail": "/images/novel-temp-thumbnail/n-16.png",
-      "category": "판타지",
+      "thumbnail": "/images/novel-temp-thumbnail/n.png",
+      "genre": "판타지",
       "viewCount": 1320,
       "rating": 4.3
     },
@@ -166,8 +165,8 @@
       "title": "해저 도시",
       "author": "최심해",
       "description": "해저 도시에서 생활하게 된 과학자가 발견한 고대 문명의 비밀",
-      "thumbnail": "/images/novel-temp-thumbnail/n-17.png",
-      "category": "SF",
+      "thumbnail": "/images/novel-temp-thumbnail/n.png",
+      "genre": "SF",
       "viewCount": 987,
       "rating": 4.1
     },
@@ -176,8 +175,8 @@
       "title": "바람의 왕국",
       "author": "강태풍",
       "description": "폭풍을 다스리는 능력을 가진 왕자의 왕좌 되찾기 여정",
-      "thumbnail": "/images/novel-temp-thumbnail/n-18.png",
-      "category": "판타지",
+      "thumbnail": "/images/novel-temp-thumbnail/n.png",
+      "genre": "판타지",
       "viewCount": 1532,
       "rating": 4.6
     },
@@ -186,8 +185,8 @@
       "title": "도서관 미스터리",
       "author": "윤책",
       "description": "오래된 도서관에서 발견된 고문서가 이끄는 숨겨진 보물의 비밀",
-      "thumbnail": "/images/novel-temp-thumbnail/n-19.png",
-      "category": "미스터리",
+      "thumbnail": "/images/novel-temp-thumbnail/n.png",
+      "genre": "미스터리",
       "viewCount": 1245,
       "rating": 4.4
     },
@@ -196,8 +195,8 @@
       "title": "숲속의 약속",
       "author": "한나무",
       "description": "신비로운 숲에서 만난 정령과 소년의 우정과 성장 이야기",
-      "thumbnail": "/images/novel-temp-thumbnail/n-20.png",
-      "category": "판타지",
+      "thumbnail": "/images/novel-temp-thumbnail/n.png",
+      "genre": "판타지",
       "viewCount": 876,
       "rating": 4.2
     },
@@ -206,8 +205,8 @@
       "title": "제국의 그림자",
       "author": "오왕국",
       "description": "무너져가는 제국을 구하기 위해 펼쳐지는 숨겨진 왕족의 모험",
-      "thumbnail": "/images/novel-temp-thumbnail/n-21.png",
-      "category": "판타지",
+      "thumbnail": "/images/novel-temp-thumbnail/n.png",
+      "genre": "판타지",
       "viewCount": 1653,
       "rating": 4.7
     },
@@ -216,8 +215,8 @@
       "title": "꿈의 조각사",
       "author": "서몽환",
       "description": "사람들의 꿈을 조각할 수 있는 능력자가 만들어내는 희망과 절망",
-      "thumbnail": "/images/novel-temp-thumbnail/n-22.png",
-      "category": "판타지",
+      "thumbnail": "/images/novel-temp-thumbnail/n.png",
+      "genre": "판타지",
       "viewCount": 1432,
       "rating": 4.5
     },
@@ -226,8 +225,8 @@
       "title": "빛의 전사들",
       "author": "임광명",
       "description": "고대의 예언에 따라 모인 여덟 명의 전사들이 어둠의 세력에 맞서는 이야기",
-      "thumbnail": "/images/novel-temp-thumbnail/n-23.png",
-      "category": "판타지",
+      "thumbnail": "/images/novel-temp-thumbnail/n.png",
+      "genre": "판타지",
       "viewCount": 1786,
       "rating": 4.8
     },
@@ -236,8 +235,8 @@
       "title": "도시의 밤",
       "author": "조야행",
       "description": "밤의 도시에서 펼쳐지는 비밀 조직과 경찰의 숨막히는 추격전",
-      "thumbnail": "/images/novel-temp-thumbnail/n-24.png",
-      "category": "미스터리",
+      "thumbnail": "/images/novel-temp-thumbnail/n.png",
+      "genre": "미스터리",
       "viewCount": 1897,
       "rating": 4.6
     },
@@ -246,8 +245,8 @@
       "title": "인공지능의 사랑",
       "author": "김AI",
       "description": "감정을 가지게 된 인공지능이 인간 창조자와 발전시키는 특별한 관계",
-      "thumbnail": "/images/novel-temp-thumbnail/n-25.png",
-      "category": "SF",
+      "thumbnail": "/images/novel-temp-thumbnail/n.png",
+      "genre": "SF",
       "viewCount": 1342,
       "rating": 4.3
     },
@@ -256,8 +255,8 @@
       "title": "해변의 카페",
       "author": "이파도",
       "description": "작은 해변 마을의 카페에서 만나는 다양한 사람들의 인생 이야기",
-      "thumbnail": "/images/novel-temp-thumbnail/n-26.png",
-      "category": "생활",
+      "thumbnail": "/images/novel-temp-thumbnail/n.png",
+      "genre": "생활",
       "viewCount": 976,
       "rating": 4.1
     },
@@ -266,8 +265,8 @@
       "title": "고스트 헌터",
       "author": "박영혼",
       "description": "영혼들의 비밀을 밝히고 그들을 평화롭게 저 세상으로 보내는 영매의 여정",
-      "thumbnail": "/images/novel-temp-thumbnail/n-27.png",
-      "category": "미스터리",
+      "thumbnail": "/images/novel-temp-thumbnail/n.png",
+      "genre": "미스터리",
       "viewCount": 1532,
       "rating": 4.4
     }

@@ -1,4 +1,4 @@
-import { getNovelData, getBestsellersData } from "@/app/actions";
+import { getNovelData } from "@/app/actions";
 import NovelItemList from "@/components/novel/NovelItemList";
 import NovelCategories from "@/components/novel/NovelCategories";
 import BestsellerRow from "@/components/novel/BestsellerRow";
@@ -6,7 +6,6 @@ import styles from "./page.module.css";
 
 export default async function NovelPage() {
   const novelData = await getNovelData();
-  const bestsellersData = await getBestsellersData();
 
   // You would typically fetch these categories from your API
   const categories = [
@@ -14,9 +13,8 @@ export default async function NovelPage() {
     { id: "fantasy", name: "판타지" },
     { id: "romance", name: "로멘스" },
     { id: "scifi", name: "과학" },
-    { id: "action", name: "액션" },
+    { id: "life", name: "일상" },
     { id: "mystery", name: "미스테리" },
-    { id: "horror", name: "호러" },
   ];
 
   return (
@@ -26,7 +24,7 @@ export default async function NovelPage() {
         <p className={styles.subtitle}>Discover your next favorite story</p>
       </div>
 
-      <BestsellerRow novels={bestsellersData.bestsellers} />
+      <BestsellerRow novels={novelData.novelAll} />
 
       <NovelCategories
         categories={categories}

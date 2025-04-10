@@ -9,10 +9,11 @@ type Novel = {
   id: string;
   title: string;
   author: string;
-  coverImage: string;
-  rating?: number;
-  genre?: string;
   description: string;
+  thumbnail: string;
+  genre: string;
+  viewCount: number;
+  rating: number;
 };
 
 interface BestsellerRowProps {
@@ -24,10 +25,17 @@ interface ScrollState {
   bestsellerAutoScrollTimeout?: NodeJS.Timeout;
 }
 
+// 베스트셀러 viewCount 기준으로 정렬
+const sortNovelsByViewCount = (novels: Novel[]): Novel[] =>
+  [...novels].sort((a, b) => b.viewCount - a.viewCount);
+
 // 인터벌과 타임아웃 ID를 저장하기 위한 싱글톤 객체 생성
 const scrollState: ScrollState = {};
 
 const BestsellerRow: React.FC<BestsellerRowProps> = ({ novels }) => {
+  // viewCount 기준으로 소설 정렬
+  const sortedNovels = sortNovelsByViewCount(novels);
+
   const scrollContainerRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -141,7 +149,7 @@ const BestsellerRow: React.FC<BestsellerRowProps> = ({ novels }) => {
         ref={scrollContainerRef}
       >
         <div className={styles.row}>
-          {novels.map((novel, index) => (
+          {sortedNovels.map((novel, index) => (
             <Link
               href={`/novel/${novel.id}`}
               key={novel.id}
@@ -150,7 +158,7 @@ const BestsellerRow: React.FC<BestsellerRowProps> = ({ novels }) => {
               <div className={styles.rankBadge}>{index + 1}</div>
               <div className={styles.imageWrapper}>
                 <Image
-                  src={novel.coverImage}
+                  src={novel.thumbnail}
                   alt={novel.title}
                   width={180}
                   height={270}

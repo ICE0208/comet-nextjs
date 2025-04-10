@@ -15,7 +15,7 @@ interface NovelItemListProps {
   data: Novel[];
 }
 
-const NovelItemList: React.FC<NovelItemListProps> = ({ data }) => {
+const NovelItemList = ({ data }: NovelItemListProps) => {
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 8;
 
