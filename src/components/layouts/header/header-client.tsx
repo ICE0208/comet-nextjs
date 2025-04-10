@@ -1,9 +1,10 @@
 "use client";
 
-import Image from "next/image";
-import styles from "./styles.module.css";
 import { useScroll } from "@/hooks/useScroll";
 import { UserInfo } from "@/lib/auth";
+import styles from "./header-client.module.css";
+import Logo from "./logo";
+import UserSection from "./user-section";
 
 interface HeaderClientProps {
   user: UserInfo;
@@ -18,32 +19,8 @@ export function HeaderClient({ user }: HeaderClientProps) {
     <div
       className={`${styles.container} ${isBgDark ? styles.containerDark : ""}`}
     >
-      <div className={styles.logo}>
-        <Image
-          src="/images/header-logo.svg"
-          alt="logo"
-          width={159}
-          height={35}
-          className={styles.logoImage}
-        />
-      </div>
-
-      <div className={styles.userSection}>
-        {user && (
-          <div className={styles.userInfo}>
-            <span className={styles.userName}>{user.userId}</span>
-          </div>
-        )}
-        <div className={styles.profile}>
-          <Image
-            src="/images/profile-temp/profile.jpg"
-            alt="profile"
-            width={30}
-            height={30}
-            className={styles.profileImage}
-          />
-        </div>
-      </div>
+      <Logo />
+      <UserSection user={user} />
     </div>
   );
 }
