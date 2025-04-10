@@ -1,0 +1,16 @@
+.userSection {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.userInfo {
+  display: flex;
+  align-items: center;
+}
+
+.userName {
+  color: #fff;
+  font-size: 14px;
+  font-weight: 500;
+}
