@@ -48,27 +48,30 @@ const BestsellerRow: React.FC<BestsellerRowProps> = ({ novels }) => {
       cardWidth = firstCard.getBoundingClientRect().width + 16; // 16px는 간격
     }
 
-    // 3초마다 자동 스크롤
-    const interval = setInterval(() => {
-      if (scrollContainer) {
-        const maxScrollLeft =
-          scrollContainer.scrollWidth - scrollContainer.clientWidth;
+    // 스크롤 로직을 함수로 추출하여 중복 제거
+    const scrollToNextItem = () => {
+      if (!scrollContainer) return;
 
-        // 다음 스크롤 위치 계산
-        let nextScrollPosition = scrollContainer.scrollLeft + cardWidth;
+      const maxScrollLeft =
+        scrollContainer.scrollWidth - scrollContainer.clientWidth;
 
-        // 끝에 도달하면 처음으로 돌아가기
-        if (nextScrollPosition >= maxScrollLeft) {
-          nextScrollPosition = 0;
-        }
+      // 다음 스크롤 위치 계산
+      let nextScrollPosition = scrollContainer.scrollLeft + cardWidth;
 
-        // 부드러운 애니메이션으로 다음 위치로 스크롤
-        scrollContainer.scrollTo({
-          left: nextScrollPosition,
-          behavior: "smooth",
-        });
+      // 끝에 도달하면 처음으로 돌아가기
+      if (nextScrollPosition >= maxScrollLeft) {
+        nextScrollPosition = 0;
       }
-    }, 3000);
+
+      // 부드러운 애니메이션으로 다음 위치로 스크롤
+      scrollContainer.scrollTo({
+        left: nextScrollPosition,
+        behavior: "smooth",
+      });
+    };
+
+    // 3초마다 자동 스크롤
+    const interval = setInterval(scrollToNextItem, 3000);
 
     // 사용자가 캐러셀과 상호작용할 때 자동 스크롤 일시 중지
     const pauseAutoScroll = () => {
@@ -88,20 +91,7 @@ const BestsellerRow: React.FC<BestsellerRowProps> = ({ novels }) => {
       }
 
       // 새로운 인터벌 생성
-      const newInterval = setInterval(() => {
-        if (scrollContainer) {
-          const maxScrollLeft =
-            scrollContainer.scrollWidth - scrollContainer.clientWidth;
-          let nextScrollPosition = scrollContainer.scrollLeft + cardWidth;
-          if (nextScrollPosition >= maxScrollLeft) {
-            nextScrollPosition = 0;
-          }
-          scrollContainer.scrollTo({
-            left: nextScrollPosition,
-            behavior: "smooth",
-          });
-        }
-      }, 3000);
+      const newInterval = setInterval(scrollToNextItem, 3000);
 
       // 새 인터벌 ID를 타입이 지정된 변수에 저장
       scrollState.bestsellerAutoScrollInterval = newInterval;
