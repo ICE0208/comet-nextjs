@@ -1,36 +1,13 @@
-"use client";
+import { getCurrentUser } from "@/lib/auth";
+import { HeaderClient } from "./header-client";
 
-import Image from "next/image";
-import styles from "./styles.module.css";
-import { useScroll } from "@/hooks/useScroll";
+export default async function Header() {
+  // 현재 로그인된 사용자 정보 가져오기
+  // 서버 컴포넌트라 await으로 가져올 수 있다.
+  const user = await getCurrentUser();
 
-export default function Header() {
-  // 스크롤이 100px 이상 내려갔을 때 isBgDark 값이 true로 변경됨
-  // isBgDark 값이 true일 때 containerDark 클래스가 추가되어 배경색이 검은색으로 변경됨
-  const isBgDark = useScroll(100);
-
-  return (
-    <div
-      className={`${styles.container} ${isBgDark ? styles.containerDark : ""}`}
-    >
-      <div className={styles.logo}>
-        <Image
-          src="/images/header-logo.svg"
-          alt="logo"
-          width={159}
-          height={35}
-          style={{ width: "100%", height: "auto" }}
-        />
-      </div>
-      <div className={styles.profile}>
-        <Image
-          src="/images/profile-temp/profile.jpg"
-          alt="profile"
-          width={30}
-          height={30}
-          style={{ width: "100%", height: "100%", objectFit: "cover" }}
-        />
-      </div>
-    </div>
-  );
+  // 서버 컴포넌트(현재 컴포넌트)에서 가져온 user의 정보와 함께
+  // 클라이언트 컴포넌트인 HeaderClient로 넘겨준다.
+  // 실질적인 렌더링은 HeaderClient가 담당한다.
+  return <HeaderClient user={user} />;
 }
