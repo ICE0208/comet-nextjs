@@ -64,37 +64,57 @@ const BestsellerRow: React.FC<BestsellerRowProps> = ({ novels }) => {
     }, 3000);
 
     // 사용자가 캐러셀과 상호작용할 때 자동 스크롤 일시 중지
-    const handleInteraction = () => {
+    const pauseAutoScroll = () => {
       clearInterval(interval);
 
-      // 5초 동안 사용자 활동이 없으면 자동 스크롤 재개
-      const timeout = setTimeout(() => {
-        // 새로운 인터벌 생성
-        const newInterval = setInterval(() => {
-          if (scrollContainer) {
-            const maxScrollLeft =
-              scrollContainer.scrollWidth - scrollContainer.clientWidth;
-            let nextScrollPosition = scrollContainer.scrollLeft + cardWidth;
-            if (nextScrollPosition >= maxScrollLeft) {
-              nextScrollPosition = 0;
-            }
-            scrollContainer.scrollTo({
-              left: nextScrollPosition,
-              behavior: "smooth",
-            });
-          }
-        }, 3000);
-
-        // 새 인터벌 ID를 타입이 지정된 변수에 저장
-        scrollState.bestsellerAutoScrollInterval = newInterval;
-      }, 5000);
-
-      // 타임아웃 ID를 정리를 위해 저장
-      scrollState.bestsellerAutoScrollTimeout = timeout;
+      // 기존 타임아웃이 있다면 정리
+      if (scrollState.bestsellerAutoScrollTimeout) {
+        clearTimeout(scrollState.bestsellerAutoScrollTimeout);
+      }
+      if (scrollState.bestsellerAutoScrollInterval) {
+        clearInterval(scrollState.bestsellerAutoScrollInterval);
+      }
     };
 
-    scrollContainer.addEventListener("mousedown", handleInteraction);
-    scrollContainer.addEventListener("touchstart", handleInteraction);
+    // 자동 스크롤 재개
+    const resumeAutoScroll = () => {
+      // 기존 인터벌이나 타임아웃이 있다면 정리
+      if (scrollState.bestsellerAutoScrollInterval) {
+        clearInterval(scrollState.bestsellerAutoScrollInterval);
+      }
+
+      // 새로운 인터벌 생성
+      const newInterval = setInterval(() => {
+        if (scrollContainer) {
+          const maxScrollLeft =
+            scrollContainer.scrollWidth - scrollContainer.clientWidth;
+          let nextScrollPosition = scrollContainer.scrollLeft + cardWidth;
+          if (nextScrollPosition >= maxScrollLeft) {
+            nextScrollPosition = 0;
+          }
+          scrollContainer.scrollTo({
+            left: nextScrollPosition,
+            behavior: "smooth",
+          });
+        }
+      }, 3000);
+
+      // 새 인터벌 ID를 타입이 지정된 변수에 저장
+      scrollState.bestsellerAutoScrollInterval = newInterval;
+    };
+
+    // 마우스가 들어오면 자동 스크롤 멈춤
+    const handleMouseEnter = () => {
+      pauseAutoScroll();
+    };
+
+    // 마우스가 나가면 자동 스크롤 재개
+    const handleMouseLeave = () => {
+      resumeAutoScroll();
+    };
+
+    scrollContainer.addEventListener("mouseenter", handleMouseEnter);
+    scrollContainer.addEventListener("mouseleave", handleMouseLeave);
 
     // 컴포넌트 언마운트 시 이벤트 리스너와 인터벌 정리
     return () => {
@@ -105,8 +125,8 @@ const BestsellerRow: React.FC<BestsellerRowProps> = ({ novels }) => {
       if (scrollState.bestsellerAutoScrollInterval) {
         clearInterval(scrollState.bestsellerAutoScrollInterval);
       }
-      scrollContainer.removeEventListener("mousedown", handleInteraction);
-      scrollContainer.removeEventListener("touchstart", handleInteraction);
+      scrollContainer.removeEventListener("mouseenter", handleMouseEnter);
+      scrollContainer.removeEventListener("mouseleave", handleMouseLeave);
     };
   }, []);
 
