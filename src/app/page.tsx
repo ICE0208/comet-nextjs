@@ -2,13 +2,14 @@ import Image from "next/image";
 import styles from "./page.module.css";
 import IconMenu from "@/components/icon-menu";
 import NovelThumbnailList from "@/components/novel-thumbnail-list";
-import { getMainPageNovelData } from "./actions";
+import { getMainPageNovelData } from "@/app/actions";
+import Link from "next/link";
 
 export default async function Home() {
-  const mainPageNovelData = await getMainPageNovelData();
+  const novelData = await getMainPageNovelData();
 
   return (
-    <div>
+    <main>
       {/* 메인 이미지 */}
       <div className={styles.mainImage}>
         <Image
@@ -41,10 +42,12 @@ export default async function Home() {
           svgPath="/icons/write.svg"
           description="창작하기"
         />
-        <IconMenu
-          svgPath="/icons/book-open.svg"
-          description="소설"
-        />
+        <Link href={"/novel"}>
+          <IconMenu
+            svgPath="/icons/book-open.svg"
+            description="소설"
+          />
+        </Link>
         <IconMenu
           svgPath="/icons/question-circle.svg"
           description="FAQ"
@@ -55,16 +58,16 @@ export default async function Home() {
         {/* Top 10 */}
         <NovelThumbnailList
           title="TOP 10"
-          data={mainPageNovelData.top10}
+          data={novelData.top10}
         />
         <div style={{ marginBottom: "40px" }} />
         {/* 추천 */}
         <NovelThumbnailList
           title="추천"
-          data={mainPageNovelData.recommend}
+          data={novelData.recommend}
         />
         <div style={{ marginBottom: "360px" }} />
       </div>
-    </div>
+    </main>
   );
 }
