@@ -1,0 +1,79 @@
+{
+  "novels": [
+    {
+      "id": "1",
+      "title": "칼의 여왕",
+      "author": "김철검",
+      "like": false,
+      "description": "검술의 세계에서 최고가 되기 위한 한 여성의 불굴의 여정",
+      "thumbnail": "/images/novel-temp-thumbnail/n-1.png",
+      "episode": [
+        {
+          "title": "첫번째 검술대회",
+          "date": "2023-05-10",
+          "rating": 4.8
+        },
+        {
+          "title": "검의 비밀",
+          "date": "2023-06-15",
+          "rating": 4.9
+        },
+        {
+          "title": "여왕의 길",
+          "date": "2023-07-20",
+          "rating": 4.7
+        }
+      ]
+    },
+    {
+      "id": "2",
+      "title": "행복의 비밀",
+      "author": "이웃집작가",
+      "like": false,
+      "description": "평범한 소녀가 발견한 삶의 작은 기쁨들에 관한 감동 스토리",
+      "thumbnail": "/images/novel-temp-thumbnail/n-2.png",
+      "episode": [
+        {
+          "title": "우연한 만남",
+          "date": "2023-04-05",
+          "rating": 4.1
+        },
+        {
+          "title": "작은 행복",
+          "date": "2023-05-12",
+          "rating": 4.3
+        },
+        {
+          "title": "마음의 꽃",
+          "date": "2023-06-20",
+          "rating": 4.2
+        }
+      ]
+    },
+    {
+      "id": "3",
+      "title": "붉은 행성의 비밀",
+      "author": "우주탐험가",
+      "like": false,
+      "description": "화성에서 발견된 고대 문명의 흔적과 인류의 운명을 바꿀 발견",
+      "thumbnail": "/images/novel-temp-thumbnail/n-3.png",
+      "episode": [
+        {
+          "title": "화성 착륙",
+          "date": "2023-03-15",
+          "rating": 4.4
+        },
+        {
+          "title": "고대 유적",
+          "date": "2023-04-22",
+          "rating": 4.6
+        },
+        {
+          "title": "인류의 기원",
+          "date": "2023-05-30",
+          "rating": 4.5
+        }
+      ]
+    }
+  ]
+}
