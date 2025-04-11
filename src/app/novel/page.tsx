@@ -63,9 +63,6 @@ const NovelPage = () => {
     }
   }, [selectedCategory, novelData.novelAll]);
 
-  console.log(selectedCategory);
-  console.log(filtered);
-
   return (
     <div className={styles.container}>
       <div className={styles.header}>
