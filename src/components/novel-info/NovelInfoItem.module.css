@@ -1,0 +1,51 @@
+.episodeItem {
+  display: flex;
+  padding: 1rem 1.5rem;
+  border-radius: 0.8rem;
+  background-color: white;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+  transition: all 0.2s ease;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.episodeItem:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.12);
+}
+
+.episodeTitle {
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: #2c3e50;
+  margin-bottom: 0.5rem;
+}
+
+.episodeDate {
+  font-size: 0.85rem;
+  color: #7f8c8d;
+  margin-bottom: 0.5rem;
+}
+
+.episodeRating {
+  display: flex;
+  align-items: center;
+  font-size: 0.9rem;
+  color: #f39c12;
+  font-weight: 500;
+}
+
+.episodeRating::before {
+  content: "★";
+  margin-right: 0.3rem;
+}
+
+.episodeInfo {
+  flex: 1;
+}
+
+.episodeThumbnail {
+  border-radius: 8px;
+  object-fit: cover;
+  margin-right: 1rem;
+}

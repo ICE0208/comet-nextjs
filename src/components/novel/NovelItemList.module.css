@@ -31,40 +31,59 @@
 }
 
 .paginationButton {
-  padding: 0.5rem 1rem;
-  background-color: #f0f0f0;
-  border: 1px solid #ddd;
-  border-radius: 4px;
-  cursor: pointer;
   display: flex;
-  align-items: center;
   justify-content: center;
+  align-items: center;
+  width: 2.5rem;
+  height: 2.5rem;
+  border: 1px solid #eaeaea;
+  border-radius: 4px;
+  background-color: #fff;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.paginationButton:hover {
+  background-color: #f5f5f5;
 }
 
 .paginationButton:disabled {
-  background-color: #e0e0e0;
-  color: #888;
+  opacity: 0.5;
   cursor: not-allowed;
 }
 
 .pageNumber {
-  padding: 0.5rem 1rem;
-  background-color: #f0f0f0;
-  border: 1px solid #ddd;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 2.5rem;
+  height: 2.5rem;
+  border: 1px solid #eaeaea;
   border-radius: 4px;
+  background-color: #fff;
   cursor: pointer;
-  min-width: 2.5rem;
-  text-align: center;
+  transition: all 0.2s ease;
+}
+
+.pageNumber:hover {
+  background-color: #f5f5f5;
 }
 
 .activePage {
-  background-color: #4a90e2;
+  background-color: #333;
   color: white;
-  border-color: #4a90e2;
+  border: 1px solid #333;
+}
+
+.activePage:hover {
+  background-color: #444;
 }
 
 .pageInfo {
-  font-size: 1rem;
+  margin-top: 0.5rem;
+  text-align: center;
+  color: #666;
+  font-size: 0.9rem;
 }
 
 /* category */
