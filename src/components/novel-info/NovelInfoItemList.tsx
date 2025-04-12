@@ -30,7 +30,8 @@ const NovelInfoItemList = ({ novel }: Props) => {
   const [sortOrder, setSortOrder] = useState<"newest" | "oldest">("newest");
   const episodesPerPage = 5;
 
-  // Sort episodes based on the current sort order
+  /* 배열 필터링,정렬.. 무거운 계산.. useMemo로 메모이제이션해서,
+   리랜더링돼도 의존성배열 값이 안변하면 실행안하고, 캐싱된 return값 바로사용함 */
   const sortedEpisodes = React.useMemo(
     () =>
       [...novel.episode].sort((a, b) => {
@@ -45,30 +46,45 @@ const NovelInfoItemList = ({ novel }: Props) => {
   const totalEpisodes = sortedEpisodes.length;
   const totalPages = Math.ceil(totalEpisodes / episodesPerPage);
 
-  // Reset to first page when changing sort order
+  /* 정렬 눌렀을때 페이지 초기화 */
   const handleSortChange = (order: "newest" | "oldest") => {
     setSortOrder(order);
     setCurrentPage(1);
   };
 
-  // 현재 페이지에 표시할 에피소드 계산
-  const indexOfLastEpisode = currentPage * episodesPerPage;
-  const indexOfFirstEpisode = indexOfLastEpisode - episodesPerPage;
+  /* 현재 페이지에 표시할 에피소드 계산 */
+  const indexOfLastEpisode = currentPage * episodesPerPage; // 2페이지면 10
+  const indexOfFirstEpisode = indexOfLastEpisode - episodesPerPage; // 2페이지면 5
   const currentEpisodes = sortedEpisodes.slice(
     indexOfFirstEpisode,
     indexOfLastEpisode
-  );
+  ); // 정렬된 에피소드 배열에서 현재페이지에 해당하는 에피소드만 추출
 
-  // 페이지 변경 핸들러
+  /* 페이지 변경 */
   const handlePageChange = (pageNumber: number) => {
     setCurrentPage(pageNumber);
   };
 
-  // 페이지 번호 배열 생성
-  const pageNumbers = [];
-  for (let i = 1; i <= totalPages; i++) {
-    pageNumbers.push(i);
-  }
+  /* 페이지네이션 번호 생성 */
+  const getPageNumbers = () => {
+    const pageNumbers = [];
+
+    /* 현재페이지를 중앙에 표시 >>> 현재 페이지가 7이면 startPage는 5 */
+    let startPage = Math.max(1, currentPage - 2);
+    /* +4해서 총 5개의 페이지 보여줌 */
+    const endPage = Math.min(totalPages, startPage + 4);
+
+    // Adjust start page if end page is maxed out 모르겠다
+    if (endPage === totalPages) {
+      startPage = Math.max(1, endPage - 4);
+    }
+
+    for (let i = startPage; i <= endPage; i++) {
+      pageNumbers.push(i);
+    }
+
+    return pageNumbers;
+  };
 
   return (
     <div className={styles.episodeContainer}>
@@ -119,13 +135,11 @@ const NovelInfoItemList = ({ novel }: Props) => {
                 이전
               </button>
 
-              {pageNumbers.map((number) => (
+              {getPageNumbers().map((number) => (
                 <button
                   key={number}
                   onClick={() => handlePageChange(number)}
-                  className={`${styles.pageButton} ${
-                    currentPage === number ? styles.activePageButton : ""
-                  }`}
+                  className={`${styles.pageNumber} ${currentPage === number ? styles.activePage : ""}`}
                 >
                   {number}
                 </button>
