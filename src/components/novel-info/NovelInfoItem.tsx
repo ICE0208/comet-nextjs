@@ -7,7 +7,7 @@ interface Episode {
   title: string;
   date: string;
   rating: number;
-  thumbnail?: string; // 아직 thumbnail 없는애들도 있어서...
+  thumbnail?: string; // 아직 thumbnail 없는애들도 있어서... 일단 bualapha로 대체
 }
 
 const NovelInfoItem = ({ title, date, rating, thumbnail }: Episode) => (

@@ -1,4 +1,6 @@
 "use client";
+/* 처음에 page에서 작업했는데, use client 쓸라니깐 async 쓰고있어서 안된다함...
+그래서 컴포넌트 따로 만듬. */
 import React, { useState } from "react";
 import Image from "next/image";
 import styles from "./NovelInfo.module.css";
@@ -25,16 +27,14 @@ interface NovelInfoClientProps {
   novel: NovelInfoData | undefined;
 }
 
-// 클라이언트 컴포넌트로 UI 렌더링 및 상태 관리
 const NovelInfoClient = ({ novel }: NovelInfoClientProps) => {
   const [like, setLike] = useState(novel?.like || false);
 
   const handleClickLike = () => {
-    // const newLikeState = !like;
     setLike(!like);
 
     if (novel) {
-      novel.like = like; // 서버에 좋아요 상태 업데이트 요청을 보내는 로직 추가 필요
+      novel.like = like;
     }
   };
 
