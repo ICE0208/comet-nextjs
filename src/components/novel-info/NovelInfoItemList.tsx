@@ -8,7 +8,7 @@ interface NovelInfoData {
   id: string;
   title: string;
   author: string;
-  like: boolean;
+  like: number;
   description: string;
   thumbnail: string;
   episode: Episode[];

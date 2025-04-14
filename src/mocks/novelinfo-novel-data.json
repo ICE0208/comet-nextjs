@@ -4,7 +4,7 @@
       "id": "1",
       "title": "칼의 여왕",
       "author": "김철검",
-      "like": false,
+      "like": 0,
       "description": "검술의 세계에서 최고가 되기 위한 한 여성의 불굴의 여정",
       "thumbnail": "/images/novel-temp-thumbnail/n-1.png",
       "episode": [
@@ -259,7 +259,7 @@
       "id": "2",
       "title": "행복의 비밀",
       "author": "이웃집작가",
-      "like": false,
+      "like": 0,
       "description": "평범한 소녀가 발견한 삶의 작은 기쁨들에 관한 감동 스토리",
       "thumbnail": "/images/novel-temp-thumbnail/n-2.png",
       "episode": [
@@ -287,7 +287,7 @@
       "id": "3",
       "title": "붉은 행성의 비밀",
       "author": "우주탐험가",
-      "like": false,
+      "like": 0,
       "description": "화성에서 발견된 고대 문명의 흔적과 인류의 운명을 바꿀 발견",
       "thumbnail": "/images/novel-temp-thumbnail/n-3.png",
       "episode": [

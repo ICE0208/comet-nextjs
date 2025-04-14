@@ -1,6 +1,6 @@
 "use client";
 
-import { getNovelData } from "@/app/actions";
+import { getNovelData } from "./actions";
 import NovelItemList from "@/components/novel/NovelItemList";
 import BestsellerRow from "@/components/novel/BestsellerRow";
 import styles from "./page.module.css";

@@ -1,5 +1,5 @@
 import React from "react";
-import { getNovelInfoData } from "@/app/actions";
+import { getNovelInfoData } from "./actions";
 import NovelInfoItemList from "@/components/novel-info/NovelInfoItemList";
 import NovelInfo from "@/components/novel-info/NovelInfo";
 import styles from "./page.module.css";
@@ -18,7 +18,7 @@ interface NovelInfoData {
   id: string;
   title: string;
   author: string;
-  like: boolean;
+  like: number;
   description: string;
   thumbnail: string;
   episode: Episode[];
@@ -42,7 +42,7 @@ const NovelInfoPage = async ({ params }: Props) => {
   return (
     <main className={styles.container}>
       <NovelInfo novel={novel} />
-      {novel ? <NovelInfoItemList novel={novel} /> : null}
+      {novel && <NovelInfoItemList novel={novel} />}
     </main>
   );
 };

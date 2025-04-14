@@ -9,7 +9,7 @@ interface NovelInfoData {
   id: string;
   title: string;
   author: string;
-  like: boolean;
+  like: number;
   description: string;
   thumbnail: string;
   episode: Episode[];
@@ -28,14 +28,10 @@ interface NovelInfoClientProps {
 }
 
 const NovelInfoClient = ({ novel }: NovelInfoClientProps) => {
-  const [like, setLike] = useState(novel?.like || false);
+  const [like, setLike] = useState(novel?.like || 0);
 
   const handleClickLike = () => {
-    setLike(!like);
-
-    if (novel) {
-      novel.like = like;
-    }
+    setLike(like + 1);
   };
 
   return (
@@ -60,7 +56,7 @@ const NovelInfoClient = ({ novel }: NovelInfoClientProps) => {
                 className={styles.like}
                 onClick={handleClickLike}
               >
-                {novel.like ? "❤️" : "🤍"}
+                {novel.like}
               </p>
             </div>
             <p className={styles.description}>{novel.description}</p>

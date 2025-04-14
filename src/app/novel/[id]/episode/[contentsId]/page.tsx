@@ -3,7 +3,7 @@
 import React, { useState, useEffect, use } from "react";
 import styles from "./page.module.css";
 import NovelContents from "@/components/novel-contents/NovelContents";
-import { getNovelContentsData } from "@/app/actions";
+import { getNovelContentsData } from "./actions";
 import NovelComment from "@/components/novel-contents/NovelComment";
 
 type Props = {
@@ -26,9 +26,7 @@ interface Episode {
 
 const NovelContentsPage = ({ params }: Props) => {
   // params를 React.use()를 사용하여 언래핑
-  const unwrappedParams = use(params);
-  const { contentsId } = unwrappedParams;
-
+  const { contentsId } = use(params);
   const [currentEpisodeId, setCurrentEpisodeId] = useState(contentsId);
   const [novelContents, setNovelContents] = useState<NovelContentsData | null>(
     null
