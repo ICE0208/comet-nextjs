@@ -1,0 +1,9 @@
+.container {
+  margin: 80px auto;
+  min-height: 100vh;
+}
+.ioComponents {
+  display: flex;
+  justify-content: center;
+  gap: 32px;
+}
