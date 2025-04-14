@@ -34,10 +34,12 @@ export default async function Home() {
       </div>
       {/* 카테고리 */}
       <div className={styles.categoryContainer}>
-        <IconMenu
-          svgPath="/icons/magic.svg"
-          description="교열"
-        />
+        <Link href={"/prompt"}>
+          <IconMenu
+            svgPath="/icons/magic.svg"
+            description="교열"
+          />
+        </Link>
         <IconMenu
           svgPath="/icons/write.svg"
           description="창작하기"
