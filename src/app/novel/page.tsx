@@ -1,6 +1,6 @@
 "use client";
 
-import { getNovelData } from "@/app/actions";
+import { getNovelData } from "./actions";
 import NovelItemList from "@/components/novel/NovelItemList";
 import BestsellerRow from "@/components/novel/BestsellerRow";
 import styles from "./page.module.css";
@@ -62,9 +62,6 @@ const NovelPage = () => {
       );
     }
   }, [selectedCategory, novelData.novelAll]);
-
-  console.log(selectedCategory);
-  console.log(filtered);
 
   return (
     <div className={styles.container}>
