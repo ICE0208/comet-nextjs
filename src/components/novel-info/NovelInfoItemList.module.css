@@ -114,13 +114,13 @@
   background-color: #f5f5f5;
 }
 
-.activePageButton {
+.activePage {
   background-color: #333;
   color: white;
   border: 1px solid #333;
 }
 
-.activePageButton:hover {
+.activePage:hover {
   background-color: #444;
 }
 
