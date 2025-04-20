@@ -1,9 +1,23 @@
 .container {
-  margin: 80px auto;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 2rem;
   min-height: 100vh;
 }
+
 .ioComponents {
   display: flex;
-  justify-content: center;
-  gap: 32px;
+  flex-direction: row;
+  gap: 2rem;
+  width: 100%;
+  max-width: 1600px;
+  height: calc(100vh - 6rem);
+  margin-top: 40px;
+}
+
+.ioComponents>* {
+  flex: 1;
+  min-width: 0;
+  height: 100%;
 }

@@ -1,10 +1,27 @@
 .container {
   display: flex;
   flex-direction: column;
-  gap: 16px;
+  gap: 1.5rem;
+  background-color: white;
+  padding: 1.5rem;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  height: 100%;
 }
-.outputContainer {
-  width: 800px;
-  height: 600px;
-  border: 1px solid #ccc;
+
+.output {
+  height: calc(100% - 120px);
+  padding: 1rem;
+  border: 1px solid #e0e0e0;
+  border-radius: 4px;
+  font-size: 1rem;
+  line-height: 1.5;
+  white-space: pre-wrap;
+  overflow-y: auto;
+}
+
+.summaryContainer {
+  border-top: 1px solid #e0e0e0;
+  padding-top: 1.5rem;
+  margin-top: auto;
 }
