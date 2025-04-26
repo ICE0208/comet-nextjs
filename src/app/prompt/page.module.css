@@ -4,6 +4,7 @@
   align-items: center;
   padding: 2rem;
   min-height: 100vh;
+  gap: 1rem;
 }
 
 .ioComponents {
@@ -16,7 +17,7 @@
   margin-top: 40px;
 }
 
-.ioComponents>* {
+.ioComponents > * {
   flex: 1;
   min-width: 0;
   height: 100%;
