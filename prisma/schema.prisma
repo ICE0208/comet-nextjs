@@ -20,3 +20,21 @@ model User {
   email        String @unique
   hashPassword String
 }
+
+model Prompt {
+  id        Int            @id @default(autoincrement())
+  text      String
+  createdAt DateTime       @default(now())
+  options   PromptOption[]
+}
+
+model PromptOption {
+  id         Int     @id @default(autoincrement())
+  optionId   String
+  optionName String
+  isSelected Boolean @default(false)
+  prompt     Prompt  @relation(fields: [promptId], references: [id], onDelete: Cascade)
+  promptId   Int
+
+  @@unique([promptId, optionId])
+}

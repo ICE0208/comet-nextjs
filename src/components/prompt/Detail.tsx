@@ -5,6 +5,7 @@ import styles from "./Detail.module.css";
 const Detail = () => {
   const [activeMenu, setActiveMenu] = useState("introduction");
 
+  // checkbox item 으로 변경
   const menuItems = [
     { id: "introduction", name: "소개" },
     { id: "usage", name: "사용 방법" },

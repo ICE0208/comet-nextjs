@@ -4,24 +4,34 @@ import styles from "./PromptInput.module.css";
 
 const PromptInput = () => {
   const [text, setText] = useState<string>("");
-  const [selectedCheckboxes, setSelectedCheckboxes] = useState<string[]>([]);
+  const [checkboxOptions, setCheckboxOptions] = useState([
+    { id: "checkbox1", name: "문법 교정", state: false },
+    { id: "checkbox2", name: "맞춤법 교정", state: false },
+    { id: "checkbox3", name: "가독성 향상", state: false },
+    { id: "checkbox4", name: "문체 개선", state: false },
+    { id: "checkbox5", name: "일관성 유지", state: false },
+  ]);
 
   const handleTextareaChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
     setText(e.target.value);
   };
 
   const handleCheckboxChange = (id: string) => {
-    setSelectedCheckboxes((prev: string[]) =>
-      prev.includes(id)
-        ? prev.filter((checkboxId) => checkboxId !== id)
-        : [...prev, id]
+    setCheckboxOptions((prevOptions) =>
+      prevOptions.map((option) =>
+        option.id === id ? { ...option, state: !option.state } : option
+      )
     );
   };
 
   const handleSubmit = async () => {
+    const selectedOptions = checkboxOptions
+      .filter((option) => option.state)
+      .map((option) => option.id);
+
     const data = {
       text,
-      selectedCheckboxes,
+      selectedOptions,
     };
 
     try {
@@ -55,23 +65,23 @@ const PromptInput = () => {
       />
       <div className={styles.checkboxContainer}>
         <div className={styles.checkboxOptionsGroup}>
-          {["checkbox1", "checkbox2", "checkbox3"].map((option) => (
+          {checkboxOptions.map((option) => (
             <div
-              key={option}
+              key={option.id}
               className={styles.checkboxWrapper}
             >
               <input
                 type="checkbox"
-                id={option}
+                id={option.id}
                 className={styles.checkbox}
-                checked={selectedCheckboxes.includes(option)}
-                onChange={() => handleCheckboxChange(option)}
+                checked={option.state}
+                onChange={() => handleCheckboxChange(option.id)}
               />
               <label
-                htmlFor={option}
+                htmlFor={option.id}
                 className={styles.checkboxLabel}
               >
-                {option}
+                {option.name}
               </label>
             </div>
           ))}
