@@ -2,7 +2,11 @@
 import React, { useState } from "react";
 import styles from "./PromptInput.module.css";
 
-const PromptInput = () => {
+interface PromptInputProps {
+  onSubmitSuccess?: () => void;
+}
+
+const PromptInput = ({ onSubmitSuccess }: PromptInputProps) => {
   const [text, setText] = useState<string>("");
   const [checkboxOptions, setCheckboxOptions] = useState([
     { id: "checkbox1", name: "문법 교정", state: false },
@@ -47,7 +51,10 @@ const PromptInput = () => {
         throw new Error("Failed to submit data");
       }
 
-      alert("Data submitted successfully!");
+      // alert("Data submitted successfully!");
+      if (onSubmitSuccess) {
+        onSubmitSuccess();
+      }
     } catch {
       alert("An error occurred while submitting data.");
     }

@@ -2,6 +2,10 @@
 import React, { useEffect, useState } from "react";
 import styles from "./PromptOutput.module.css";
 
+interface PromptOutputProps {
+  refreshTrigger?: number;
+}
+
 type PromptOptionType = {
   id: number;
   optionId: string;
@@ -16,7 +20,7 @@ type PromptType = {
   options: PromptOptionType[];
 };
 
-const PromptOutput = () => {
+const PromptOutput = ({ refreshTrigger = 0 }: PromptOutputProps) => {
   const [latestPrompt, setLatestPrompt] = useState<PromptType | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -44,10 +48,9 @@ const PromptOutput = () => {
     fetchLatestPrompt();
 
     // 30초마다 최신 데이터 갱신
-    const intervalId = setInterval(fetchLatestPrompt, 30000);
-
-    return () => clearInterval(intervalId);
-  }, []);
+    // const intervalId = setInterval(fetchLatestPrompt, 30000);
+    // return () => clearInterval(intervalId);
+  }, [refreshTrigger]);
 
   return (
     <div className={styles.container}>
