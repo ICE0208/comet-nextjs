@@ -6,7 +6,7 @@ import PromptInput from "@/components/prompt/PromptInput";
 import PromptOutput from "@/components/prompt/PromptOutput";
 import Detail from "@/components/prompt/Detail";
 
-const Page = () => {
+const PromptPage = () => {
   const [submitCount, setSubmitCount] = useState(0);
 
   // 제출 시 호출될 함수
@@ -25,4 +25,4 @@ const Page = () => {
   );
 };
 
-export default Page;
+export default PromptPage;

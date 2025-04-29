@@ -46,10 +46,6 @@ const PromptOutput = ({ refreshTrigger = 0 }: PromptOutputProps) => {
     };
 
     fetchLatestPrompt();
-
-    // 30초마다 최신 데이터 갱신
-    // const intervalId = setInterval(fetchLatestPrompt, 30000);
-    // return () => clearInterval(intervalId);
   }, [refreshTrigger]);
 
   return (
