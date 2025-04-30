@@ -13,7 +13,7 @@ const __dirname = path.dirname(__filename);
 const compat = new FlatCompat({
   baseDirectory: __dirname,
   recommendedConfig: js.configs.recommended,
-  allConfig: js.configs.all
+  allConfig: js.configs.all,
 });
 
 export default defineConfig([
@@ -27,7 +27,7 @@ export default defineConfig([
     plugins: {
       prettier,
       "@typescript-eslint": typescriptEslint,
-      react
+      react,
     },
 
     languageOptions: {
@@ -39,15 +39,15 @@ export default defineConfig([
         project: ["tsconfig.json"],
 
         ecmaFeatures: {
-          jsx: true
-        }
-      }
+          jsx: true,
+        },
+      },
     },
 
     rules: {
       "prettier/prettier": "error",
       "no-console": "warn",
-      "no-unused-vars": "error",
+      "@typescript-eslint/no-unused-vars": "error",
       "prefer-const": "error",
       "arrow-body-style": ["error", "as-needed"],
       "object-shorthand": "error",
@@ -55,7 +55,7 @@ export default defineConfig([
       "no-nested-ternary": "error",
       "react/jsx-pascal-case": "error",
       "react/self-closing-comp": "error",
-      "react/jsx-no-useless-fragment": "error"
-    }
-  }
+      "react/jsx-no-useless-fragment": "error",
+    },
+  },
 ]);
