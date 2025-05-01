@@ -69,13 +69,13 @@ export default function ProfilePage() {
                 <div className={styles.followerInfo}>
                   <button className={styles.followerItem}>
                     <span className={styles.followerCount}>
-                      {profileInfo?.followCount.follower ?? "--"}
+                      {profileInfo?.followCount.following ?? "--"}
                     </span>
                     <span className={styles.followerLabel}>팔로워</span>
                   </button>
                   <button className={styles.followerItem}>
                     <span className={styles.followerCount}>
-                      {profileInfo?.followCount.following ?? "--"}
+                      {profileInfo?.followCount.follower ?? "--"}
                     </span>
                     <span className={styles.followerLabel}>팔로잉</span>
                   </button>
