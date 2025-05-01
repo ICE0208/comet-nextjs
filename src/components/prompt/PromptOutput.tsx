@@ -1,14 +1,13 @@
 "use client";
 import React, { useEffect } from "react";
 import styles from "./PromptOutput.module.css";
-import { usePromptStore } from "@/store/store"; // Zustand 스토어 가져오기
+import { usePromptStore } from "@/store/promptStore"; // Zustand 스토어 가져오기
 
 interface PromptOutputProps {
   refreshTrigger?: number;
 }
 
 const PromptOutput = ({ refreshTrigger = 0 }: PromptOutputProps) => {
-  // Zustand 스토어에서 필요한 상태와 액션 가져오기
   const outputData = usePromptStore((state) => state.outputData);
   const isLoading = usePromptStore((state) => state.isLoading);
   const error = usePromptStore((state) => state.error);

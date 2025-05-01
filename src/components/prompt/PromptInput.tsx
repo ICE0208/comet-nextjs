@@ -20,6 +20,7 @@ const PromptInput = ({ onSubmitSuccess }: PromptInputProps) => {
     setText(e.target.value);
   };
 
+  // 활성화된 체크박스 추출 함수
   const handleCheckboxChange = (id: string) => {
     setCheckboxOptions((prevOptions) =>
       prevOptions.map((option) =>
@@ -51,7 +52,7 @@ const PromptInput = ({ onSubmitSuccess }: PromptInputProps) => {
         throw new Error("Failed to submit data");
       }
 
-      // alert("Data submitted successfully!");
+      // app/prompt/page.tsx에서 전달된 함수 호출
       if (onSubmitSuccess) {
         onSubmitSuccess();
       }

@@ -20,7 +20,6 @@ interface PromptState {
   error: string | null;
 }
 
-//여기 린트에러 도무지 모르겠네..
 interface Actions {
   actions: {
     setOutputData: (data: OutputData) => void;
@@ -29,15 +28,15 @@ interface Actions {
   };
 }
 
+// 초기값
 const initialState: PromptState = {
   outputData: null,
   isLoading: false,
   error: null,
 };
 
-// Zustand 스토어 생성
+// 스토어 생성
 export const usePromptStore = create<PromptState & Actions>((set) => ({
-  // 출력 데이터 초기값
   ...initialState,
 
   actions: {

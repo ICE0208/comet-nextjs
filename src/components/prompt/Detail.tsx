@@ -1,13 +1,13 @@
 "use client";
 import React, { useState } from "react";
 import styles from "./Detail.module.css";
-import { usePromptStore } from "@/store/store"; // Zustand 스토어 가져오기
+import { usePromptStore } from "@/store/promptStore";
 
 const Detail = () => {
   const [activeMenu, setActiveMenu] = useState("introduction");
   const outputData = usePromptStore((state) => state.outputData);
 
-  // checkbox item 으로 변경
+  // options 추출
   const menuItems =
     outputData?.options.map((option) => ({
       id: option.optionId,
