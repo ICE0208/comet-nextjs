@@ -1,9 +1,8 @@
 .container {
   display: flex;
   flex-direction: column;
-  gap: 1.5rem;
   background-color: white;
-  padding: 2rem;
+  padding: 2rem 2rem 0 2rem;
   border-radius: 12px;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
   height: 100%;
@@ -12,10 +11,11 @@
 
 .textarea {
   width: 100%;
-  height: calc(100% - 120px);
+  height: calc(100% - 80px);
   padding: 1.25rem;
   border: 1px solid #e0e0e0;
   border-radius: 8px;
+  background-color: #fdfdfd;
   resize: none;
   font-size: 1rem;
   line-height: 1.6;
@@ -36,8 +36,6 @@
   flex-wrap: wrap;
   align-items: center;
   gap: 1.5rem;
-  margin-top: auto;
-  border-top: 1px solid #eaeaea;
   padding-top: 1.5rem;
   justify-content: space-between;
 }
