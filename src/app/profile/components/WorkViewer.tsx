@@ -21,7 +21,7 @@ export const WorkViewer = ({ activeTab, novelLibrary }: WorkViewerProps) => {
 
     return (
       <div className={styles.worksList}>
-        {novelLibrary?.novels.map((n) => (
+        {novelLibrary.novels.map((n) => (
           <Link
             href={`/novel/${n.id}`}
             key={n.id}
@@ -53,7 +53,13 @@ export const WorkViewer = ({ activeTab, novelLibrary }: WorkViewerProps) => {
                 </div>
                 <div className={styles.workMetaItem}>
                   <CalendarIcon className={styles.icon} />
-                  <span>출판 {n.createdAt.toISOString().slice(0, 7)}</span>
+                  <span>
+                    출판{" "}
+                    {new Intl.DateTimeFormat("ko", {
+                      year: "numeric",
+                      month: "long",
+                    }).format(new Date(n.createdAt))}
+                  </span>
                 </div>
               </div>
             </div>
@@ -68,7 +74,7 @@ export const WorkViewer = ({ activeTab, novelLibrary }: WorkViewerProps) => {
 
     return (
       <div className={styles.likedGrid}>
-        {novelLibrary?.novelLikes.map((n) => (
+        {novelLibrary.novelLikes.map((n) => (
           <Link
             href={`/novel/${n.novelId}`}
             key={n.novelId}
