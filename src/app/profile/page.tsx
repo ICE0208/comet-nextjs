@@ -1,132 +1,32 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import styles from "./page.module.css";
+import { novelLibraryAction, profileInfoAction } from "./actions";
+
+type ProfileInfo = Awaited<ReturnType<typeof profileInfoAction>>;
+type NovelLibrary = Awaited<ReturnType<typeof novelLibraryAction>>;
 
 export default function ProfilePage() {
   const [activeTab, setActiveTab] = useState<"works" | "liked">("works");
 
-  const [user] = useState({
-    id: "1",
-    name: "알렉스 존슨",
-    email: "user@example.com",
-    joinDate: "2025년 3월 15일",
-    location: "서울, 대한민국",
-    about:
-      "몰입감 있는 미스터리 소설을 창작하는 수상 경력의 작가입니다. " +
-      "제 작품은 인간 심리의 깊이와 우리의 삶을 형성하는 예상치 못한 연결을 탐구합니다.",
-  });
+  const [profileInfo, setProfileInfo] = useState<ProfileInfo | null>(null);
+  const [novelLibrary, setNovelLibrary] = useState<NovelLibrary | null>(null);
 
-  const [stats] = useState({
-    publications: 24,
-    readers: 12400,
-    reviews: 342,
-    rating: 4.8,
-  });
+  useEffect(() => {
+    const fetchData = async () => {
+      const [profile, library] = await Promise.all([
+        profileInfoAction(),
+        novelLibraryAction(),
+      ]);
+      setProfileInfo(profile);
+      setNovelLibrary(library);
+    };
 
-  const [myNovels] = useState([
-    {
-      id: "1",
-      title: "고요한 메아리: 1권",
-      coverImage: "/images/novel-temp-thumbnail/n-1.png",
-      date: "2025-03-10",
-      description:
-        "인간 관계의 신비와 과거 결정의 메아리에 관한 흥미로운 이야기입니다. " +
-        "이 권에서는 주인공 사라 웰스가 가족의 비밀을 밝히는 여정을 탐험합니다.",
-      reviews: 20,
-      readers: 470,
-      publishedYear: 2023,
-    },
-    {
-      id: "2",
-      title: "고요한 메아리: 2권",
-      coverImage: "/images/novel-temp-thumbnail/n-2.png",
-      date: "2025-02-22",
-      description:
-        "인간 관계의 신비와 과거 결정의 메아리에 관한 흥미로운 이야기입니다. " +
-        "이 권에서는 주인공 사라 웰스가 가족의 비밀을 밝히는 여정을 탐험합니다.",
-      reviews: 28,
-      readers: 520,
-      publishedYear: 2022,
-    },
-    {
-      id: "3",
-      title: "고요한 메아리: 3권",
-      coverImage: "/images/novel-temp-thumbnail/n-3.png",
-      date: "2025-01-15",
-      description:
-        "인간 관계의 신비와 과거 결정의 메아리에 관한 흥미로운 이야기입니다. " +
-        "이 권에서는 주인공 사라 웰스가 가족의 비밀을 밝히는 여정을 탐험합니다.",
-      reviews: 36,
-      readers: 580,
-      publishedYear: 2021,
-    },
-    {
-      id: "4",
-      title: "고요한 메아리: 4권",
-      coverImage: "/images/novel-temp-thumbnail/n-4.png",
-      date: "2024-12-30",
-      description:
-        "인간 관계의 신비와 과거 결정의 메아리에 관한 흥미로운 이야기입니다. " +
-        "이 권에서는 주인공 사라 웰스가 가족의 비밀을 밝히는 여정을 탐험합니다.",
-      reviews: 44,
-      readers: 620,
-      publishedYear: 2020,
-    },
-    {
-      id: "5",
-      title: "고요한 메아리: 5권",
-      coverImage: "/images/novel-temp-thumbnail/n-5.png",
-      date: "2024-11-18",
-      description:
-        "인간 관계의 신비와 과거 결정의 메아리에 관한 흥미로운 이야기입니다. " +
-        "이 권에서는 주인공 사라 웰스가 가족의 비밀을 밝히는 여정을 탐험합니다.",
-      reviews: 52,
-      readers: 670,
-      publishedYear: 2019,
-    },
-  ]);
-
-  const [likedNovels] = useState([
-    {
-      id: "6",
-      title: "달빛 소나타",
-      coverImage: "/images/novel-temp-thumbnail/n-6.png",
-      author: "저자 이름 1",
-    },
-    {
-      id: "7",
-      title: "밤하늘의 별들",
-      coverImage: "/images/novel-temp-thumbnail/n-7.png",
-      author: "저자 이름 2",
-    },
-    {
-      id: "8",
-      title: "꿈속의 여행자",
-      coverImage: "/images/novel-temp-thumbnail/n-8.png",
-      author: "저자 이름 3",
-    },
-    {
-      id: "9",
-      title: "겨울의 속삭임",
-      coverImage: "/images/novel-temp-thumbnail/n-9.png",
-      author: "저자 이름 4",
-    },
-    {
-      id: "10",
-      title: "봄날의 기억",
-      coverImage: "/images/novel-temp-thumbnail/n-10.png",
-      author: "저자 이름 5",
-    },
-    {
-      id: "11",
-      title: "이야기꾼의 시간",
-      coverImage: "/images/novel-temp-thumbnail/n-11.png",
-      author: "저자 이름 6",
-    },
-  ]);
+    fetchData();
+  }, []);
 
   return (
     <div className="min-h-screen bg-slate-50">
@@ -135,7 +35,7 @@ export default function ProfilePage() {
         <div className="absolute -bottom-16 left-8">
           <Image
             src="/images/profile-temp/profile.jpg"
-            alt={user.name}
+            alt={profileInfo?.userId ?? "----"}
             width={120}
             height={120}
             className={styles.profileImage}
@@ -151,10 +51,12 @@ export default function ProfilePage() {
           <div className="space-y-6">
             <div className={styles.profileCard}>
               <div>
-                <h1 className={styles.profileName}>{user.name}</h1>
+                <h1 className={styles.profileName}>
+                  {profileInfo?.userId ?? "----"}
+                </h1>
                 <div className={styles.profileLocation}>
                   <MapIcon className={styles.icon} />
-                  <span>{user.location}</span>
+                  <span>{profileInfo?.location ?? "------"}</span>
                 </div>
                 <div className={styles.badgeContainer}>
                   <span className={`${styles.badge} ${styles.badgePrimary}`}>
@@ -166,11 +68,15 @@ export default function ProfilePage() {
                 </div>
                 <div className={styles.followerInfo}>
                   <button className={styles.followerItem}>
-                    <span className={styles.followerCount}>8.2k</span>
+                    <span className={styles.followerCount}>
+                      {profileInfo?.followCount.follower ?? "--"}
+                    </span>
                     <span className={styles.followerLabel}>팔로워</span>
                   </button>
                   <button className={styles.followerItem}>
-                    <span className={styles.followerCount}>156</span>
+                    <span className={styles.followerCount}>
+                      {profileInfo?.followCount.following ?? "--"}
+                    </span>
                     <span className={styles.followerLabel}>팔로잉</span>
                   </button>
                 </div>
@@ -180,7 +86,9 @@ export default function ProfilePage() {
 
               <div>
                 <h2 className={styles.cardTitle}>소개</h2>
-                <p className={styles.aboutText}>{user.about}</p>
+                <p className={styles.aboutText}>
+                  {profileInfo?.about ?? "-".repeat(150)}
+                </p>
               </div>
 
               <div className={styles.divider} />
@@ -190,21 +98,27 @@ export default function ProfilePage() {
                 <div className={styles.statsGrid}>
                   <div className={styles.statItem}>
                     <div className={styles.statLabel}>작품</div>
-                    <div className={styles.statValue}>{stats.publications}</div>
+                    <div className={styles.statValue}>
+                      {profileInfo?.stats.novelCount ?? "--"}
+                    </div>
                   </div>
                   <div className={styles.statItem}>
                     <div className={styles.statLabel}>독자</div>
                     <div className={styles.statValue}>
-                      {(stats.readers / 1000).toFixed(1)}k
+                      {profileInfo?.stats.readerCount ?? "--"}
                     </div>
                   </div>
                   <div className={styles.statItem}>
                     <div className={styles.statLabel}>리뷰</div>
-                    <div className={styles.statValue}>{stats.reviews}</div>
+                    <div className={styles.statValue}>
+                      {profileInfo?.stats.reviewCount ?? "--"}
+                    </div>
                   </div>
                   <div className={styles.statItem}>
                     <div className={styles.statLabel}>평점</div>
-                    <div className={styles.statValue}>{stats.rating}</div>
+                    <div className={styles.statValue}>
+                      {profileInfo?.stats.averageRating ?? "--"}
+                    </div>
                   </div>
                 </div>
               </div>
@@ -259,17 +173,17 @@ export default function ProfilePage() {
 
             {activeTab === "works" ? (
               <div className={styles.worksList}>
-                {myNovels.map((novel) => (
+                {novelLibrary?.novels.map((n) => (
                   <Link
-                    href={`/novel/${novel.id}`}
-                    key={novel.id}
+                    href={`/novel/${n.id}`}
+                    key={n.id}
                     className={styles.workItem}
                     style={{ textDecoration: "none" }} // 인라인 스타일로 밑줄 제거 추가
                   >
                     <div className={styles.workCover}>
                       <Image
-                        src={novel.coverImage}
-                        alt={novel.title}
+                        src={n.imageUrl}
+                        alt={n.title}
                         width={80}
                         height={120}
                         className="h-full w-full object-cover"
@@ -277,23 +191,25 @@ export default function ProfilePage() {
                     </div>
                     <div className={styles.workInfo}>
                       <div>
-                        <h3 className={styles.workTitle}>{novel.title}</h3>
+                        <h3 className={styles.workTitle}>{n.title}</h3>
                         <p className={styles.workDescription}>
-                          {novel.description}
+                          {n.description}
                         </p>
                       </div>
                       <div className={styles.workMeta}>
                         <div className={styles.workMetaItem}>
                           <MessageIcon className={styles.icon} />
-                          <span>{novel.reviews} 리뷰</span>
+                          <span>-- 리뷰</span>
                         </div>
                         <div className={styles.workMetaItem}>
                           <UsersIcon className={styles.icon} />
-                          <span>{novel.readers} 독자</span>
+                          <span>-- 독자</span>
                         </div>
                         <div className={styles.workMetaItem}>
                           <CalendarIcon className={styles.icon} />
-                          <span>출판 {novel.publishedYear}</span>
+                          <span>
+                            출판 {n.createdAt.toISOString().slice(0, 7)}
+                          </span>
                         </div>
                       </div>
                     </div>
@@ -302,24 +218,26 @@ export default function ProfilePage() {
               </div>
             ) : (
               <div className={styles.likedGrid}>
-                {likedNovels.map((novel) => (
+                {novelLibrary?.novelLikes.map((n) => (
                   <Link
-                    href={`/novel/${novel.id}`}
-                    key={novel.id}
+                    href={`/novel/${n.novelId}`}
+                    key={n.novelId}
                     className={styles.likedItem}
                     style={{ textDecoration: "none" }} // 인라인 스타일로 밑줄 제거 추가
                   >
                     <div className={styles.likedCover}>
                       <Image
-                        src={novel.coverImage}
-                        alt={novel.title}
+                        src={n.novel.imageUrl}
+                        alt={n.novel.title}
                         fill
                         sizes="(max-width: 768px) 50vw, (max-width: 1200px) 30vw, 20vw"
                         className="object-cover"
                       />
                     </div>
-                    <h3 className={styles.likedTitle}>{novel.title}</h3>
-                    <p className={styles.likedAuthor}>저자: {novel.author}</p>
+                    <h3 className={styles.likedTitle}>{n.novel.title}</h3>
+                    <p className={styles.likedAuthor}>
+                      저자: {n.novel.author.userId}
+                    </p>
                   </Link>
                 ))}
               </div>
