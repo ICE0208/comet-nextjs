@@ -1,0 +1,90 @@
+.container {
+  display: flex;
+  flex-direction: column;
+  background-color: white;
+  padding: 2rem 2rem 0 2rem;
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+  height: 100%;
+  transition: all 0.2s ease;
+}
+
+.textarea {
+  width: 100%;
+  height: calc(100% - 80px);
+  padding: 1.25rem;
+  border: 1px solid #e0e0e0;
+  border-radius: 8px;
+  background-color: #fdfdfd;
+  resize: none;
+  font-size: 1rem;
+  line-height: 1.6;
+  white-space: pre-wrap;
+  overflow-y: auto;
+  transition: all 0.2s ease;
+  font-family: inherit;
+}
+
+.textarea:focus {
+  outline: none;
+  border-color: #4a90e2;
+  box-shadow: 0 0 0 3px rgba(74, 144, 226, 0.15);
+}
+
+.checkboxContainer {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 1.5rem;
+  padding-top: 1.5rem;
+  justify-content: space-between;
+}
+
+.checkboxWrapper {
+  display: flex;
+  align-items: center;
+  gap: 0.25rem;
+}
+
+.checkboxLabel {
+  font-size: 0.95rem;
+  font-weight: 500;
+  color: #444;
+  user-select: none;
+}
+
+.checkbox {
+  width: 18px;
+  height: 18px;
+  cursor: pointer;
+  accent-color: #4a90e2;
+}
+
+.submitButton {
+  background-color: #4a90e2;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  padding: 0.75rem 1.5rem;
+  font-size: 0.95rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  box-shadow: 0 2px 6px rgba(74, 144, 226, 0.25);
+  margin-left: auto;
+}
+
+.submitButton:hover {
+  background-color: #3a80d2;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 8px rgba(74, 144, 226, 0.3);
+}
+
+.submitButton:active {
+  transform: translateY(0);
+}
+
+.checkboxOptionsGroup {
+  display: flex;
+  gap: 1.5rem;
+}
