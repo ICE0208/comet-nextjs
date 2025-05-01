@@ -1,12 +1,9 @@
 "use client";
 import React, { useState } from "react";
 import styles from "./PromptInput.module.css";
+import { usePromptStore } from "@/store/promptStore";
 
-interface PromptInputProps {
-  onSubmitSuccess?: () => void;
-}
-
-const PromptInput = ({ onSubmitSuccess }: PromptInputProps) => {
+const PromptInput = () => {
   const [text, setText] = useState<string>("");
   const [checkboxOptions, setCheckboxOptions] = useState([
     { id: "checkbox1", name: "문법 교정", state: false },
@@ -15,6 +12,7 @@ const PromptInput = ({ onSubmitSuccess }: PromptInputProps) => {
     { id: "checkbox4", name: "문체 개선", state: false },
     { id: "checkbox5", name: "일관성 유지", state: false },
   ]);
+  const setOutputData = usePromptStore((state) => state.actions.setOutputData);
 
   const handleTextareaChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
     setText(e.target.value);
@@ -48,13 +46,11 @@ const PromptInput = ({ onSubmitSuccess }: PromptInputProps) => {
         body: JSON.stringify(data),
       });
 
+      const result = await response.json();
+      setOutputData(result.prompt);
+
       if (!response.ok) {
         throw new Error("Failed to submit data");
-      }
-
-      // app/prompt/page.tsx에서 전달된 함수 호출
-      if (onSubmitSuccess) {
-        onSubmitSuccess();
       }
     } catch {
       alert("An error occurred while submitting data.");
