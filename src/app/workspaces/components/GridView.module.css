@@ -10,10 +10,10 @@
   position: relative;
   background: #ffffff;
   border-radius: 10px;
-  border: 1px solid #e2e8f0;
+  border: 1px solid #f0f0f0;
   padding: 24px;
-  transition: all 0.2s ease;
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+  transition: all 0.25s ease;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
   cursor: pointer;
   display: flex;
   flex-direction: column;
@@ -22,9 +22,9 @@
 }
 
 .card:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
-  border-color: #cbd5e0;
+  transform: translateY(-3px);
+  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+  border-color: #e6e6e6;
 }
 
 .optionBtn {
@@ -50,9 +50,9 @@
   top: 38px;
   right: 12px;
   background: white;
-  border-radius: 4px;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-  border: 1px solid #e2e8f0;
+  border-radius: 6px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.12);
+  border: 1px solid #f0f0f0;
   overflow: hidden;
   z-index: 10;
   width: 120px;
@@ -85,32 +85,37 @@
   font-size: 20px;
   font-weight: 600;
   margin-bottom: 16px;
-  color: #2d3748;
+  color: #262626;
   word-break: break-word;
   line-height: 1.4;
+  letter-spacing: -0.2px;
 }
 
 .meta {
   display: flex;
   flex-direction: column;
-  gap: 10px;
+  gap: 12px;
   margin-top: auto;
 }
 
 .metaItem {
   display: flex;
   font-size: 14px;
-  color: #718096;
+  color: #666;
+  padding: 2px 0;
+  background-color: transparent;
+  border-radius: 0;
 }
 
 .metaLabel {
   font-weight: 500;
   margin-right: 8px;
   min-width: 75px;
+  color: #777;
 }
 
 .metaValue {
-  color: #4a5568;
+  color: #333;
   font-weight: 500;
 }
 
@@ -135,15 +140,26 @@
 @media (max-width: 480px) {
   .grid {
     grid-template-columns: 1fr;
+    gap: 16px;
   }
 
   .meta {
     flex-direction: column;
-    gap: 0.5rem;
+    gap: 8px;
   }
 
   .card {
-    padding: 1.2rem;
+    padding: 18px;
     min-height: 150px;
+  }
+
+  .metaItem {
+    padding: 2px 0;
+    font-size: 13px;
+  }
+
+  .chatTitle {
+    font-size: 18px;
+    margin-bottom: 12px;
   }
 }

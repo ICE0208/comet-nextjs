@@ -14,6 +14,7 @@ import {
   deleteWorkspace,
 } from "./actions";
 import { useRouter } from "next/navigation";
+
 export default function PromptListPage() {
   const [optionOpenId, setOptionOpenId] = useState<string | null>(null);
   const [works, setWorks] = useState<WorkItem[]>([]);
@@ -183,31 +184,33 @@ export default function PromptListPage() {
   };
 
   return (
-    <div className={styles.container}>
-      <div className={styles.title}>나의 작업 공간</div>
+    <>
+      <div className={styles.container}>
+        <div className={styles.title}>나의 작업 공간</div>
 
-      {/* 탑 바 컴포넌트 */}
-      <TopBar
-        view={view}
-        setView={setView}
-        sort={sort}
-        setSort={setSort}
-        onCreateClick={handleCreateClick}
-      />
+        {/* 탑 바 컴포넌트 */}
+        <TopBar
+          view={view}
+          setView={setView}
+          sort={sort}
+          setSort={setSort}
+          onCreateClick={handleCreateClick}
+        />
 
-      {/* 작업이 없는 경우 중앙에 메시지 표시 */}
-      {works.length === 0 ? (
-        <div className={styles.emptyStateContainer}>
-          <div className={styles.emptyState}>
-            <p>현재 진행중인 작업이 없습니다.</p>
-            <p>작업을 만들어보세요!</p>
+        {/* 작업이 없는 경우 중앙에 메시지 표시 */}
+        {works.length === 0 ? (
+          <div className={styles.emptyStateContainer}>
+            <div className={styles.emptyState}>
+              <p>현재 진행중인 작업이 없습니다.</p>
+              <p>작업을 만들어보세요!</p>
+            </div>
           </div>
-        </div>
-      ) : (
-        renderViewComponent()
-      )}
+        ) : (
+          renderViewComponent()
+        )}
+      </div>
 
-      {/* 작업 모달 (생성/편집) */}
+      {/* 작업 모달 (생성/편집) - 컨테이너 밖으로 이동 */}
       <WorkspaceModal
         isOpen={isModalOpen}
         onClose={() => {
@@ -219,6 +222,6 @@ export default function PromptListPage() {
         mode={modalMode}
         isLoading={isLoading}
       />
-    </div>
+    </>
   );
 }

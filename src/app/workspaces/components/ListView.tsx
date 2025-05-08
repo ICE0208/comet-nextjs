@@ -22,29 +22,39 @@ export default function ListView({
 }: ListViewProps) {
   return (
     <div className={styles.list}>
-      <div className={styles.listHeader}>
-        <div className={styles.titleCol}>제목</div>
-        <div className={styles.countCol}>대화 기록</div>
-        <div className={styles.dateCol}>최근 사용</div>
-        <div className={styles.dateCol}>생성일</div>
-        <div className={styles.actionCol} />
-      </div>
-
       {chats.map((chat) => (
         <div
           className={styles.listItem}
           key={chat.id}
           onClick={() => handleCardClick(chat.id)}
         >
-          <div className={styles.titleCol}>{chat.title}</div>
-          <div className={styles.countCol}>{chat._count.history}개</div>
-          <div className={styles.dateCol}>
-            {formatRelativeTime(chat.lastUsedAt)}
+          <div className={styles.itemContent}>
+            <div className={styles.itemTitle}>{chat.title}</div>
+            <div className={styles.itemInfo}>
+              <div className={styles.infoItem}>
+                <span className={styles.infoLabel}>대화 기록:</span>
+                <span className={styles.infoValue}>
+                  {chat._count.history}개
+                </span>
+              </div>
+              <div className={styles.infoItem}>
+                <span className={styles.infoLabel}>최근 사용:</span>
+                <span className={styles.infoValue}>
+                  {formatRelativeTime(chat.lastUsedAt)}
+                </span>
+              </div>
+              <div className={styles.infoItem}>
+                <span className={styles.infoLabel}>생성일:</span>
+                <span className={styles.infoValue}>
+                  {formatDateTime(chat.createdAt)}
+                </span>
+              </div>
+            </div>
           </div>
-          <div className={styles.dateCol}>{formatDateTime(chat.createdAt)}</div>
-          <div className={styles.actionCol}>
+
+          <div className={styles.itemActions}>
             <button
-              className={styles.optionBtnList}
+              className={styles.optionBtn}
               onClick={(e) => {
                 e.stopPropagation();
                 setOptionOpenId(optionOpenId === chat.id ? null : chat.id);
@@ -80,7 +90,7 @@ export default function ListView({
               </svg>
             </button>
             {optionOpenId === chat.id && (
-              <div className={styles.optionMenuList}>
+              <div className={styles.optionMenu}>
                 <button
                   className={styles.optionMenuItem}
                   onClick={(e) => handleRename(chat.id, e)}
