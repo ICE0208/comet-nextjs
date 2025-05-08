@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import styles from "./page.module.css";
 import { WorkItem, SortType, ViewType } from "./types";
 import GridView from "./components/GridView";
@@ -14,10 +14,11 @@ import {
   deleteWorkspace,
 } from "./actions";
 import { useRouter } from "next/navigation";
+import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 
 export default function PromptListPage() {
+  // ===== 상태 관리 =====
   const [optionOpenId, setOptionOpenId] = useState<string | null>(null);
-  const [works, setWorks] = useState<WorkItem[]>([]);
   const [sort, setSort] = useState<SortType>("latest");
   const [view, setView] = useState<ViewType>("grid");
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -26,64 +27,118 @@ export default function PromptListPage() {
     id: string;
     title: string;
   } | null>(null);
-  const [isLoading, setIsLoading] = useState(false);
+
   const router = useRouter();
+  const queryClient = useQueryClient();
 
-  useEffect(() => {
-    fetchWorkspaces();
-  }, []);
+  // ===== React Query 데이터 가져오기 =====
+  // 워크스페이스 목록 조회 (읽기)
+  const {
+    data: works = [], // 기본값으로 빈 배열 설정
+    isLoading: isLoadingWorkspaces,
+  } = useQuery({
+    queryKey: ["workspaces"], // 캐싱용 키
+    queryFn: async () => {
+      // 실제 데이터를 가져오는 함수
+      try {
+        return await getWorkspaceList();
+      } catch {
+        return [];
+      }
+    },
+  });
 
-  const fetchWorkspaces = async () => {
-    try {
-      const workspaces = await getWorkspaceList();
-      setWorks(workspaces);
-    } catch {
-      alert("작업 로드 중 오류가 발생했습니다.");
-    }
-  };
+  // ===== React Query 변경 작업 =====
+  // 워크스페이스 삭제 (삭제)
+  const deleteWorkspaceMutation = useMutation({
+    mutationFn: deleteWorkspace, // 삭제 함수 호출
+    onSuccess: (result, id) => {
+      // 성공 시 캐시 업데이트
+      if (result.success) {
+        // 캐시에서 해당 항목 제거
+        queryClient.setQueryData(["workspaces"], (oldData: WorkItem[] = []) =>
+          oldData.filter((item) => item.id !== id)
+        );
+      } else {
+        alert(result.error || "작업 삭제에 실패했습니다.");
+      }
+    },
+    onError: () => {
+      alert("작업 삭제 중 오류가 발생했습니다.");
+    },
+  });
 
-  // 정렬
+  // 워크스페이스 제목 업데이트 (수정)
+  const updateWorkspaceTitleMutation = useMutation({
+    mutationFn: ({ id, title }: { id: string; title: string }) =>
+      updateWorkspaceTitle(id, title),
+    onSuccess: (result, { id }) => {
+      if (result.success && result.workspace) {
+        // 캐시 데이터 업데이트
+        queryClient.setQueryData(["workspaces"], (oldData: WorkItem[] = []) =>
+          oldData.map((item) => (item.id === id ? result.workspace : item))
+        );
+      } else {
+        alert(result.error || "작업 이름 변경에 실패했습니다.");
+      }
+      // 모달 닫기
+      setEditingChat(null);
+      setIsModalOpen(false);
+    },
+    onError: () => {
+      alert("작업 이름 변경 중 오류가 발생했습니다.");
+      setEditingChat(null);
+      setIsModalOpen(false);
+    },
+  });
+
+  // 새 워크스페이스 생성 (생성)
+  const createWorkspaceMutation = useMutation({
+    mutationFn: createWorkspace,
+    onSuccess: (newWorkspace) => {
+      // 캐시에 새 항목 추가
+      queryClient.setQueryData(["workspaces"], (oldData: WorkItem[] = []) => [
+        newWorkspace,
+        ...oldData,
+      ]);
+      setIsModalOpen(false);
+    },
+    onError: () => {
+      alert("작업을 생성하는 중 오류가 발생했습니다.");
+      setIsModalOpen(false);
+    },
+  });
+
+  // ===== 이벤트 핸들러 =====
+  // 목록 정렬하기
   const sortedWorks = [...works].sort((a, b) => {
     if (sort === "latest") {
+      // 최근 사용순
       return (
         new Date(b.lastUsedAt).getTime() - new Date(a.lastUsedAt).getTime()
       );
     } else {
+      // 생성순
       return new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime();
     }
   });
 
-  // 삭제
-  const handleDelete = async (id: string, e: React.MouseEvent) => {
-    e.stopPropagation();
+  // 삭제 버튼 클릭
+  const handleDelete = (id: string, e: React.MouseEvent) => {
+    e.stopPropagation(); // 부모 요소 클릭 이벤트 방지
 
     if (
       window.confirm(
         "이 작업을 삭제하시겠습니까? 이 작업은 되돌릴 수 없습니다."
       )
     ) {
-      setIsLoading(true);
-      try {
-        const result = await deleteWorkspace(id);
-
-        if (result.success) {
-          // 성공적으로 삭제된 경우 로컬 상태 업데이트
-          setWorks((prev) => prev.filter((c) => c.id !== id));
-        } else {
-          // 삭제 실패 시 에러 메시지 표시
-          alert(result.error || "작업 삭제에 실패했습니다.");
-        }
-      } catch {
-        alert("작업 삭제 중 오류가 발생했습니다.");
-      } finally {
-        setIsLoading(false);
-      }
+      deleteWorkspaceMutation.mutate(id);
     }
 
-    setOptionOpenId(null);
+    setOptionOpenId(null); // 옵션 메뉴 닫기
   };
 
-  // 제목 변경(모달 열기)
+  // 이름 변경 클릭 - 모달 열기
   const handleRenameClick = (id: string, e: React.MouseEvent) => {
     e.stopPropagation();
     const chat = works.find((c) => c.id === id);
@@ -95,54 +150,29 @@ export default function PromptListPage() {
     setOptionOpenId(null);
   };
 
-  // 제목 변경 저장
-  const handleRenameConfirm = async (newTitle: string) => {
+  // 이름 변경 확인
+  const handleRenameConfirm = (newTitle: string) => {
     if (editingChat) {
-      setIsLoading(true);
-      try {
-        const result = await updateWorkspaceTitle(editingChat.id, newTitle);
-
-        if (result.success && result.workspace) {
-          // 성공적으로 업데이트된 경우 로컬 상태 업데이트
-          setWorks((prev) =>
-            prev.map((c) => (c.id === editingChat.id ? result.workspace : c))
-          );
-        } else {
-          // 실패한 경우 에러 메시지 표시
-          alert(result.error || "작업 이름 변경에 실패했습니다.");
-        }
-      } catch {
-        alert("작업 이름 변경 중 오류가 발생했습니다.");
-      } finally {
-        setIsLoading(false);
-        setEditingChat(null);
-        setIsModalOpen(false);
-      }
+      updateWorkspaceTitleMutation.mutate({
+        id: editingChat.id,
+        title: newTitle,
+      });
     }
   };
 
-  // 새 작업 생성 클릭
+  // 새 작업 생성 버튼 클릭
   const handleCreateClick = () => {
     setModalMode("create");
     setEditingChat(null);
     setIsModalOpen(true);
   };
 
-  // 새 작업 생성 저장
-  const handleCreateConfirm = async (title: string) => {
-    setIsLoading(true);
-    try {
-      const newWorkspace = await createWorkspace(title);
-      setWorks((prev) => [newWorkspace, ...prev]);
-    } catch {
-      alert("작업을 생성하는 중 오류가 발생했습니다.");
-    } finally {
-      setIsLoading(false);
-      setIsModalOpen(false);
-    }
+  // 새 작업 생성 확인
+  const handleCreateConfirm = (title: string) => {
+    createWorkspaceMutation.mutate(title);
   };
 
-  // 모달 확인 버튼 클릭
+  // 모달 확인 버튼 클릭 처리
   const handleModalConfirm = (title: string) => {
     if (modalMode === "create") {
       handleCreateConfirm(title);
@@ -151,37 +181,64 @@ export default function PromptListPage() {
     }
   };
 
-  // 카드 클릭
+  // 항목 클릭 - 상세 페이지로 이동
   const handleCardClick = (id: string) => {
     router.push(`/workspaces/${id}`);
   };
 
-  // 뷰 컴포넌트 렌더링 함수
+  // ===== 렌더링 함수 =====
+  // 현재 선택된 뷰에 따라 컴포넌트 렌더링
   const renderViewComponent = () => {
-    if (view === "grid") {
+    const viewProps = {
+      chats: sortedWorks,
+      optionOpenId,
+      setOptionOpenId,
+      handleCardClick,
+      handleRename: handleRenameClick,
+      handleDelete,
+    };
+
+    return view === "grid" ? (
+      <GridView {...viewProps} />
+    ) : (
+      <ListView {...viewProps} />
+    );
+  };
+
+  // 페이지 내용 렌더링 (로딩/비어있음/목록)
+  const renderPageContent = () => {
+    // 로딩 중일 때
+    if (isLoadingWorkspaces) {
       return (
-        <GridView
-          chats={sortedWorks}
-          optionOpenId={optionOpenId}
-          setOptionOpenId={setOptionOpenId}
-          handleCardClick={handleCardClick}
-          handleRename={handleRenameClick}
-          handleDelete={handleDelete}
-        />
+        <div className={styles.emptyStateContainer}>
+          <div className={styles.emptyState}>
+            <p className={styles.loadingText}>작업을 불러오는 중입니다...</p>
+          </div>
+        </div>
       );
     }
 
-    return (
-      <ListView
-        chats={sortedWorks}
-        optionOpenId={optionOpenId}
-        setOptionOpenId={setOptionOpenId}
-        handleCardClick={handleCardClick}
-        handleRename={handleRenameClick}
-        handleDelete={handleDelete}
-      />
-    );
+    // 작업이 없을 때
+    if (works.length === 0) {
+      return (
+        <div className={styles.emptyStateContainer}>
+          <div className={styles.emptyState}>
+            <p>현재 진행중인 작업이 없습니다.</p>
+            <p>작업을 만들어보세요!</p>
+          </div>
+        </div>
+      );
+    }
+
+    // 작업이 있을 때 목록 표시
+    return renderViewComponent();
   };
+
+  // 로딩 상태 통합 (모달에서 사용)
+  const isLoading =
+    deleteWorkspaceMutation.isPending ||
+    updateWorkspaceTitleMutation.isPending ||
+    createWorkspaceMutation.isPending;
 
   return (
     <>
@@ -197,20 +254,11 @@ export default function PromptListPage() {
           onCreateClick={handleCreateClick}
         />
 
-        {/* 작업이 없는 경우 중앙에 메시지 표시 */}
-        {works.length === 0 ? (
-          <div className={styles.emptyStateContainer}>
-            <div className={styles.emptyState}>
-              <p>현재 진행중인 작업이 없습니다.</p>
-              <p>작업을 만들어보세요!</p>
-            </div>
-          </div>
-        ) : (
-          renderViewComponent()
-        )}
+        {/* 페이지 내용 */}
+        {renderPageContent()}
       </div>
 
-      {/* 작업 모달 (생성/편집) - 컨테이너 밖으로 이동 */}
+      {/* 작업 모달 (생성/편집) */}
       <WorkspaceModal
         isOpen={isModalOpen}
         onClose={() => {

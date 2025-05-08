@@ -3,7 +3,7 @@
   max-width: 1200px;
   border-radius: 10px;
   overflow: hidden;
-  min-height: 300px;
+  padding-bottom: 80px;
   position: relative;
   z-index: 1;
   display: flex;

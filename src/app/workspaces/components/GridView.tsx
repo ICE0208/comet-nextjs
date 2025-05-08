@@ -86,7 +86,7 @@ export default function GridView({
             <div className={styles.chatTitle}>{chat.title}</div>
             <div className={styles.meta}>
               <div className={styles.metaItem}>
-                <span className={styles.metaLabel}>대화 기록:</span>
+                <span className={styles.metaLabel}>교정 횟수:</span>
                 <span className={styles.metaValue}>
                   {chat._count.history}개
                 </span>
