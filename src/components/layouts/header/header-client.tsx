@@ -7,7 +7,7 @@ import Logo from "./logo";
 import UserSection from "./user-section";
 
 interface HeaderClientProps {
-  user: UserInfo;
+  user: UserInfo | null;
 }
 
 export function HeaderClient({ user }: HeaderClientProps) {
