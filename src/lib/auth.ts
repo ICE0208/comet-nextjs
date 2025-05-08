@@ -5,10 +5,10 @@ import { verifyToken } from "./jwt";
 export type UserInfo = {
   id: number;
   userId: string;
-} | null;
+};
 
 // 현재 로그인된 사용자 정보 가져오기
-export async function getCurrentUser(): Promise<UserInfo> {
+export async function getCurrentUser(): Promise<UserInfo | null> {
   // 쿠키 저장소를 가져와서
   const cookieStore = await cookies();
   // token의 value를 빼온다
