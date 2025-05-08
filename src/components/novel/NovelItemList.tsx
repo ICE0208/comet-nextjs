@@ -2,17 +2,10 @@
 import React, { useEffect, useState } from "react";
 import NovelItem from "./NovelItem";
 import styles from "./NovelItemList.module.css";
-
-type Novel = {
-  id: string;
-  title: string;
-  author: string;
-  description: string;
-  thumbnail: string;
-};
+import { Novel } from "@/app/novel/page";
 
 interface NovelItemListProps {
-  data: Novel[];
+  data: Novel;
 }
 
 const NovelItemList = ({ data }: NovelItemListProps) => {

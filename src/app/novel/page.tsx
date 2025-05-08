@@ -1,31 +1,19 @@
 "use client";
 
-import { getNovelData } from "./actions";
+import { novelData } from "./actions";
 import NovelItemList from "@/components/novel/NovelItemList";
 import BestsellerRow from "@/components/novel/BestsellerRow";
 import styles from "./page.module.css";
 import { useState, useEffect } from "react";
 
-type Novel = {
-  id: string;
-  title: string;
-  author: string;
-  description: string;
-  thumbnail: string;
-  genre: string;
-  viewCount: number;
-  rating: number;
-};
-
-type NovelData = {
-  novelAll: Novel[];
-};
+// novelData() returns a direct array, not an object with a novels property
+export type Novel = Awaited<ReturnType<typeof novelData>>;
 
 const NovelPage = () => {
   /* 불러온 데이터, 선택된 장르, 선택된 장르에따라 필터링된 데이터 */
-  const [novelData, setNovelData] = useState<NovelData>({ novelAll: [] });
+  const [novelsData, setNovelsData] = useState<Novel>([]);
   const [selectedCategory, setSelectedCategory] = useState("all");
-  const [filtered, setFiltered] = useState<Novel[]>([]);
+  const [filtered, setFiltered] = useState<Novel>([]);
 
   const handleCategoryClick = (categoryId: string) => {
     setSelectedCategory(categoryId);
@@ -39,15 +27,15 @@ const NovelPage = () => {
     { id: "scifi", name: "과학" },
     { id: "life", name: "일상" },
     { id: "mystery", name: "미스테리" },
+    { id: "etc", name: "기타" },
   ];
 
   /* 처음 마운트될때 한번 렌더링 (데이터 없음)
      novelData상태 변해서 두번째 렌더링 */
   useEffect(() => {
     const fetchData = async () => {
-      const data = await getNovelData();
-      setNovelData(data);
-      /* data = { novelAll: Novel[] } >>> fetch 데이터 이렇게생김... */
+      const data = await novelData();
+      setNovelsData(data);
     };
     fetchData();
   }, []);
@@ -55,13 +43,11 @@ const NovelPage = () => {
   /* 두번째 렌더링에서 novelData상태 변해서 useEffect실행 >>> filtered상태 변해서 세번째 렌더링 */
   useEffect(() => {
     if (selectedCategory === "all") {
-      setFiltered(novelData.novelAll);
+      setFiltered(novelsData);
     } else {
-      setFiltered(
-        novelData.novelAll.filter((item) => item.genre === selectedCategory)
-      );
+      setFiltered(novelsData.filter((item) => item.genre === selectedCategory));
     }
-  }, [selectedCategory, novelData.novelAll]);
+  }, [selectedCategory, novelsData]);
 
   return (
     <div className={styles.container}>
@@ -70,7 +56,7 @@ const NovelPage = () => {
         <p className={styles.subtitle}>Discover your next favorite story</p>
       </div>
 
-      <BestsellerRow novels={novelData.novelAll} />
+      <BestsellerRow />
 
       <div className={styles.categoriesContainer}>
         <div className={styles.categories}>

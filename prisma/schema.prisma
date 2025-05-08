@@ -40,11 +40,21 @@ model Follow {
   @@id(name: "relationshipId", [followerId, followingId]) // 복합키
 }
 
+enum Genres {
+  fantasy
+  romance
+  scifi
+  life
+  mystery
+  etc
+}
+
 model Novel {
   id          String   @id @default(uuid()) @db.Uuid
   title       String
   description String
   imageUrl    String
+  genre       Genres   @default(etc)
   authorId    Int
   createdAt   DateTime @default(now())
   isPublished Boolean  @default(false)

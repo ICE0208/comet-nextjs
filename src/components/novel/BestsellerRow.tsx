@@ -1,41 +1,39 @@
 "use client";
 
-import React, { useRef, useEffect } from "react";
+import React, { useState, useRef, useEffect } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import styles from "./BestsellerRow.module.css";
 
-type Novel = {
-  id: string;
-  title: string;
-  author: string;
-  description: string;
-  thumbnail: string;
-  genre: string;
-  viewCount: number;
-  rating: number;
+type NovelResponse = {
+  novels: {
+    id: string;
+    title: string;
+    imageUrl: string;
+    author: {
+      userId: string;
+    };
+    _count: {
+      novelLike: number;
+    };
+  }[];
 };
-
-interface BestsellerRowProps {
-  novels: Novel[];
-}
-
-// 베스트셀러 viewCount 기준으로 정렬
-const sortNovelsByViewCount = (novels: Novel[]): Novel[] =>
-  [...novels].sort((a, b) => b.viewCount - a.viewCount);
 
 // 인터벌 ID 저장할 변수
 let intervalState: NodeJS.Timeout;
 
-const BestsellerRow: React.FC<BestsellerRowProps> = ({ novels }) => {
-  // viewCount 기준으로 소설 정렬
-  const sortedNovels = sortNovelsByViewCount(novels);
-
+const BestsellerRow = () => {
   const scrollContainerRef = useRef<HTMLDivElement>(null);
+  const [sortedNovels, setSortedNovels] = useState<NovelResponse["novels"]>([]);
 
   useEffect(() => {
-    if (!novels.length) return;
-    // 데이터가 있을 때만 실행
+    const getNovels = async () => {
+      const response = await fetch("/api/novel/topten");
+      const data: NovelResponse = await response.json();
+      setSortedNovels(data.novels);
+      if (!data.novels.length) return;
+    };
+    getNovels();
 
     const scrollContainer = scrollContainerRef.current;
     if (!scrollContainer) return;
@@ -115,7 +113,7 @@ const BestsellerRow: React.FC<BestsellerRowProps> = ({ novels }) => {
       scrollContainer.removeEventListener("mouseenter", handleMouseEnter);
       scrollContainer.removeEventListener("mouseleave", handleMouseLeave);
     };
-  }, [novels]);
+  }, []);
 
   return (
     <div className={styles.container}>
@@ -128,7 +126,7 @@ const BestsellerRow: React.FC<BestsellerRowProps> = ({ novels }) => {
         ref={scrollContainerRef}
       >
         <div className={styles.row}>
-          {sortedNovels.slice(0, 10).map((novel, index) => (
+          {sortedNovels.map((novel, index) => (
             <Link
               href={`/novel/${novel.id}`}
               key={novel.id}
@@ -137,7 +135,7 @@ const BestsellerRow: React.FC<BestsellerRowProps> = ({ novels }) => {
               <div className={styles.rankBadge}>{index + 1}</div>
               <div className={styles.imageWrapper}>
                 <Image
-                  src={novel.thumbnail}
+                  src={novel.imageUrl}
                   alt={novel.title}
                   width={180}
                   height={270}
@@ -147,13 +145,14 @@ const BestsellerRow: React.FC<BestsellerRowProps> = ({ novels }) => {
                 <div className={styles.overlay}>
                   <div className={styles.overlayContent}>
                     <h3 className={styles.title}>{novel.title}</h3>
-                    <p className={styles.author}>{novel.author}</p>
-                    {novel.rating && (
-                      <div className={styles.rating}>
-                        <span className={styles.starIcon}>★</span>{" "}
-                        {novel.rating.toFixed(1)}
-                      </div>
-                    )}
+                    <p className={styles.author}>{novel.author.userId}</p>
+                    {/* {novel.rating && ( */}
+                    <div className={styles.rating}>
+                      <span className={styles.starIcon}>★</span>{" "}
+                      {/* {novel.rating.toFixed(1)} */}
+                      {4.5} {/* 임시로 고정된 값 */}
+                    </div>
+                    {/* )} */}
                   </div>
                 </div>
               </div>
