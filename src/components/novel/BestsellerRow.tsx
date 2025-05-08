@@ -5,7 +5,6 @@ import Image from "next/image";
 import Link from "next/link";
 import styles from "./BestsellerRow.module.css";
 
-// API 응답 타입 정의
 type NovelResponse = {
   novels: {
     id: string;
