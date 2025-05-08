@@ -1,14 +1,15 @@
 import React from "react";
 import styles from "./ListView.module.css";
 import { ChatItem } from "../types";
+import { formatDateTime, formatRelativeTime } from "@/utils/date";
 
 interface ListViewProps {
   chats: ChatItem[];
-  optionOpenId: number | null;
-  setOptionOpenId: (id: number | null) => void;
-  handleCardClick: (id: number) => void;
-  handleRename: (id: number, e: React.MouseEvent) => void;
-  handleDelete: (id: number, e: React.MouseEvent) => void;
+  optionOpenId: string | null;
+  setOptionOpenId: (id: string | null) => void;
+  handleCardClick: (id: string) => void;
+  handleRename: (id: string, e: React.MouseEvent) => void;
+  handleDelete: (id: string, e: React.MouseEvent) => void;
 }
 
 export default function ListView({
@@ -22,21 +23,11 @@ export default function ListView({
   return (
     <div className={styles.list}>
       <div className={styles.listHeader}>
-        <div className={styles.listIcon} />
-        <div className={`${styles.listHeaderItem}`}>제목</div>
-        <div className={`${styles.listHeaderItem} ${styles.date}`}>
-          생성 시간
-        </div>
-        <div className={`${styles.listHeaderItem} ${styles.date}`}>
-          최근 사용
-        </div>
-        <div className={`${styles.listHeaderItem} ${styles.revision}`}>
-          교열 횟수
-        </div>
-        <div
-          className={styles.listHeaderItem}
-          style={{ flex: "0 0 50px" }}
-        />
+        <div className={styles.titleCol}>제목</div>
+        <div className={styles.countCol}>대화 기록</div>
+        <div className={styles.dateCol}>최근 사용</div>
+        <div className={styles.dateCol}>생성일</div>
+        <div className={styles.actionCol} />
       </div>
 
       {chats.map((chat) => (
@@ -45,18 +36,13 @@ export default function ListView({
           key={chat.id}
           onClick={() => handleCardClick(chat.id)}
         >
-          <div className={styles.listIcon}>{chat.icon}</div>
-          <div className={styles.listCol}>{chat.title}</div>
-          <div className={`${styles.listCol} ${styles.date}`}>
-            {chat.createdAt}
+          <div className={styles.titleCol}>{chat.title}</div>
+          <div className={styles.countCol}>{chat._count.history}개</div>
+          <div className={styles.dateCol}>
+            {formatRelativeTime(chat.lastUsedAt)}
           </div>
-          <div className={`${styles.listCol} ${styles.date}`}>
-            {chat.lastUsedAt}
-          </div>
-          <div className={`${styles.listCol} ${styles.revision}`}>
-            {chat.revisionCount}회
-          </div>
-          <div style={{ position: "relative", flex: "0 0 50px" }}>
+          <div className={styles.dateCol}>{formatDateTime(chat.createdAt)}</div>
+          <div className={styles.actionCol}>
             <button
               className={styles.optionBtnList}
               onClick={(e) => {

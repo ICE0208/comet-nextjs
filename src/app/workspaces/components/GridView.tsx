@@ -1,14 +1,15 @@
 import React from "react";
 import styles from "./GridView.module.css";
 import { ChatItem } from "../types";
+import { formatDateTime, formatRelativeTime } from "@/utils/date";
 
 interface GridViewProps {
   chats: ChatItem[];
-  optionOpenId: number | null;
-  setOptionOpenId: (id: number | null) => void;
-  handleCardClick: (id: number) => void;
-  handleRename: (id: number, e: React.MouseEvent) => void;
-  handleDelete: (id: number, e: React.MouseEvent) => void;
+  optionOpenId: string | null;
+  setOptionOpenId: (id: string | null) => void;
+  handleCardClick: (id: string) => void;
+  handleRename: (id: string, e: React.MouseEvent) => void;
+  handleDelete: (id: string, e: React.MouseEvent) => void;
 }
 
 export default function GridView({
@@ -84,9 +85,24 @@ export default function GridView({
           <div className={styles.info}>
             <div className={styles.chatTitle}>{chat.title}</div>
             <div className={styles.meta}>
-              <span>생성: {chat.createdAt}</span>
-              <span>최근 사용: {chat.lastUsedAt}</span>
-              <span>교열 {chat.revisionCount}회</span>
+              <div className={styles.metaItem}>
+                <span className={styles.metaLabel}>대화 기록:</span>
+                <span className={styles.metaValue}>
+                  {chat._count.history}개
+                </span>
+              </div>
+              <div className={styles.metaItem}>
+                <span className={styles.metaLabel}>최근 사용:</span>
+                <span className={styles.metaValue}>
+                  {formatRelativeTime(chat.lastUsedAt)}
+                </span>
+              </div>
+              <div className={styles.metaItem}>
+                <span className={styles.metaLabel}>생성일:</span>
+                <span className={styles.metaValue}>
+                  {formatDateTime(chat.createdAt)}
+                </span>
+              </div>
             </div>
           </div>
         </div>

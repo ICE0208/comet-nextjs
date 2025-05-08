@@ -1,0 +1,149 @@
+.grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 28px;
+  width: 100%;
+  max-width: 1200px;
+}
+
+.card {
+  position: relative;
+  background: #ffffff;
+  border-radius: 10px;
+  border: 1px solid #e2e8f0;
+  padding: 24px;
+  transition: all 0.2s ease;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+  cursor: pointer;
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  min-height: 180px;
+}
+
+.card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+  border-color: #cbd5e0;
+}
+
+.optionBtn {
+  position: absolute;
+  top: 12px;
+  right: 12px;
+  background: none;
+  border: none;
+  color: #718096;
+  cursor: pointer;
+  padding: 4px;
+  border-radius: 4px;
+  transition: background-color 0.2s;
+}
+
+.optionBtn:hover {
+  background-color: #f7fafc;
+  color: #4a5568;
+}
+
+.optionMenu {
+  position: absolute;
+  top: 38px;
+  right: 12px;
+  background: white;
+  border-radius: 4px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  border: 1px solid #e2e8f0;
+  overflow: hidden;
+  z-index: 10;
+  width: 120px;
+}
+
+.optionMenuItem {
+  width: 100%;
+  padding: 10px 16px;
+  border: none;
+  text-align: left;
+  background: none;
+  cursor: pointer;
+  font-size: 14px;
+  color: #4a5568;
+  transition: background-color 0.2s;
+}
+
+.optionMenuItem:hover {
+  background-color: #f7fafc;
+}
+
+.info {
+  margin-top: 8px;
+  flex-grow: 1;
+  display: flex;
+  flex-direction: column;
+}
+
+.chatTitle {
+  font-size: 20px;
+  font-weight: 600;
+  margin-bottom: 16px;
+  color: #2d3748;
+  word-break: break-word;
+  line-height: 1.4;
+}
+
+.meta {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin-top: auto;
+}
+
+.metaItem {
+  display: flex;
+  font-size: 14px;
+  color: #718096;
+}
+
+.metaLabel {
+  font-weight: 500;
+  margin-right: 8px;
+  min-width: 75px;
+}
+
+.metaValue {
+  color: #4a5568;
+  font-weight: 500;
+}
+
+/* 모바일 반응형 */
+@media (max-width: 1024px) {
+  .grid {
+    grid-template-columns: repeat(2, 1fr);
+    max-width: 100%;
+  }
+}
+
+@media (max-width: 768px) {
+  .grid {
+    max-width: 100%;
+  }
+
+  .card {
+    min-height: 160px;
+  }
+}
+
+@media (max-width: 480px) {
+  .grid {
+    grid-template-columns: 1fr;
+  }
+
+  .meta {
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+
+  .card {
+    padding: 1.2rem;
+    min-height: 150px;
+  }
+}
