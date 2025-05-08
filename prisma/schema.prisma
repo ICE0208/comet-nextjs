@@ -26,6 +26,7 @@ model User {
   novels     Novel[]
   ratings    EpisodeRating[]
   novelLikes NovelLike[]
+  workspaces Workspace[]
 }
 
 model Follow {
@@ -93,6 +94,48 @@ model EpisodeRating {
   episode Episode @relation(fields: [episodeId], references: [id], onDelete: Cascade)
 
   @@id([userId, episodeId])
+}
+
+model Workspace {
+  id         String   @id @default(uuid()) @db.Uuid
+  title      String
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+  lastUsedAt DateTime @default(now())
+
+  userId Int?
+  user   User? @relation(fields: [userId], references: [id], onDelete: SetNull)
+
+  history WorkspaceHistory[]
+}
+
+enum MessageStatus {
+  PENDING
+  COMPLETED
+  ERROR
+  CANCELLED
+}
+
+model WorkspaceHistory {
+  id               String             @id @default(uuid()) @db.Uuid
+  workspaceId      String             @db.Uuid
+  userRequest      String             @db.Text
+  aiResponse       String             @db.Text
+  AIResponseDetail AIResponseDetail[]
+  status           MessageStatus      @default(COMPLETED)
+  createdAt        DateTime           @default(now())
+
+  workspace Workspace @relation(fields: [workspaceId], references: [id], onDelete: Cascade)
+}
+
+model AIResponseDetail {
+  id                 Int      @id @default(autoincrement())
+  type               String
+  text               String   @db.Text
+  createdAt          DateTime @default(now())
+  workspaceHistoryId String   @db.Uuid
+
+  WorkspaceHistory WorkspaceHistory @relation(fields: [workspaceHistoryId], references: [id], onDelete: Cascade)
 }
 
 model Prompt {
