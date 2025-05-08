@@ -46,3 +46,25 @@
     margin-bottom: 24px;
   }
 }
+
+.emptyStateContainer {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  min-height: 200px;
+  margin-top: 20px;
+}
+
+.emptyState {
+  max-width: 500px;
+  padding: 20px;
+  text-align: center;
+}
+
+.emptyState p {
+  font-size: 1.3rem;
+  color: #555;
+  margin: 0;
+  line-height: 1.8;
+}

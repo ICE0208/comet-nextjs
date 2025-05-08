@@ -2,9 +2,18 @@
 import React, { useState } from "react";
 import styles from "./PromptInput.module.css";
 import { usePromptStore } from "@/store/promptStore";
+import { submitWork } from "../actions";
 
-const PromptInput = () => {
-  const [text, setText] = useState<string>("");
+interface PromptInputProps {
+  workspaceId: string;
+  savedInputText: string;
+}
+
+const PromptInput = ({
+  workspaceId,
+  savedInputText: savedText,
+}: PromptInputProps) => {
+  const [text, setText] = useState<string>(savedText);
   const [checkboxOptions, setCheckboxOptions] = useState([
     { id: "checkbox1", name: "문법 교정", state: false },
     { id: "checkbox2", name: "맞춤법 교정", state: false },
@@ -30,28 +39,16 @@ const PromptInput = () => {
   const handleSubmit = async () => {
     const selectedOptions = checkboxOptions
       .filter((option) => option.state)
-      .map((option) => option.id);
-
-    const data = {
-      text,
-      selectedOptions,
-    };
+      .map((option) => option.name);
 
     try {
-      const response = await fetch("/api/submit", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(data),
-      });
+      const newAIResponse = await submitWork(
+        workspaceId,
+        text,
+        selectedOptions
+      );
 
-      const result = await response.json();
-      setOutputData(result.prompt);
-
-      if (!response.ok) {
-        throw new Error("Failed to submit data");
-      }
+      setOutputData(newAIResponse);
     } catch {
       alert("An error occurred while submitting data.");
     }

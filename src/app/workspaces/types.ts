@@ -1,6 +1,6 @@
 import { Prisma } from "@prisma/client";
 
-export type ChatItem = Prisma.WorkspaceGetPayload<{
+export type WorkItem = Prisma.WorkspaceGetPayload<{
   select: {
     id: true;
     title: true;

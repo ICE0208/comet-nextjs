@@ -117,25 +117,34 @@ enum MessageStatus {
 }
 
 model WorkspaceHistory {
-  id               String             @id @default(uuid()) @db.Uuid
-  workspaceId      String             @db.Uuid
-  userRequest      String             @db.Text
-  aiResponse       String             @db.Text
-  AIResponseDetail AIResponseDetail[]
-  status           MessageStatus      @default(COMPLETED)
-  createdAt        DateTime           @default(now())
+  id          String        @id @default(uuid()) @db.Uuid
+  workspaceId String        @db.Uuid
+  userRequest String        @db.Text
+  status      MessageStatus @default(COMPLETED)
+  createdAt   DateTime      @default(now())
+  aiResponse  AIResponse?
 
   workspace Workspace @relation(fields: [workspaceId], references: [id], onDelete: Cascade)
 }
 
-model AIResponseDetail {
-  id                 Int      @id @default(autoincrement())
-  type               String
-  text               String   @db.Text
-  createdAt          DateTime @default(now())
-  workspaceHistoryId String   @db.Uuid
+model AIResponse {
+  id                 Int                @id @default(autoincrement())
+  text               String             @db.Text
+  createdAt          DateTime           @default(now())
+  workspaceHistoryId String             @unique @db.Uuid
+  details            AIResponseDetail[]
 
-  WorkspaceHistory WorkspaceHistory @relation(fields: [workspaceHistoryId], references: [id], onDelete: Cascade)
+  workspaceHistory WorkspaceHistory @relation(fields: [workspaceHistoryId], references: [id], onDelete: Cascade)
+}
+
+model AIResponseDetail {
+  id           Int      @id @default(autoincrement())
+  type         String
+  text         String   @db.Text
+  createdAt    DateTime @default(now())
+  aiResponseId Int
+
+  aiResponse AIResponse @relation(fields: [aiResponseId], references: [id], onDelete: Cascade)
 }
 
 model Prompt {

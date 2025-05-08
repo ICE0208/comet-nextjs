@@ -34,7 +34,7 @@ export default async function Home() {
       </div>
       {/* 카테고리 */}
       <div className={styles.categoryContainer}>
-        <Link href={"/prompt"}>
+        <Link href={"/workspaces"}>
           <IconMenu
             svgPath="/icons/magic.svg"
             description="교열"

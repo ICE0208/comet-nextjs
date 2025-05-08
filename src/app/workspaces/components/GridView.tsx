@@ -1,10 +1,10 @@
 import React from "react";
 import styles from "./GridView.module.css";
-import { ChatItem } from "../types";
+import { WorkItem } from "../types";
 import { formatDateTime, formatRelativeTime } from "@/utils/date";
 
 interface GridViewProps {
-  chats: ChatItem[];
+  chats: WorkItem[];
   optionOpenId: string | null;
   setOptionOpenId: (id: string | null) => void;
   handleCardClick: (id: string) => void;

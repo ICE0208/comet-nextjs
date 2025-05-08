@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from "react";
 import styles from "./page.module.css";
-import { ChatItem, SortType, ViewType } from "./types";
+import { WorkItem, SortType, ViewType } from "./types";
 import GridView from "./components/GridView";
 import ListView from "./components/ListView";
 import TopBar from "./components/TopBar";
@@ -13,10 +13,10 @@ import {
   updateWorkspaceTitle,
   deleteWorkspace,
 } from "./actions";
-
+import { useRouter } from "next/navigation";
 export default function PromptListPage() {
   const [optionOpenId, setOptionOpenId] = useState<string | null>(null);
-  const [chats, setChats] = useState<ChatItem[]>([]);
+  const [works, setWorks] = useState<WorkItem[]>([]);
   const [sort, setSort] = useState<SortType>("latest");
   const [view, setView] = useState<ViewType>("grid");
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -26,6 +26,7 @@ export default function PromptListPage() {
     title: string;
   } | null>(null);
   const [isLoading, setIsLoading] = useState(false);
+  const router = useRouter();
 
   useEffect(() => {
     fetchWorkspaces();
@@ -34,14 +35,14 @@ export default function PromptListPage() {
   const fetchWorkspaces = async () => {
     try {
       const workspaces = await getWorkspaceList();
-      setChats(workspaces);
-    } catch (error) {
-      console.error("작업 목록을 불러오는 중 오류 발생:", error);
+      setWorks(workspaces);
+    } catch {
+      alert("작업 로드 중 오류가 발생했습니다.");
     }
   };
 
   // 정렬
-  const sortedChats = [...chats].sort((a, b) => {
+  const sortedWorks = [...works].sort((a, b) => {
     if (sort === "latest") {
       return (
         new Date(b.lastUsedAt).getTime() - new Date(a.lastUsedAt).getTime()
@@ -66,13 +67,12 @@ export default function PromptListPage() {
 
         if (result.success) {
           // 성공적으로 삭제된 경우 로컬 상태 업데이트
-          setChats((prev) => prev.filter((c) => c.id !== id));
+          setWorks((prev) => prev.filter((c) => c.id !== id));
         } else {
           // 삭제 실패 시 에러 메시지 표시
           alert(result.error || "작업 삭제에 실패했습니다.");
         }
-      } catch (error) {
-        console.error("작업 삭제 중 오류 발생:", error);
+      } catch {
         alert("작업 삭제 중 오류가 발생했습니다.");
       } finally {
         setIsLoading(false);
@@ -85,7 +85,7 @@ export default function PromptListPage() {
   // 제목 변경(모달 열기)
   const handleRenameClick = (id: string, e: React.MouseEvent) => {
     e.stopPropagation();
-    const chat = chats.find((c) => c.id === id);
+    const chat = works.find((c) => c.id === id);
     if (chat) {
       setEditingChat({ id, title: chat.title });
       setModalMode("edit");
@@ -103,15 +103,14 @@ export default function PromptListPage() {
 
         if (result.success && result.workspace) {
           // 성공적으로 업데이트된 경우 로컬 상태 업데이트
-          setChats((prev) =>
+          setWorks((prev) =>
             prev.map((c) => (c.id === editingChat.id ? result.workspace : c))
           );
         } else {
           // 실패한 경우 에러 메시지 표시
           alert(result.error || "작업 이름 변경에 실패했습니다.");
         }
-      } catch (error) {
-        console.error("작업 이름 변경 중 오류 발생:", error);
+      } catch {
         alert("작업 이름 변경 중 오류가 발생했습니다.");
       } finally {
         setIsLoading(false);
@@ -133,9 +132,8 @@ export default function PromptListPage() {
     setIsLoading(true);
     try {
       const newWorkspace = await createWorkspace(title);
-      setChats((prev) => [newWorkspace, ...prev]);
-    } catch (error) {
-      console.error("작업 생성 중 오류 발생:", error);
+      setWorks((prev) => [newWorkspace, ...prev]);
+    } catch {
       alert("작업을 생성하는 중 오류가 발생했습니다.");
     } finally {
       setIsLoading(false);
@@ -154,8 +152,34 @@ export default function PromptListPage() {
 
   // 카드 클릭
   const handleCardClick = (id: string) => {
-    console.log(`카드 ${id} 클릭됨`);
-    // 여기에 카드 클릭 시 실행할 로직 추가
+    router.push(`/workspaces/${id}`);
+  };
+
+  // 뷰 컴포넌트 렌더링 함수
+  const renderViewComponent = () => {
+    if (view === "grid") {
+      return (
+        <GridView
+          chats={sortedWorks}
+          optionOpenId={optionOpenId}
+          setOptionOpenId={setOptionOpenId}
+          handleCardClick={handleCardClick}
+          handleRename={handleRenameClick}
+          handleDelete={handleDelete}
+        />
+      );
+    }
+
+    return (
+      <ListView
+        chats={sortedWorks}
+        optionOpenId={optionOpenId}
+        setOptionOpenId={setOptionOpenId}
+        handleCardClick={handleCardClick}
+        handleRename={handleRenameClick}
+        handleDelete={handleDelete}
+      />
+    );
   };
 
   return (
@@ -171,25 +195,16 @@ export default function PromptListPage() {
         onCreateClick={handleCreateClick}
       />
 
-      {/* 뷰 컴포넌트 */}
-      {view === "grid" ? (
-        <GridView
-          chats={sortedChats}
-          optionOpenId={optionOpenId}
-          setOptionOpenId={setOptionOpenId}
-          handleCardClick={handleCardClick}
-          handleRename={handleRenameClick}
-          handleDelete={handleDelete}
-        />
+      {/* 작업이 없는 경우 중앙에 메시지 표시 */}
+      {works.length === 0 ? (
+        <div className={styles.emptyStateContainer}>
+          <div className={styles.emptyState}>
+            <p>현재 진행중인 작업이 없습니다.</p>
+            <p>작업을 만들어보세요!</p>
+          </div>
+        </div>
       ) : (
-        <ListView
-          chats={sortedChats}
-          optionOpenId={optionOpenId}
-          setOptionOpenId={setOptionOpenId}
-          handleCardClick={handleCardClick}
-          handleRename={handleRenameClick}
-          handleDelete={handleDelete}
-        />
+        renderViewComponent()
       )}
 
       {/* 작업 모달 (생성/편집) */}
