@@ -3,7 +3,7 @@ import styles from "./user-section.module.css";
 import ProfileDropdown from "./profile-dropdown";
 
 interface UserSectionProps {
-  user: UserInfo;
+  user: UserInfo | null;
 }
 
 export default function UserSection({ user }: UserSectionProps) {

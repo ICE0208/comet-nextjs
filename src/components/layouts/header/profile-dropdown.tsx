@@ -8,7 +8,7 @@ import { useRouter } from "next/navigation";
 import { logout } from "./actions";
 
 interface ProfileDropdownProps {
-  user: UserInfo;
+  user: UserInfo | null;
 }
 
 export default function ProfileDropdown({ user }: ProfileDropdownProps) {
