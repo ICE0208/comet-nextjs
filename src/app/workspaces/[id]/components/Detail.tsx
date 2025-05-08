@@ -4,14 +4,15 @@ import styles from "./Detail.module.css";
 import { usePromptStore } from "@/store/promptStore";
 
 const Detail = () => {
-  const [activeMenu, setActiveMenu] = useState("introduction");
+  const [activeMenu, setActiveMenu] = useState(-1);
   const outputData = usePromptStore((state) => state.outputData);
 
   // options 추출
   const menuItems =
-    outputData?.options.map((option) => ({
-      id: option.optionId,
-      name: option.optionName,
+    outputData?.details.map((detail) => ({
+      id: detail.id,
+      name: detail.type,
+      text: detail.text,
     })) || [];
 
   return (

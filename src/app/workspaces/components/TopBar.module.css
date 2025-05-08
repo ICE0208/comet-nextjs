@@ -1,0 +1,93 @@
+.topBar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  max-width: 1200px;
+  margin-bottom: 2.5rem;
+  padding-top: 0.5rem;
+}
+
+.rightControls {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.createButton {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 16px;
+  border-radius: 6px;
+  font-size: 14px;
+  font-weight: 500;
+  background-color: #f5f5f5;
+  color: #333;
+  border: 1px solid #e2e8f0;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.createButton:hover {
+  background-color: #eaeaea;
+}
+
+.plusIcon {
+  transition: transform 0.2s ease;
+}
+
+.createButton:hover .plusIcon {
+  transform: rotate(90deg);
+}
+
+.viewToggle {
+  display: flex;
+  border-radius: 8px;
+  overflow: hidden;
+  border: 1px solid #e2e8f0;
+  background: #fff;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+}
+
+.viewBtn {
+  padding: 0.5rem 1.2rem;
+  background: none;
+  border: none;
+  font-size: 1.1rem;
+  color: #4a5568;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.viewBtn.selected {
+  background: #f1f5f9;
+  color: #4a5568;
+  font-weight: 600;
+}
+
+.sortSelect {
+  border: 1px solid #e2e8f0;
+  border-radius: 6px;
+  padding: 0.5rem 1.2rem;
+  font-size: 0.9rem;
+  background: #fff;
+  color: #4a5568;
+  outline: none;
+  cursor: pointer;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+}
+
+@media (max-width: 768px) {
+  .topBar {
+    max-width: 100%;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 1rem;
+  }
+
+  .rightControls {
+    width: 100%;
+    justify-content: flex-end;
+  }
+}

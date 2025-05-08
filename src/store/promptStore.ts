@@ -1,17 +1,12 @@
+import { Prisma } from "@prisma/client";
 import { create } from "zustand";
 
 // 출력 데이터의 구조를 정의하는 인터페이스입니다.
-interface OutputData {
-  id: number;
-  text: string;
-  createdAt: string;
-  options: {
-    id: number;
-    optionId: string;
-    optionName: string;
-    isSelected: boolean;
-  }[];
-}
+type OutputData = Prisma.AIResponseGetPayload<{
+  include: {
+    details: true;
+  };
+}>;
 
 // 프롬프트 상태 관리 인터페이스
 interface PromptState {
@@ -22,7 +17,7 @@ interface PromptState {
 
 interface Actions {
   actions: {
-    setOutputData: (data: OutputData) => void;
+    setOutputData: (data: OutputData | null) => void;
     setLoading: (loading: boolean) => void;
     setError: (error: string | null) => void;
   };
