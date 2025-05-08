@@ -1,0 +1,38 @@
+.container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 2rem 1rem;
+  margin-top: 60px;
+  background: #ffffff;
+  min-height: 100vh;
+}
+
+.title {
+  font-size: 2rem;
+  font-weight: 700;
+  color: #2d3748;
+  margin-bottom: 2rem;
+  text-align: left;
+  width: 100%;
+  max-width: 900px;
+}
+
+@media (max-width: 768px) {
+  .title {
+    max-width: 100%;
+  }
+}
+
+@media (max-width: 480px) {
+  .container {
+    padding: 1.5rem 0.8rem;
+  }
+
+  .title {
+    font-size: 1.7rem;
+    margin-bottom: 1.5rem;
+  }
+}
