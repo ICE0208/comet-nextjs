@@ -20,7 +20,6 @@ const NovelPage = () => {
   };
 
   /* 카테고리 목록 ( 필터링시 장르랑 id랑 비교 )*/
-  /* 올일떄 따로하나만들어라*/
   const categories = [
     { id: "all", name: "전체" },
     { id: "fantasy", name: "판타지" },
