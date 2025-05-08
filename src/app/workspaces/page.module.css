@@ -68,3 +68,22 @@
   margin: 0;
   line-height: 1.8;
 }
+
+.loadingText {
+  color: #666;
+  font-size: 1.3rem;
+  margin: 0;
+  animation: pulse 1.5s infinite ease-in-out;
+}
+
+@keyframes pulse {
+  0% {
+    opacity: 0.6;
+  }
+  50% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0.6;
+  }
+}

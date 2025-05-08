@@ -32,7 +32,7 @@ export default function ListView({
             <div className={styles.itemTitle}>{chat.title}</div>
             <div className={styles.itemInfo}>
               <div className={styles.infoItem}>
-                <span className={styles.infoLabel}>대화 기록:</span>
+                <span className={styles.infoLabel}>교정 횟수:</span>
                 <span className={styles.infoValue}>
                   {chat._count.history}개
                 </span>
