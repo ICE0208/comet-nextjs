@@ -3,12 +3,11 @@ import Image from "next/image";
 import styles from "./NovelContents.module.css";
 
 interface Episode {
-  id: string;
+  id: number;
   title: string;
-  date: string;
-  rating: number;
-  thumbnail?: string;
-  contents: string;
+  imageUrl: string;
+  content: string;
+  uploadDate: Date;
 }
 
 interface Props {
@@ -18,9 +17,9 @@ interface Props {
 const NovelContents = ({ data }: Props) => (
   <div className={styles.container}>
     <div className={styles.header}>
-      {data.thumbnail && (
+      {data.imageUrl && (
         <Image
-          src={data.thumbnail}
+          src={data.imageUrl}
           alt={data.title}
           width={80}
           height={80}
@@ -31,16 +30,16 @@ const NovelContents = ({ data }: Props) => (
         <div>
           <h1 className={styles.title}>{data.title}</h1>
           <div className={styles.date} />
-          {new Date(data.date).toLocaleDateString("ko-KR", {
+          {new Date(data.uploadDate).toLocaleDateString("ko-KR", {
             year: "numeric",
             month: "long",
             day: "numeric",
           })}
         </div>
-        <div className={styles.rating}>{data.rating}</div>
+        <div className={styles.rating}>-----</div>
       </div>
     </div>
-    <div className={styles.contents}>{data.contents}</div>
+    <div className={styles.contents}>{data.content}</div>
   </div>
 );
 

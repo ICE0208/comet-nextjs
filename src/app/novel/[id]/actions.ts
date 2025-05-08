@@ -1,7 +1,36 @@
 "use server";
+import prisma from "@/lib/prisma";
+import { redirect } from "next/navigation";
 
-export async function getNovelInfoData() {
-  // mocks json 파일에서 데이터 가져오기
-  const response = await import("@/mocks/novelinfo-novel-data.json");
-  return response.default;
+export async function novelInfoData(id: string) {
+  try {
+    const novel = await prisma.novel.findUnique({
+      where: {
+        id,
+      },
+      include: {
+        episodes: {
+          select: {
+            id: true,
+            title: true,
+            content: true,
+            imageUrl: true,
+            uploadDate: true,
+          },
+        },
+        author: {
+          select: {
+            userId: true,
+          },
+        },
+      },
+    });
+
+    if (!novel) {
+      redirect("/");
+    }
+    return novel;
+  } catch {
+    return redirect("/prompt");
+  }
 }
