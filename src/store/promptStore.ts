@@ -17,7 +17,7 @@ interface PromptState {
 
 interface Actions {
   actions: {
-    setOutputData: (data: OutputData) => void;
+    setOutputData: (data: OutputData | null) => void;
     setLoading: (loading: boolean) => void;
     setError: (error: string | null) => void;
   };

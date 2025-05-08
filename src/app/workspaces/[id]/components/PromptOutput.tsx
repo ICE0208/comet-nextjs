@@ -20,6 +20,13 @@ const PromptOutput = ({ savedAIResponse }: PromptOutputProps) => {
   // const setError = usePromptStore((state) => state.actions.setError);
   const setOutputData = usePromptStore((state) => state.actions.setOutputData);
 
+  useEffect(
+    () => () => {
+      setOutputData(null);
+    },
+    [setOutputData]
+  );
+
   useEffect(() => {
     if (savedAIResponse) {
       setOutputData(savedAIResponse);
