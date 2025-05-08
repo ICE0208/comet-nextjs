@@ -13,7 +13,7 @@ const NovelItemList = ({ data }: NovelItemListProps) => {
   const itemsPerPage = 8;
 
   // 전체 페이지 수 계산
-  const totalPages = Math.ceil(data.length / itemsPerPage);
+  const totalPages = Math.max(1, Math.ceil(data.length / itemsPerPage));
 
   // 현재 페이지에 해당하는 아이템을 가져오기
   const indexOfLastItem = currentPage * itemsPerPage;
