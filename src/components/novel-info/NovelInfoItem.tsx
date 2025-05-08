@@ -3,17 +3,15 @@ import styles from "./NovelInfoItem.module.css";
 import Image from "next/image";
 
 interface Episode {
-  id: string;
   title: string;
-  date: string;
-  rating: number;
-  thumbnail?: string; // 아직 thumbnail 없는애들도 있어서... 일단 bualapha로 대체
+  uploadDate: string;
+  imageUrl?: string;
 }
 
-const NovelInfoItem = ({ title, date, rating, thumbnail }: Episode) => (
+const NovelInfoItem = ({ title, uploadDate, imageUrl }: Episode) => (
   <div className={styles.episodeItem}>
     <Image
-      src={thumbnail ? thumbnail : "/images/novel-temp-thumbnail/n.png"}
+      src={imageUrl ? imageUrl : "/images/novel-temp-thumbnail/n.png"}
       alt="episode thumbnail"
       width={80}
       height={80}
@@ -21,8 +19,8 @@ const NovelInfoItem = ({ title, date, rating, thumbnail }: Episode) => (
     />
     <div className={styles.episodeInfo}>
       <h3 className={styles.episodeTitle}>{title}</h3>
-      <p className={styles.episodeDate}>{date}</p>
-      <p className={styles.episodeRating}>{rating}</p>
+      <p className={styles.episodeDate}>{uploadDate}</p>
+      <p className={styles.episodeRating}>-----</p>
     </div>
   </div>
 );

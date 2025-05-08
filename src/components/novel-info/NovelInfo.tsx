@@ -1,37 +1,18 @@
 "use client";
-/* 처음에 page에서 작업했는데, use client 쓸라니깐 async 쓰고있어서 안된다함...
-그래서 컴포넌트 따로 만듬. */
 import React, { useState } from "react";
 import Image from "next/image";
 import styles from "./NovelInfo.module.css";
+import { Novel } from "@/app/novel/[id]/page"; // 서버 컴포넌트에서 가져온 Novel 타입을 사용
 
-interface NovelInfoData {
-  id: string;
-  title: string;
-  author: string;
-  like: number;
-  description: string;
-  thumbnail: string;
-  episode: Episode[];
-}
+type NovelProps = {
+  novel: Novel;
+};
 
-interface Episode {
-  id: string;
-  title: string;
-  date: string;
-  rating: number;
-  thumbnail?: string;
-}
-
-interface NovelInfoClientProps {
-  novel: NovelInfoData | undefined;
-}
-
-const NovelInfoClient = ({ novel }: NovelInfoClientProps) => {
-  const [like, setLike] = useState(novel?.like || 0);
+const NovelInfoClient = ({ novel }: NovelProps) => {
+  const [like, setLike] = useState("-----");
 
   const handleClickLike = () => {
-    setLike(like + 1);
+    setLike(like + "-");
   };
 
   return (
@@ -39,7 +20,7 @@ const NovelInfoClient = ({ novel }: NovelInfoClientProps) => {
       {novel ? (
         <div className={styles.novelInfo}>
           <Image
-            src={novel.thumbnail}
+            src={novel.imageUrl}
             alt={`${novel.title} 표지 이미지`}
             width={200}
             height={0}
@@ -50,13 +31,13 @@ const NovelInfoClient = ({ novel }: NovelInfoClientProps) => {
             <div className={styles.novelInfoHeader}>
               <div className={styles.novelInfoTitle}>
                 <h2>{novel.title}</h2>
-                <p>{novel.author}</p>
+                <p>{novel.author.userId}</p>
               </div>
               <p
                 className={styles.like}
                 onClick={handleClickLike}
               >
-                {novel.like}
+                {like}
               </p>
             </div>
             <p className={styles.description}>{novel.description}</p>

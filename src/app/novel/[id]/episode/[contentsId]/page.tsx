@@ -3,41 +3,44 @@
 import React, { useState, useEffect, use } from "react";
 import styles from "./page.module.css";
 import NovelContents from "@/components/novel-contents/NovelContents";
-import { getNovelContentsData } from "./actions";
+import { novelInfoData } from "../../actions";
 import NovelComment from "@/components/novel-contents/NovelComment";
+import { Novel } from "@/app/novel/[id]/page"; // 서버 컴포넌트에서 가져온 Novel 타입을 사용
+import { redirect } from "next/navigation";
 
 type Props = {
   params: Promise<{
+    id: string;
     contentsId: string;
   }>;
 };
 
-interface NovelContentsData {
-  episode: Episode[];
-}
 interface Episode {
-  id: string;
+  id: number;
   title: string;
-  date: string;
-  rating: number;
-  thumbnail?: string;
-  contents: string;
+  imageUrl: string;
+  content: string;
+  uploadDate: Date;
 }
 
 const NovelContentsPage = ({ params }: Props) => {
   // params를 React.use()를 사용하여 언래핑
-  const { contentsId } = use(params);
-  const [currentEpisodeId, setCurrentEpisodeId] = useState(contentsId);
-  const [novelContents, setNovelContents] = useState<NovelContentsData | null>(
-    null
-  );
+  const { id, contentsId } = use(params);
+  const [episodes, setEpisodes] = useState<Episode[]>([]);
+  const [selectedEpisode, setSelectedEpisode] = useState<Episode | null>(null);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const data = await getNovelContentsData();
-        setNovelContents(data);
+        const novel: Novel = await novelInfoData(id);
+        const episode = novel.episodes.find(
+          (ep) => ep.id === Number(contentsId)
+        );
+        if (episode !== null) {
+          setSelectedEpisode(episode || null);
+        }
+        setEpisodes(novel.episodes);
         setLoading(false);
       } catch {
         setLoading(false);
@@ -45,30 +48,26 @@ const NovelContentsPage = ({ params }: Props) => {
     };
 
     fetchData();
-  }, []);
+  }, [id, contentsId]);
 
-  if (loading || !novelContents) {
+  if (loading) {
     return <div>로딩 중...</div>;
   }
 
-  const episode: Episode[] = novelContents.episode;
-  const selectedEpisode = episode.find((ep) => ep.id === currentEpisodeId);
-
-  // 현재 에피소드의 인덱스 찾기
-  const currentIndex = episode.findIndex((ep) => ep.id === currentEpisodeId);
-
-  // 컴포넌트를 전활할지... Link로 페이지를 전환할지...
-  // 이전화 이동 함수
   const goToPrevious = () => {
-    if (currentIndex > 0) {
-      setCurrentEpisodeId(episode[currentIndex - 1].id);
+    if (episodes.length > 1) {
+      redirect(`/novel/${id}/episode/${+contentsId - 1}`);
     }
   };
 
-  // 다음화 이동 함수
   const goToNext = () => {
-    if (currentIndex < episode.length - 1) {
-      setCurrentEpisodeId(episode[currentIndex + 1].id);
+    if (episodes.length > 0) {
+      const currentIndex = episodes.findIndex(
+        (episode) => episode.id === Number(contentsId)
+      );
+      if (currentIndex < episodes.length - 1) {
+        redirect(`/novel/${id}/episode/${+contentsId + 1}`);
+      }
     }
   };
 
@@ -80,14 +79,19 @@ const NovelContentsPage = ({ params }: Props) => {
           <div className={styles.navigationButtons}>
             <button
               onClick={goToPrevious}
-              disabled={currentIndex <= 0}
+              disabled={episodes.length <= 1}
               className={styles.navButton}
             >
               이전화
             </button>
             <button
               onClick={goToNext}
-              disabled={currentIndex >= episode.length - 1}
+              disabled={
+                episodes.findIndex(
+                  (episode) => episode.id === Number(contentsId)
+                ) ==
+                episodes.length - 1
+              }
               className={styles.navButton}
             >
               다음화

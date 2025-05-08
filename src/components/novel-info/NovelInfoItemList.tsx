@@ -3,26 +3,10 @@ import Link from "next/link";
 import React, { useState } from "react";
 import NovelInfoItem from "./NovelInfoItem";
 import styles from "./NovelInfoItemList.module.css";
+import { Novel } from "@/app/novel/[id]/page"; // 서버 컴포넌트에서 가져온 Novel 타입을 사용
 
-interface NovelInfoData {
-  id: string;
-  title: string;
-  author: string;
-  like: number;
-  description: string;
-  thumbnail: string;
-  episode: Episode[];
-}
-
-interface Episode {
-  id: string;
-  title: string;
-  date: string;
-  rating: number;
-  thumbnail?: string;
-}
 interface Props {
-  novel: NovelInfoData;
+  novel: Novel;
 }
 
 const NovelInfoItemList = ({ novel }: Props) => {
@@ -34,13 +18,13 @@ const NovelInfoItemList = ({ novel }: Props) => {
    리랜더링돼도 의존성배열 값이 안변하면 실행안하고, 캐싱된 return값 바로사용함 */
   const sortedEpisodes = React.useMemo(
     () =>
-      [...novel.episode].sort((a, b) => {
-        const dateA = new Date(a.date).getTime();
-        const dateB = new Date(b.date).getTime();
+      [...novel.episodes].sort((a, b) => {
+        const dateA = new Date(a.uploadDate).getTime();
+        const dateB = new Date(b.uploadDate).getTime();
 
         return sortOrder === "newest" ? dateB - dateA : dateA - dateB;
       }),
-    [novel.episode, sortOrder]
+    [novel.episodes, sortOrder]
   );
 
   const totalEpisodes = sortedEpisodes.length;
@@ -116,11 +100,9 @@ const NovelInfoItemList = ({ novel }: Props) => {
             >
               <NovelInfoItem
                 key={episode.id}
-                id={episode.id}
                 title={episode.title}
-                date={episode.date}
-                rating={episode.rating}
-                thumbnail={episode.thumbnail}
+                uploadDate={episode.uploadDate.toString()}
+                imageUrl={episode.imageUrl}
               />
             </Link>
           ))}
