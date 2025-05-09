@@ -1,13 +1,15 @@
 import Image from "next/image";
 import styles from "./page.module.css";
 import IconMenu from "@/components/icon-menu";
-import NovelThumbnailList from "@/components/novel-thumbnail-list";
-import { getMainPageNovelData } from "@/app/actions";
+import MainNovelItems from "@/components/main-page/MainNovelItems";
+import IntroSection from "@/components/main-page/IntroSection";
+import { novelData } from "./actions";
 import Link from "next/link";
 
-export default async function Home() {
-  const novelData = await getMainPageNovelData();
+export type Novels = Awaited<ReturnType<typeof novelData>>;
 
+export const Home = async () => {
+  const novelsData: Novels = await novelData();
   const navItems = [
     {
       href: "/workspaces",
@@ -53,6 +55,7 @@ export default async function Home() {
           </div>
         </div>
       </div>
+      <IntroSection />
       <div className={styles.navContainer}>
         {navItems.map((item, index) => (
           <Link
@@ -67,18 +70,19 @@ export default async function Home() {
           </Link>
         ))}
       </div>
-      <div>
-        <NovelThumbnailList
-          title="TOP 10"
-          data={novelData.top10}
+      <div className={styles.novelContainer}>
+        <MainNovelItems
+          title="인기"
+          data={novelsData}
         />
         <div style={{ marginBottom: "40px" }} />
-        <NovelThumbnailList
-          title="추천"
-          data={novelData.recommend}
+        <MainNovelItems
+          title="최신"
+          data={novelsData}
         />
-        <div style={{ marginBottom: "360px" }} />
+        <div style={{ marginBottom: "40px" }} />
       </div>
     </main>
   );
-}
+};
+export default Home;
