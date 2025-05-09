@@ -50,9 +50,22 @@
   text-align: center;
 }
 
-.categoryContainer {
+.navContainer {
   display: flex;
   justify-content: center;
   gap: 34px;
   padding: 40px 10px;
+}
+
+.navItem {
+  text-decoration: none;
+  color: #000;
+  font-size: 20px;
+  font-weight: 600;
+  transition: color 0.3s ease;
+  padding: 10px 20px;
+  cursor: default;
+}
+.navItem:hover {
+  color: #0070f3;
 }

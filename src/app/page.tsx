@@ -8,9 +8,31 @@ import Link from "next/link";
 export default async function Home() {
   const novelData = await getMainPageNovelData();
 
+  const navItems = [
+    {
+      href: "/workspaces",
+      icon: "/icons/magic.svg",
+      description: "교열",
+    },
+    {
+      href: "/workspaces",
+      icon: "/icons/write.svg",
+      description: "창작하기",
+    },
+    {
+      href: "/novel",
+      icon: "/icons/book-open.svg",
+      description: "소설",
+    },
+    {
+      href: "/workspaces",
+      icon: "/icons/question-circle.svg",
+      description: "FAQ",
+    },
+  ];
+
   return (
     <main>
-      {/* 메인 이미지 */}
       <div className={styles.mainImage}>
         <Image
           src="/images/main-image.webp"
@@ -20,7 +42,6 @@ export default async function Home() {
           style={{ objectFit: "cover" }}
         />
         <div className={styles.mainImageCover} />
-        {/* 교열 해보기 */}
         <div className={styles.tryToDemo}>
           <div className={styles.tryToDemoTitle}>교열 해보기</div>
           <div className={styles.tryToDemoInputContainer}>
@@ -32,38 +53,26 @@ export default async function Home() {
           </div>
         </div>
       </div>
-      {/* 카테고리 */}
-      <div className={styles.categoryContainer}>
-        <Link href={"/workspaces"}>
-          <IconMenu
-            svgPath="/icons/magic.svg"
-            description="교열"
-          />
-        </Link>
-        <IconMenu
-          svgPath="/icons/write.svg"
-          description="창작하기"
-        />
-        <Link href={"/novel"}>
-          <IconMenu
-            svgPath="/icons/book-open.svg"
-            description="소설"
-          />
-        </Link>
-        <IconMenu
-          svgPath="/icons/question-circle.svg"
-          description="FAQ"
-        />
+      <div className={styles.navContainer}>
+        {navItems.map((item, index) => (
+          <Link
+            key={index}
+            href={item.href}
+            className={styles.navItem}
+          >
+            <IconMenu
+              svgPath={item.icon}
+              description={item.description}
+            />
+          </Link>
+        ))}
       </div>
-      {/* 소설 목록 */}
       <div>
-        {/* Top 10 */}
         <NovelThumbnailList
           title="TOP 10"
           data={novelData.top10}
         />
         <div style={{ marginBottom: "40px" }} />
-        {/* 추천 */}
         <NovelThumbnailList
           title="추천"
           data={novelData.recommend}

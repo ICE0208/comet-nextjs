@@ -13,8 +13,8 @@ export default function IconMenu({ svgPath, description }: IconMenuProps) {
         <Image
           src={svgPath}
           alt="icon"
-          width={24}
-          height={24}
+          width={32}
+          height={32}
         />
       </div>
       <div>{description}</div>
