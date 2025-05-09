@@ -17,6 +17,9 @@ export async function novelData() {
           },
         },
       },
+      orderBy: {
+        createdAt: "desc",
+      },
     });
 
     if (!novel) {
