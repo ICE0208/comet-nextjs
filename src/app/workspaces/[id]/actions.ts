@@ -3,6 +3,7 @@
 import { getCurrentUser } from "@/lib/auth";
 import { redirect } from "next/navigation";
 import prisma from "@/lib/prisma";
+import { processLiteraryText } from "@/utils/ai";
 
 export async function getWorkspaceById(id: string) {
   const currentUser = await getCurrentUser();
@@ -41,8 +42,8 @@ export async function getWorkspaceById(id: string) {
 
 export async function submitWork(
   workspaceId: string,
-  text: string,
-  selectedOptions: string[]
+  text: string
+  // selectedOptions: string[]
 ) {
   const currentUser = await getCurrentUser();
   if (!currentUser) {
@@ -72,25 +73,19 @@ export async function submitWork(
   // ! AI Server에 요청하는 부분
   // ! 실제로는 요청 후, 대기 상태로 나타내고
   // !요청 처리 후, 결과를 표시하는 것으로 변경함
-  const responseFromAIServer = {
-    text: `${text}를 교정한 문장입니다.`,
-    details: selectedOptions.map((type) => ({
-      type,
-      text: `${type}의 교정 내용입니다.`,
-    })),
-  };
+  const responseFromAIServer = await processLiteraryText(text);
 
   const newAIResponse = await prisma.aIResponse.create({
     data: {
       workspaceHistoryId: newHistory.id,
-      text: responseFromAIServer.text,
-      details: {
-        create: responseFromAIServer.details,
-      },
+      text: JSON.stringify(responseFromAIServer),
+      // details: {
+      //   create: responseFromAIServer.details,
+      // },
     },
-    include: {
-      details: true,
-    },
+    // include: {
+    //   details: true,
+    // },
   });
 
   // workspaces의 최근 사용 시간을 업데이트

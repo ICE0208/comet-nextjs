@@ -1,12 +1,8 @@
-import { Prisma } from "@prisma/client";
+import { AIResponse } from "@prisma/client";
 import { create } from "zustand";
 
 // 출력 데이터의 구조를 정의하는 인터페이스입니다.
-type OutputData = Prisma.AIResponseGetPayload<{
-  include: {
-    details: true;
-  };
-}>;
+type OutputData = AIResponse;
 
 // 프롬프트 상태 관리 인터페이스
 interface PromptState {

@@ -3,7 +3,6 @@ import styles from "./page.module.css";
 
 import PromptInput from "./components/PromptInput";
 import PromptOutput from "./components/PromptOutput";
-import Detail from "./components/Detail";
 import { getWorkspaceById } from "./actions";
 
 type WorkspacePageProps = {
@@ -36,7 +35,7 @@ const WorkspacePage = async ({ params }: WorkspacePageProps) => {
           }
         />
       </div>
-      <Detail />
+      {/* <Detail /> */}
     </div>
   );
 };
