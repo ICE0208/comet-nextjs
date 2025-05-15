@@ -1,38 +1,40 @@
-"use client";
-import React, { useState } from "react";
-import styles from "./Detail.module.css";
-import { usePromptStore } from "@/store/promptStore";
+// 쓸지말지 고민중, 현재 오류있음
 
-const Detail = () => {
-  const [activeMenu, setActiveMenu] = useState(-1);
-  const outputData = usePromptStore((state) => state.outputData);
+// "use client";
+// import React, { useState } from "react";
+// import styles from "./Detail.module.css";
+// import { usePromptStore } from "@/store/promptStore";
 
-  // options 추출
-  const menuItems =
-    outputData?.details.map((detail) => ({
-      id: detail.id,
-      name: detail.type,
-      text: detail.text,
-    })) || [];
+// const Detail = () => {
+//   const [activeMenu, setActiveMenu] = useState(-1);
+//   const outputData = usePromptStore((state) => state.outputData);
 
-  return (
-    <div className={styles.container}>
-      <div className={styles.sidebar}>
-        <h3 className={styles.sectionTitle}>세부사항</h3>
-        {menuItems.map((item) => (
-          <div
-            key={item.id}
-            className={`${styles.sidebarItem} ${activeMenu === item.id ? styles.sidebarItemActive : ""}`}
-            onClick={() => setActiveMenu(item.id)}
-          >
-            {item.name}
-          </div>
-        ))}
-      </div>
+//   // options 추출
+//   const menuItems =
+//     outputData?.details.map((detail) => ({
+//       id: detail.id,
+//       name: detail.type,
+//       text: detail.text,
+//     })) || [];
 
-      <div className={styles.content} />
-    </div>
-  );
-};
+//   return (
+//     <div className={styles.container}>
+//       <div className={styles.sidebar}>
+//         <h3 className={styles.sectionTitle}>세부사항</h3>
+//         {menuItems.map((item) => (
+//           <div
+//             key={item.id}
+//             className={`${styles.sidebarItem} ${activeMenu === item.id ? styles.sidebarItemActive : ""}`}
+//             onClick={() => setActiveMenu(item.id)}
+//           >
+//             {item.name}
+//           </div>
+//         ))}
+//       </div>
 
-export default Detail;
+//       <div className={styles.content} />
+//     </div>
+//   );
+// };
+
+// export default Detail;
