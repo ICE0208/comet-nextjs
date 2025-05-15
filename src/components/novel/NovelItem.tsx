@@ -27,8 +27,8 @@ const NovelItem = ({ novel }: NovelItemProps) => (
       <p className={styles.author}>by {novel.author.userId}</p>
       {novel.description && (
         <p className={styles.description}>
-          {novel.description.length > 50
-            ? `${novel.description.substring(0, 50)}...`
+          {novel.description.length > 30
+            ? `${novel.description.substring(0, 30)}...`
             : novel.description}
         </p>
       )}

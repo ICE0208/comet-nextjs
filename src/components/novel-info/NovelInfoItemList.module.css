@@ -1,6 +1,7 @@
 .episodeContainer {
   display: flex;
   flex-direction: column;
+  min-height: 50vh;
   gap: 1rem;
   margin-top: 2rem;
   width: 100%;

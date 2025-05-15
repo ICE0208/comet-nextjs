@@ -27,28 +27,47 @@ const BestsellerRow = () => {
   const [sortedNovels, setSortedNovels] = useState<NovelResponse["novels"]>([]);
 
   useEffect(() => {
+    // API를 통해 소설 데이터 가져오기
     const getNovels = async () => {
-      const response = await fetch("/api/novel/topten");
-      const data: NovelResponse = await response.json();
-      setSortedNovels(data.novels);
-      if (!data.novels.length) return;
+      try {
+        const response = await fetch("/api/novel/topten");
+        const data: NovelResponse = await response.json();
+        setSortedNovels(data.novels);
+      } catch (error) {
+        return error;
+      }
     };
+
     getNovels();
 
+    // 나머지 스크롤 로직은 데이터 가져오기와 별도로 실행
     const scrollContainer = scrollContainerRef.current;
     if (!scrollContainer) return;
 
     let cardWidth = 0;
 
-    const firstCard = scrollContainer.querySelector(`.${styles.novelCard}`);
-    if (firstCard) {
-      // 카드의 너비와 마진/간격을 포함한 전체 너비 계산
-      cardWidth = firstCard.getBoundingClientRect().width + 16; // 16px는 간격
-    }
+    const setupCardWidth = () => {
+      const firstCard = scrollContainer.querySelector(`.${styles.novelCard}`);
+      if (firstCard) {
+        // 카드의 너비와 마진/간격을 포함한 전체 너비 계산
+        cardWidth = firstCard.getBoundingClientRect().width + 16; // 16px는 간격
+      } else {
+        // 카드가 아직 렌더링되지 않았다면 기본값 설정
+        cardWidth = 300 + 16; // 기본 카드 너비 + 간격
+      }
+    };
+
+    // 초기 카드 너비 설정
+    setupCardWidth();
 
     // 스크롤 로직을 함수로 추출하여 중복 제거
     const scrollToNextItem = () => {
       if (!scrollContainer) return;
+
+      // 카드 요소가 추가된 후 너비를 다시 확인
+      if (cardWidth === 0) {
+        setupCardWidth();
+      }
 
       const maxScrollLeft =
         scrollContainer.scrollWidth - scrollContainer.clientWidth;
@@ -117,10 +136,6 @@ const BestsellerRow = () => {
 
   return (
     <div className={styles.container}>
-      <h2 className={styles.sectionTitle}>
-        <span className={styles.highlightText}>베스트셀러</span>
-      </h2>
-
       <div
         className={styles.scrollContainer}
         ref={scrollContainerRef}

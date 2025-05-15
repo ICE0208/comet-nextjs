@@ -49,10 +49,3 @@
   flex: 1;
   text-align: center;
 }
-
-.categoryContainer {
-  display: flex;
-  justify-content: center;
-  gap: 34px;
-  padding: 40px 10px;
-}

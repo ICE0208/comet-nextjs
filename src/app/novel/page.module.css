@@ -2,7 +2,7 @@
   max-width: 1200px;
   margin: 0 auto;
   padding: 2rem 1rem;
-  margin-top: 100px;
+  margin-top: 20px;
 }
 
 .header {
@@ -48,6 +48,7 @@
   color: #555;
   text-decoration: none;
   transition: all 0.2s ease;
+  cursor: default;
 }
 
 .categoryItem:hover {

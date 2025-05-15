@@ -101,7 +101,7 @@ const NovelInfoItemList = ({ novel }: Props) => {
               <NovelInfoItem
                 key={episode.id}
                 title={episode.title}
-                uploadDate={episode.uploadDate.toString()}
+                uploadDate={episode.uploadDate}
                 imageUrl={episode.imageUrl}
               />
             </Link>

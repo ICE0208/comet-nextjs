@@ -22,7 +22,7 @@
   position: relative;
   width: 100%;
   height: 0;
-  padding-bottom: 150%; /* 2:3 aspect ratio for book covers */
+  padding-bottom: 100%; /* 2:3 aspect ratio for book covers */
   overflow: hidden;
 }
 
@@ -31,8 +31,8 @@
   top: 0;
   left: 0;
   width: 100%;
-  height: 100%;
-  object-fit: cover;
+  height: auto;
+  object-fit: fill;
   transition: transform 0.3s ease;
 }
 
