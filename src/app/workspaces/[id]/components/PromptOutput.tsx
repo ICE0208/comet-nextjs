@@ -27,7 +27,7 @@ const CorrectedText = ({ segment }: { segment: Segment }) => {
   const tooltipRef = useRef<HTMLDivElement>(null);
 
   if (!segment.correction) {
-    return <span>{segment.text}</span>;
+    return <span style={{ wordSpacing: "normal" }}>{segment.text}</span>;
   }
 
   const handleMouseEnter = () => {
@@ -75,6 +75,7 @@ const CorrectedText = ({ segment }: { segment: Segment }) => {
               position: "relative",
               maxWidth: "300px",
               lineHeight: "1.5",
+              wordSpacing: "normal",
             }}
           >
             <div style={{ marginBottom: "6px" }}>
@@ -174,6 +175,7 @@ const PromptOutput = ({ savedAIResponse }: PromptOutputProps) => {
                   <div
                     key={idx}
                     className={styles.correctionLine}
+                    style={{ wordSpacing: "normal", letterSpacing: "-0.02em" }}
                   >
                     {line.segments.map((segment: Segment, i: number) => (
                       <CorrectedText
@@ -186,9 +188,7 @@ const PromptOutput = ({ savedAIResponse }: PromptOutputProps) => {
               </div>
             ) : (
               <div className={styles.promptText}>
-                {outputData.text && !correctionData && (
-                  <p>데이터를 처리하는 중입니다...</p>
-                )}
+                <p>데이터를 처리하는 중입니다...</p>
               </div>
             )}
 
