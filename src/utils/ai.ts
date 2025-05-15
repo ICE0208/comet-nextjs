@@ -54,7 +54,7 @@ export async function processLiteraryText(
     }
 
     const config = {
-      temperature: 0.6,
+      temperature: 0.4,
       responseMimeType: "application/json",
       responseSchema: {
         type: Type.ARRAY,
