@@ -136,10 +136,6 @@ const BestsellerRow = () => {
 
   return (
     <div className={styles.container}>
-      <h2 className={styles.sectionTitle}>
-        <span className={styles.highlightText}>베스트셀러</span>
-      </h2>
-
       <div
         className={styles.scrollContainer}
         ref={scrollContainerRef}

@@ -138,20 +138,15 @@
 
 .rankBadge {
   position: absolute;
-  top: 12px;
+  top: 16px;
   left: 12px;
-  background-color: #00000000; /* Netflix red */
   color: #fff;
-  width: 60px; /* Increased from 30px */
-  height: 60px; /* Increased from 30px */
-  border-radius: 50%;
   display: flex;
   align-items: center;
   justify-content: center;
   font-weight: 700;
-  font-size: 2.4rem; /* Increased from 0.9rem */
+  font-size: 3.6rem; /* Increased from 0.9rem */
   z-index: 2;
-  box-shadow: 0 3px 8px rgba(0, 0, 0, 0.3);
 }
 
 /* Add responsive adjustments */

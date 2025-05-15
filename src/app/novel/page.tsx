@@ -51,11 +51,6 @@ const NovelPage = () => {
 
   return (
     <div className={styles.container}>
-      <div className={styles.header}>
-        <h1 className={styles.title}>Our Web Novel Collection</h1>
-        <p className={styles.subtitle}>Discover your next favorite story</p>
-      </div>
-
       <BestsellerRow />
 
       <div className={styles.categoriesContainer}>

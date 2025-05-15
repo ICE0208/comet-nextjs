@@ -10,7 +10,7 @@ interface NovelItemListProps {
 
 const NovelItemList = ({ data }: NovelItemListProps) => {
   const [currentPage, setCurrentPage] = useState(1);
-  const itemsPerPage = 8;
+  const itemsPerPage = 10;
 
   // 전체 페이지 수 계산
   const totalPages = Math.ceil(data.length / itemsPerPage);
@@ -56,9 +56,9 @@ const NovelItemList = ({ data }: NovelItemListProps) => {
   return (
     <div className={styles.container}>
       <div className={styles.grid}>
-        {currentItems.map((novel, key) => (
+        {currentItems.map((novel) => (
           <NovelItem
-            key={key}
+            key={novel.id}
             novel={novel}
           />
         ))}

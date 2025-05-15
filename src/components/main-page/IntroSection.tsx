@@ -20,7 +20,7 @@ const IntroSection = () => (
             작품 둘러보기
           </Link>
           <Link
-            href="/auth/signup"
+            href="/workspaces"
             className={`${styles.button} ${styles.secondaryButton}`}
           >
             지금 시작하기
