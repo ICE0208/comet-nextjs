@@ -1,0 +1,48 @@
+.header {
+  position: relative;
+  /* height: 60px; */
+  width: 100%;
+  /* background: linear-gradient(to right, #6a43d1, #9474e6); */
+  /* border-radius: 0px 0px 12px 12px; */
+  /* margin-bottom: 30px; */
+  margin-top: 40px;
+  overflow: visible; /* 이미지가 영역 밖으로 나갈 수 있도록 변경 */
+  display: flex;
+  /* justify-content: center; */
+  /* align-items: flex-end; */
+  /* padding: 20px; */
+}
+
+.title {
+  font-size: 1.6rem;
+  font-weight: 500;
+  color: #333;
+  margin-bottom: 0.5rem;
+}
+
+.container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  height: 100vh;
+  gap: 1rem;
+  padding: 0 20px;
+  overflow: hidden;
+  background-color: #f8fafc;
+}
+
+.ioComponents {
+  display: flex;
+  flex-direction: row;
+  gap: 1.5rem;
+  width: 100%;
+  max-width: 100%;
+  flex: 1;
+  margin-bottom: 20px;
+}
+
+.ioComponents > * {
+  flex: 1;
+  min-width: 0;
+  height: 100%;
+}
