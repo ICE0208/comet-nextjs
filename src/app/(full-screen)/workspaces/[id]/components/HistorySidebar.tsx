@@ -10,7 +10,6 @@ type HistoryItem = Awaited<
 
 interface HistorySidebarProps {
   history: HistoryItem[];
-  workspaceId: string;
   isOpen: boolean;
   onClose: () => void;
   selectedHistoryId: string | null;
@@ -25,6 +24,9 @@ const HistorySidebar: React.FC<HistorySidebarProps> = ({
   setSelectedHistoryId,
 }) => {
   const [showFavoritesOnly, setShowFavoritesOnly] = useState(true);
+  const [loadingStates, setLoadingStates] = useState<Record<string, boolean>>(
+    {}
+  );
 
   // 히스토리 항목 클릭 시 해당 히스토리로 이동하는 핸들러
   const handleHistoryItemClick = (historyId: string) => {
@@ -34,7 +36,14 @@ const HistorySidebar: React.FC<HistorySidebarProps> = ({
   };
 
   const handleToggleFavorite = async (historyId: string) => {
-    await toggleFavorite(historyId);
+    if (loadingStates[historyId]) return;
+
+    setLoadingStates((prev) => ({ ...prev, [historyId]: true }));
+    try {
+      await toggleFavorite(historyId);
+    } finally {
+      setLoadingStates((prev) => ({ ...prev, [historyId]: false }));
+    }
   };
 
   const filteredHistory = showFavoritesOnly
@@ -102,11 +111,12 @@ const HistorySidebar: React.FC<HistorySidebarProps> = ({
                       : item.userRequest}
                   </p>
                   <button
-                    className={`${styles.starButton} ${item.historyFavorite ? styles.active : ""}`}
+                    className={`${styles.starButton} ${item.historyFavorite ? styles.active : ""} ${loadingStates[item.id] ? styles.loading : ""}`}
                     onClick={(e) => {
                       e.stopPropagation();
                       handleToggleFavorite(item.id);
                     }}
+                    disabled={loadingStates[item.id]}
                   >
                     <svg
                       xmlns="http://www.w3.org/2000/svg"

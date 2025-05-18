@@ -161,12 +161,11 @@
 }
 
 .starButton {
-  background: none;
-  border: none;
   padding: 4px;
-  color: #9ca3af;
+  border: none;
+  background: none;
   cursor: pointer;
-  border-radius: 4px;
+  color: #9ca3af;
   transition: all 0.2s ease;
   display: flex;
   align-items: center;
@@ -174,7 +173,6 @@
 }
 
 .starButton:hover {
-  background-color: #f3f4f6;
   color: #fbbf24;
 }
 
@@ -182,8 +180,17 @@
   color: #fbbf24;
 }
 
-.starButton.active:hover {
-  color: #f59e0b;
+.starButton.loading {
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
 }
 
 .emptyState {

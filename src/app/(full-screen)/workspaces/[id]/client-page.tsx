@@ -60,7 +60,6 @@ const ClientWorkspacePage = ({ workspace }: ClientWorkspacePageProps) => {
       {/* 히스토리 사이드바 */}
       <HistorySidebar
         history={workspace.history}
-        workspaceId={workspace.id}
         isOpen={isHistorySidebarOpen}
         onClose={() => setIsHistorySidebarOpen(false)}
         selectedHistoryId={selectedHistoryId}
