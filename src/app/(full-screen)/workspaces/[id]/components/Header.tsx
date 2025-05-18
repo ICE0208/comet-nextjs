@@ -1,3 +1,4 @@
+"use client";
 import React from "react";
 import Link from "next/link";
 import styles from "../page.module.css";
@@ -26,7 +27,11 @@ const IconButton: React.FC<IconButtonProps> = ({
  * Header 컴포넌트
  * 워크스페이스 페이지의 상단 헤더를 렌더링
  */
-const Header: React.FC = () => (
+interface HeaderProps {
+  onToggleHistory?: () => void;
+}
+
+const Header: React.FC<HeaderProps> = ({ onToggleHistory }) => (
   <header className={styles.headerBar}>
     <div className={styles.headerLeft}>
       <Link
@@ -65,7 +70,10 @@ const Header: React.FC = () => (
           <path d={HEADER_BUTTONS.NEW_CORRECTION.iconPath} />
         </svg>
       </IconButton>
-      <IconButton title={HEADER_BUTTONS.VIEW_LIST.title}>
+      <IconButton
+        title={HEADER_BUTTONS.VIEW_LIST.title}
+        onClick={onToggleHistory}
+      >
         <svg
           xmlns="http://www.w3.org/2000/svg"
           width="20"

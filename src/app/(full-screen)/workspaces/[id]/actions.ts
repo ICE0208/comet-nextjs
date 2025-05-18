@@ -4,6 +4,7 @@ import { getCurrentUser } from "@/lib/auth";
 import { redirect } from "next/navigation";
 import prisma from "@/lib/prisma";
 import { processLiteraryText } from "@/utils/ai";
+import { revalidatePath } from "next/cache";
 
 export async function getWorkspaceById(id: string) {
   const currentUser = await getCurrentUser();
@@ -28,7 +29,6 @@ export async function getWorkspaceById(id: string) {
         orderBy: {
           createdAt: "desc",
         },
-        take: 1,
       },
     },
   });
@@ -62,14 +62,6 @@ export async function submitWork(
     redirect("/workspaces");
   }
 
-  const newHistory = await prisma.workspaceHistory.create({
-    data: {
-      workspaceId,
-      userRequest: text,
-      status: "PENDING",
-    },
-  });
-
   // ! AI Server에 요청하는 부분
   // ! 실제로는 요청 후, 대기 상태로 나타내고
   // !요청 처리 후, 결과를 표시하는 것으로 변경함
@@ -78,6 +70,14 @@ export async function submitWork(
   if (responseFromAIServer.error) {
     throw new Error(responseFromAIServer.error);
   }
+
+  const newHistory = await prisma.workspaceHistory.create({
+    data: {
+      workspaceId,
+      userRequest: text,
+      status: "COMPLETED",
+    },
+  });
 
   const newAIResponse = await prisma.aIResponse.create({
     data: {
@@ -101,6 +101,9 @@ export async function submitWork(
       lastUsedAt: new Date(),
     },
   });
+
+  // History 업데이트를 위한 revalidatePath
+  revalidatePath(`/workspaces/${workspaceId}`);
 
   return newAIResponse;
 }

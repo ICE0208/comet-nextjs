@@ -13,7 +13,7 @@ import { useRouter } from "next/navigation";
 
 type AIResponse = Awaited<
   ReturnType<typeof getWorkspaceById>
->["history"][0]["aiResponse"];
+>["history"][number]["aiResponse"];
 
 interface PromptOutputProps {
   savedAIResponse: AIResponse;

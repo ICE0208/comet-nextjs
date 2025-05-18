@@ -1,4 +1,4 @@
-import { Workspace } from "@prisma/client";
+import { getWorkspaceById } from "./actions";
 
 export type WorkspacePageProps = {
   params: Promise<{
@@ -7,7 +7,8 @@ export type WorkspacePageProps = {
 };
 
 export type HeaderProps = {
-  workspaceTitle: string;
+  workspaceTitle?: string;
+  onToggleHistory?: () => void;
 };
 
 export type FooterProps = {
@@ -25,13 +26,22 @@ export type PromptInputProps = {
   savedInputText: string;
 };
 
+interface AIResponseItem {
+  id: number;
+  createdAt: Date;
+  text: string;
+  workspaceHistoryId: string;
+  details?: {
+    id: number;
+    createdAt: Date;
+    text: string;
+    type: string;
+    aiResponseId: number;
+  }[];
+}
+
 export type PromptOutputProps = {
-  savedAIResponse: string | null;
+  savedAIResponse: AIResponseItem | null;
 };
 
-export type WorkspaceWithHistory = Workspace & {
-  history: {
-    userRequest: string;
-    aiResponse: string;
-  }[];
-};
+export type WorkspaceWithHistory = Awaited<ReturnType<typeof getWorkspaceById>>;
