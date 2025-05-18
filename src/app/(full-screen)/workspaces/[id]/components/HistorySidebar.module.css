@@ -58,6 +58,7 @@
   gap: 10px;
   overflow-y: auto;
   flex: 1;
+  padding: 1px;
 }
 
 .historyItem {
@@ -67,12 +68,35 @@
   border: 1px solid #e5e7eb;
   cursor: pointer;
   transition: all 0.2s ease;
+  position: relative;
+  margin: 1px 0;
 }
 
 .historyItem:hover {
-  background-color: #f3f4f6;
-  border-color: #d1d5db;
+  background-color: #f5f3ff;
+  border-color: #c4b5fd;
   transform: translateY(-1px);
+  z-index: 1;
+}
+
+.selected {
+  background-color: #eef2ff;
+  border-color: #818cf8;
+  box-shadow: 0 2px 4px rgba(129, 140, 248, 0.1);
+}
+
+.selected:hover {
+  background-color: #e0e7ff;
+  border-color: #6366f1;
+}
+
+.selected .historyItemText {
+  color: #4f46e5;
+  font-weight: 500;
+}
+
+.selected .historyDate {
+  color: #6366f1;
 }
 
 .historyItemContent {

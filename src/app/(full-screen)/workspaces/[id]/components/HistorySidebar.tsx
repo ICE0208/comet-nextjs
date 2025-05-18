@@ -1,5 +1,4 @@
 "use client";
-import React from "react";
 import styles from "./HistorySidebar.module.css";
 
 // 히스토리 항목의 타입 정의
@@ -23,16 +22,21 @@ interface HistorySidebarProps {
   workspaceId: string;
   isOpen: boolean;
   onClose: () => void;
+  selectedHistoryId: string | null;
+  setSelectedHistoryId: (historyId: string) => void;
 }
 
 const HistorySidebar: React.FC<HistorySidebarProps> = ({
   history,
   isOpen,
   onClose,
+  selectedHistoryId,
+  setSelectedHistoryId,
 }) => {
-  // 히스토리 항목을 클릭했을 때 해당 히스토리로 이동
-  const handleHistoryItemClick = () => {
-    // 히스토리 선택 후 작업 (향후 구현)
+  // 히스토리 항목 클릭 시 해당 히스토리로 이동하는 핸들러
+  const handleHistoryItemClick = (historyId: string) => {
+    if (!historyId) return;
+    setSelectedHistoryId(historyId);
     onClose();
   };
 
@@ -61,14 +65,14 @@ const HistorySidebar: React.FC<HistorySidebarProps> = ({
       </div>
 
       <div className={styles.historyList}>
-        {history.length === 0 ? (
+        {!history?.length ? (
           <div className={styles.emptyState}>히스토리가 없습니다.</div>
         ) : (
           history.map((item) => (
             <div
               key={item.id}
-              className={styles.historyItem}
-              onClick={handleHistoryItemClick}
+              className={`${styles.historyItem} ${item.id === selectedHistoryId ? styles.selected : ""}`}
+              onClick={() => handleHistoryItemClick(item.id)}
             >
               <div className={styles.historyItemContent}>
                 <p className={styles.historyItemText}>

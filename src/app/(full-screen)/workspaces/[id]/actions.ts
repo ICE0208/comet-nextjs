@@ -76,21 +76,29 @@ export async function submitWork(
       workspaceId,
       userRequest: text,
       status: "COMPLETED",
+      aiResponse: {
+        create: {
+          text: JSON.stringify(responseFromAIServer),
+        },
+      },
+    },
+    include: {
+      aiResponse: true,
     },
   });
 
-  const newAIResponse = await prisma.aIResponse.create({
-    data: {
-      workspaceHistoryId: newHistory.id,
-      text: JSON.stringify(responseFromAIServer),
-      // details: {
-      //   create: responseFromAIServer.details,
-      // },
-    },
-    // include: {
-    //   details: true,
-    // },
-  });
+  // await prisma.aIResponse.create({
+  //   data: {
+  //     workspaceHistoryId: newHistory.id,
+  //     text: JSON.stringify(responseFromAIServer),
+  //     // details: {
+  //     //   create: responseFromAIServer.details,
+  //     // },
+  //   },
+  //   // include: {
+  //   //   details: true,
+  //   // },
+  // });
 
   // workspaces의 최근 사용 시간을 업데이트
   await prisma.workspace.update({
@@ -105,5 +113,5 @@ export async function submitWork(
   // History 업데이트를 위한 revalidatePath
   revalidatePath(`/workspaces/${workspaceId}`);
 
-  return newAIResponse;
+  return newHistory;
 }

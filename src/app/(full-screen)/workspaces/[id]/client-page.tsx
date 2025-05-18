@@ -21,9 +21,14 @@ interface ClientWorkspacePageProps {
 
 const ClientWorkspacePage = ({ workspace }: ClientWorkspacePageProps) => {
   const [isHistorySidebarOpen, setIsHistorySidebarOpen] = useState(false);
+  const [selectedHistoryId, setSelectedHistoryId] = useState(
+    workspace.history.length > 0 ? workspace.history[0].id : null
+  );
 
   // 최근 히스토리에서 입력 텍스트와 AI 응답 추출
-  const latestHistory = workspace.history[0] || {
+  const selectedHistory = workspace.history.find(
+    (history) => history.id === selectedHistoryId
+  ) || {
     userRequest: "",
     aiResponse: null,
   };
@@ -44,9 +49,10 @@ const ClientWorkspacePage = ({ workspace }: ClientWorkspacePageProps) => {
       <div className={styles.ioComponents}>
         <PromptInput
           workspaceId={workspace.id}
-          savedInputText={latestHistory.userRequest}
+          savedInputText={selectedHistory.userRequest}
+          setSelectedHistoryId={setSelectedHistoryId}
         />
-        <PromptOutput savedAIResponse={latestHistory.aiResponse} />
+        <PromptOutput savedAIResponse={selectedHistory.aiResponse} />
       </div>
 
       <Footer lastEditDate={new Date(workspace.updatedAt)} />
@@ -57,6 +63,8 @@ const ClientWorkspacePage = ({ workspace }: ClientWorkspacePageProps) => {
         workspaceId={workspace.id}
         isOpen={isHistorySidebarOpen}
         onClose={() => setIsHistorySidebarOpen(false)}
+        selectedHistoryId={selectedHistoryId}
+        setSelectedHistoryId={setSelectedHistoryId}
       />
 
       {/* 백그라운드 오버레이 */}

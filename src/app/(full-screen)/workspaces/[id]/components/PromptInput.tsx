@@ -7,11 +7,13 @@ import { submitWork } from "../actions";
 interface PromptInputProps {
   workspaceId: string;
   savedInputText: string;
+  setSelectedHistoryId: (historyId: string) => void;
 }
 
 const PromptInput = ({
   workspaceId,
   savedInputText: savedText,
+  setSelectedHistoryId,
 }: PromptInputProps) => {
   const [text, setText] = useState<string>(savedText);
   const setOutputData = usePromptStore((state) => state.actions.setOutputData);
@@ -19,6 +21,12 @@ const PromptInput = ({
     (state) => state.actions.setLoadingState
   );
   const loadingState = usePromptStore((state) => state.loadingState);
+
+  useEffect(() => {
+    if (savedText) {
+      setText(savedText);
+    }
+  }, [savedText]);
 
   // 컴포넌트 마운트 시 로딩 상태 확인 (디버깅용)
   useEffect(() => {
@@ -41,9 +49,10 @@ const PromptInput = ({
     try {
       setLoadingState("correctionLoading");
 
-      const newAIResponse = await submitWork(workspaceId, text);
+      const newHistory = await submitWork(workspaceId, text);
 
-      setOutputData(newAIResponse);
+      setOutputData(newHistory.aiResponse);
+      setSelectedHistoryId(newHistory.id);
     } catch (error) {
       alert("텍스트 교정 중 오류가 발생했습니다. 다시 시도해주세요.");
       console.error("Submission error:", error);
