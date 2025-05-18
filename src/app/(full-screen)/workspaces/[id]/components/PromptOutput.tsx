@@ -27,7 +27,7 @@ const CorrectedText = ({ segment }: { segment: Segment }) => {
   const tooltipRef = useRef<HTMLDivElement>(null);
 
   if (!segment.correction) {
-    return <span style={{ wordSpacing: "normal" }}>{segment.text}</span>;
+    return <p style={{ wordSpacing: "normal" }}>{segment.text}</p>;
   }
 
   const handleMouseEnter = () => {

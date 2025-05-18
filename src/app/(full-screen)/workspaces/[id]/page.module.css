@@ -1,16 +1,9 @@
 .header {
   position: relative;
-  /* height: 60px; */
   width: 100%;
-  /* background: linear-gradient(to right, #6a43d1, #9474e6); */
-  /* border-radius: 0px 0px 12px 12px; */
-  /* margin-bottom: 30px; */
-  margin-top: 40px;
-  overflow: visible; /* 이미지가 영역 밖으로 나갈 수 있도록 변경 */
+  margin-top: 0;
+  overflow: visible;
   display: flex;
-  /* justify-content: center; */
-  /* align-items: flex-end; */
-  /* padding: 20px; */
 }
 
 .title {
@@ -25,7 +18,7 @@
   flex-direction: column;
   align-items: center;
   height: 100vh;
-  gap: 1rem;
+  gap: 0.5rem;
   padding: 0 20px;
   overflow: hidden;
   background-color: #f8fafc;
@@ -38,11 +31,112 @@
   width: 100%;
   max-width: 100%;
   flex: 1;
-  margin-bottom: 20px;
+  margin-bottom: 10px;
 }
 
 .ioComponents > * {
   flex: 1;
   min-width: 0;
   height: 100%;
+}
+
+/* 헤더 바 스타일 */
+.headerBar {
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0.75rem 0;
+  margin-top: 4px;
+}
+
+.headerLeft,
+.headerRight {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.backLink {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  color: #4b5563;
+  text-decoration: none;
+  font-weight: 500;
+  font-size: 0.95rem;
+  transition: color 0.2s ease;
+}
+
+.backLink:hover {
+  color: #6366f1;
+}
+
+.iconButton {
+  background: none;
+  border: none;
+  padding: 0.5rem;
+  border-radius: 6px;
+  color: #4b5563;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.iconButton:hover {
+  background-color: rgba(99, 102, 241, 0.1);
+  color: #6366f1;
+}
+
+/* 푸터 스타일 */
+.footer {
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0.75rem 0;
+  border-top: 1px solid #e5e7eb;
+  margin-top: auto;
+  margin-bottom: 4px;
+}
+
+.footerLeft,
+.footerRight,
+.footerCenter {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.copyright {
+  font-size: 0.85rem;
+  color: #6b7280;
+}
+
+.lastEdit {
+  font-size: 0.85rem;
+  color: #6b7280;
+}
+
+.footerButton {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.5rem 0.75rem;
+  border-radius: 6px;
+  border: 1px solid #e5e7eb;
+  background-color: white;
+  color: #4b5563;
+  font-size: 0.85rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.footerButton:hover {
+  border-color: #d1d5db;
+  background-color: #f9fafb;
+  color: #6366f1;
 }
