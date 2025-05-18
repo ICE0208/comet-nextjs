@@ -52,6 +52,36 @@
   color: #4b5563;
 }
 
+.filterButtons {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 16px;
+}
+
+.filterButton {
+  flex: 1;
+  padding: 8px 16px;
+  border: 1px solid #e5e7eb;
+  border-radius: 6px;
+  background-color: white;
+  color: #6b7280;
+  font-size: 0.9rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.filterButton:hover {
+  background-color: #f9fafb;
+  border-color: #d1d5db;
+}
+
+.filterButton.active {
+  background-color: #eef2ff;
+  border-color: #818cf8;
+  color: #4f46e5;
+}
+
 .historyList {
   display: flex;
   flex-direction: column;
@@ -105,6 +135,13 @@
   gap: 8px;
 }
 
+.historyItemHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 2px;
+}
+
 .historyItemText {
   margin: 0;
   font-size: 0.95rem;
@@ -115,11 +152,38 @@
   display: -webkit-box;
   -webkit-line-clamp: 2;
   -webkit-box-orient: vertical;
+  flex: 1;
 }
 
 .historyDate {
   font-size: 0.8rem;
   color: #6b7280;
+}
+
+.starButton {
+  background: none;
+  border: none;
+  padding: 4px;
+  color: #9ca3af;
+  cursor: pointer;
+  border-radius: 4px;
+  transition: all 0.2s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.starButton:hover {
+  background-color: #f3f4f6;
+  color: #fbbf24;
+}
+
+.starButton.active {
+  color: #fbbf24;
+}
+
+.starButton.active:hover {
+  color: #f59e0b;
 }
 
 .emptyState {

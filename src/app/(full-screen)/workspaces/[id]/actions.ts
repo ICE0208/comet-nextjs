@@ -25,7 +25,9 @@ export async function getWorkspaceById(id: string) {
               details: true,
             },
           },
+          historyFavorite: true,
         },
+
         orderBy: {
           createdAt: "desc",
         },
@@ -114,4 +116,59 @@ export async function submitWork(
   revalidatePath(`/workspaces/${workspaceId}`);
 
   return newHistory;
+}
+
+export async function toggleFavorite(historyId: string) {
+  // 로그인 여부 확인
+  const currentUser = await getCurrentUser();
+  if (!currentUser) {
+    redirect("/");
+  }
+
+  const history = await prisma.workspaceHistory.findUnique({
+    where: {
+      id: historyId,
+    },
+    select: {
+      workspace: {
+        select: {
+          userId: true,
+          id: true,
+        },
+      },
+      historyFavorite: true,
+    },
+  });
+
+  // 히스토리 존재 여부 확인
+  if (!history) {
+    redirect("/workspaces");
+  }
+
+  // 히스토리 소유자 확인
+  const owner = history.workspace.userId;
+  if (owner !== currentUser.id) {
+    redirect("/workspaces");
+  }
+
+  // 즐겨찾기 상태 토글
+  if (history.historyFavorite) {
+    await prisma.historyFavorite.delete({
+      where: {
+        id: history.historyFavorite.id,
+      },
+    });
+  } else {
+    await prisma.historyFavorite.create({
+      data: {
+        workspaceHistoryId: historyId,
+      },
+    });
+  }
+
+  revalidatePath(`/workspaces/${history.workspace.id}`);
+
+  return {
+    success: true,
+  };
 }
