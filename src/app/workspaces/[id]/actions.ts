@@ -75,6 +75,10 @@ export async function submitWork(
   // !요청 처리 후, 결과를 표시하는 것으로 변경함
   const responseFromAIServer = await processLiteraryText(text);
 
+  if (responseFromAIServer.error) {
+    throw new Error(responseFromAIServer.error);
+  }
+
   const newAIResponse = await prisma.aIResponse.create({
     data: {
       workspaceHistoryId: newHistory.id,
