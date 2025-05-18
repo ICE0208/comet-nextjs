@@ -35,7 +35,6 @@ const WorkspacePage = async ({ params }: WorkspacePageProps) => {
           }
         />
       </div>
-      {/* <Detail /> */}
     </div>
   );
 };
