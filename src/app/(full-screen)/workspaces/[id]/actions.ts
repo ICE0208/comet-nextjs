@@ -3,7 +3,6 @@
 import { getCurrentUser } from "@/lib/auth";
 import { redirect } from "next/navigation";
 import prisma from "@/lib/prisma";
-import { processLiteraryText } from "@/utils/ai";
 import { revalidatePath } from "next/cache";
 
 export async function getWorkspaceById(id: string) {
@@ -67,55 +66,55 @@ export async function submitWork(
   // ! AI Server에 요청하는 부분
   // ! 실제로는 요청 후, 대기 상태로 나타내고
   // !요청 처리 후, 결과를 표시하는 것으로 변경함
-  const responseFromAIServer = await processLiteraryText(text);
+  // const responseFromAIServer = await processLiteraryText(text);
 
-  if (responseFromAIServer.error) {
-    throw new Error(responseFromAIServer.error);
-  }
+  // if (responseFromAIServer.error) {
+  //   throw new Error(responseFromAIServer.error);
+  // }
 
-  const newHistory = await prisma.workspaceHistory.create({
-    data: {
-      workspaceId,
-      userRequest: text,
-      status: "COMPLETED",
-      aiResponse: {
-        create: {
-          text: JSON.stringify(responseFromAIServer),
-        },
-      },
-    },
-    include: {
-      aiResponse: true,
-    },
-  });
-
-  // await prisma.aIResponse.create({
+  // const newHistory = await prisma.workspaceHistory.create({
   //   data: {
-  //     workspaceHistoryId: newHistory.id,
-  //     text: JSON.stringify(responseFromAIServer),
-  //     // details: {
-  //     //   create: responseFromAIServer.details,
-  //     // },
+  //     workspaceId,
+  //     userRequest: text,
+  //     status: "COMPLETED",
+  //     aiResponse: {
+  //       create: {
+  //         text: JSON.stringify(responseFromAIServer),
+  //       },
+  //     },
   //   },
-  //   // include: {
-  //   //   details: true,
-  //   // },
+  //   include: {
+  //     aiResponse: true,
+  //   },
   // });
 
-  // workspaces의 최근 사용 시간을 업데이트
-  await prisma.workspace.update({
-    where: {
-      id: workspaceId,
+  // // workspaces의 최근 사용 시간을 업데이트
+  // await prisma.workspace.update({
+  //   where: {
+  //     id: workspaceId,
+  //   },
+  //   data: {
+  //     lastUsedAt: new Date(),
+  //   },
+  // });
+
+  const aiResult = await fetch("http://localhost:5005/correction", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
     },
-    data: {
-      lastUsedAt: new Date(),
-    },
+    body: JSON.stringify({ text, workspaceId }),
   });
+  if (!aiResult.ok) {
+    throw new Error("AI 요청 실패");
+  }
+
+  const aiResultJson = await aiResult.json();
 
   // History 업데이트를 위한 revalidatePath
   revalidatePath(`/workspaces/${workspaceId}`);
 
-  return newHistory;
+  return aiResultJson;
 }
 
 export async function toggleFavorite(historyId: string) {
