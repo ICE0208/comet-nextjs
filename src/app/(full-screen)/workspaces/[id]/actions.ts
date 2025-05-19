@@ -68,7 +68,7 @@ export async function submitWork(
     },
   });
 
-  fetch("http://icehome.hopto.org:5005/correction", {
+  fetch("https://icehome.hopto.org/correction", {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
