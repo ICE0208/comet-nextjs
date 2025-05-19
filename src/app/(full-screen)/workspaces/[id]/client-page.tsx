@@ -58,14 +58,17 @@ const ClientWorkspacePage = ({ workspace }: ClientWorkspacePageProps) => {
           };
 
           if (status === "COMPLETED" && response) {
-            router.refresh();
-
             const aiResponse = JSON.parse(response) as AIResponse;
             setOutputData(aiResponse);
             // 서버 상태 최신화 - 히스토리 목록 갱신
           }
 
+          if (status === "ERROR") {
+            setOutputData(null);
+          }
+
           if (status !== "PENDING") {
+            router.refresh();
             eventSource?.close();
             setLoadingState("idle");
           }
