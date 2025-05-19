@@ -5,7 +5,7 @@ import styles from "./page.module.css";
 import NovelContents from "@/components/novel-contents/NovelContents";
 import { novelInfoData } from "../../actions";
 import NovelComment from "@/components/novel-contents/NovelComment";
-import { Novel } from "@/app/novel/[id]/page"; // 서버 컴포넌트에서 가져온 Novel 타입을 사용
+import { Novel } from "@/app/(page)/novel/[id]/page"; // 서버 컴포넌트에서 가져온 Novel 타입을 사용
 import { redirect } from "next/navigation";
 
 type Props = {

@@ -3,7 +3,7 @@ import Link from "next/link";
 import React, { useState } from "react";
 import NovelInfoItem from "./NovelInfoItem";
 import styles from "./NovelInfoItemList.module.css";
-import { Novel } from "@/app/novel/[id]/page"; // 서버 컴포넌트에서 가져온 Novel 타입을 사용
+import { Novel } from "@/app/(page)/novel/[id]/page"; // 서버 컴포넌트에서 가져온 Novel 타입을 사용
 
 interface Props {
   novel: Novel;
