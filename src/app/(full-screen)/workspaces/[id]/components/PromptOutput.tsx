@@ -248,10 +248,12 @@ const PromptOutput = ({ selectedHistory, historyCount }: PromptOutputProps) => {
               style={{ wordSpacing: "normal", letterSpacing: "-0.02em" }}
             >
               {line.segments.map((segment: Segment, i: number) => (
-                <CorrectedText
-                  key={i}
-                  segment={segment}
-                />
+                <div key={i}>
+                  <CorrectedText
+                    key={i}
+                    segment={segment}
+                  />
+                </div>
               ))}
             </div>
           ))}
