@@ -23,10 +23,29 @@ const HistorySidebar: React.FC<HistorySidebarProps> = ({
   selectedHistoryId,
   setSelectedHistoryId,
 }) => {
-  const [showFavoritesOnly, setShowFavoritesOnly] = useState(true);
+  const [showFavoritesOnly, setShowFavoritesOnly] = useState(false);
   const [loadingStates, setLoadingStates] = useState<Record<string, boolean>>(
     {}
   );
+
+  const getHistoryDate = (item: HistoryItem) => {
+    if (item.aiResponse) {
+      return new Date(item.aiResponse.createdAt).toLocaleDateString("ko-KR", {
+        month: "short",
+        day: "numeric",
+        hour: "2-digit",
+        minute: "2-digit",
+      });
+    }
+    if (item.status === "PENDING") return "교열중...";
+    if (item.status === "ERROR") return "교열 실패";
+    return new Date(item.createdAt).toLocaleDateString("ko-KR", {
+      month: "short",
+      day: "numeric",
+      hour: "2-digit",
+      minute: "2-digit",
+    });
+  };
 
   // 히스토리 항목 클릭 시 해당 히스토리로 이동하는 핸들러
   const handleHistoryItemClick = (historyId: string) => {
@@ -134,12 +153,7 @@ const HistorySidebar: React.FC<HistorySidebarProps> = ({
                   </button>
                 </div>
                 <span className={styles.historyDate}>
-                  {new Date(item.createdAt).toLocaleDateString("ko-KR", {
-                    month: "short",
-                    day: "numeric",
-                    hour: "2-digit",
-                    minute: "2-digit",
-                  })}
+                  {getHistoryDate(item)}
                 </span>
               </div>
             </div>

@@ -19,7 +19,7 @@
   align-items: center;
   height: 100vh;
   gap: 0.5rem;
-  padding: 0 20px;
+  padding: 6px 40px;
   overflow: hidden;
   background-color: #f8fafc;
 }
@@ -32,6 +32,7 @@
   max-width: 100%;
   flex: 1;
   margin-bottom: 10px;
+  min-height: 0;
 }
 
 .ioComponents > * {

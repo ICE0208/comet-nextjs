@@ -19,11 +19,7 @@ export async function getWorkspaceById(id: string) {
     include: {
       history: {
         include: {
-          aiResponse: {
-            include: {
-              details: true,
-            },
-          },
+          aiResponse: true,
           historyFavorite: true,
         },
 
@@ -63,58 +59,30 @@ export async function submitWork(
     redirect("/workspaces");
   }
 
-  // ! AI Server에 요청하는 부분
-  // ! 실제로는 요청 후, 대기 상태로 나타내고
-  // !요청 처리 후, 결과를 표시하는 것으로 변경함
-  // const responseFromAIServer = await processLiteraryText(text);
+  // 워크스페이스 히스토리 생성
+  const newWorkspaceHistory = await prisma.workspaceHistory.create({
+    data: {
+      workspaceId,
+      userRequest: text,
+      status: "PENDING",
+    },
+  });
 
-  // if (responseFromAIServer.error) {
-  //   throw new Error(responseFromAIServer.error);
-  // }
-
-  // const newHistory = await prisma.workspaceHistory.create({
-  //   data: {
-  //     workspaceId,
-  //     userRequest: text,
-  //     status: "COMPLETED",
-  //     aiResponse: {
-  //       create: {
-  //         text: JSON.stringify(responseFromAIServer),
-  //       },
-  //     },
-  //   },
-  //   include: {
-  //     aiResponse: true,
-  //   },
-  // });
-
-  // // workspaces의 최근 사용 시간을 업데이트
-  // await prisma.workspace.update({
-  //   where: {
-  //     id: workspaceId,
-  //   },
-  //   data: {
-  //     lastUsedAt: new Date(),
-  //   },
-  // });
-
-  const aiResult = await fetch("http://localhost:5005/correction", {
+  fetch("http://icehome.hopto.org:5005/correction", {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
     },
-    body: JSON.stringify({ text, workspaceId }),
+    body: JSON.stringify({ text, historyId: newWorkspaceHistory.id }),
   });
-  if (!aiResult.ok) {
-    throw new Error("AI 요청 실패");
-  }
-
-  const aiResultJson = await aiResult.json();
+  // if (!aiResult.ok) {
+  //   throw new Error("AI 요청 실패");
+  // }
 
   // History 업데이트를 위한 revalidatePath
   revalidatePath(`/workspaces/${workspaceId}`);
 
-  return aiResultJson;
+  return newWorkspaceHistory.id;
 }
 
 export async function toggleFavorite(historyId: string) {

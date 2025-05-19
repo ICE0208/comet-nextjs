@@ -144,7 +144,8 @@
 }
 
 .errorText {
-  color: #ef4444;
+  color: #ff5353;
+  font-weight: 500;
 }
 
 .promptContent {
