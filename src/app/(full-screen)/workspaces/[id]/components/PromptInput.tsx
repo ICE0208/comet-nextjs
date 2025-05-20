@@ -19,6 +19,7 @@ const PromptInput = ({
   const setLoadingState = usePromptStore(
     (state) => state.actions.setLoadingState
   );
+  const setOutputData = usePromptStore((state) => state.actions.setOutputData);
   const loadingState = usePromptStore((state) => state.loadingState);
 
   useEffect(() => {
@@ -78,6 +79,7 @@ const PromptInput = ({
     } catch (error) {
       alert("텍스트 교정 중 오류가 발생했습니다.");
       console.error("Submission error:", error);
+      setOutputData(null);
       setLoadingState("idle");
     }
   };
