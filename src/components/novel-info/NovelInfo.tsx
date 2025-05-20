@@ -2,7 +2,7 @@
 import React, { useState } from "react";
 import Image from "next/image";
 import styles from "./NovelInfo.module.css";
-import { Novel } from "@/app/novel/[id]/page"; // 서버 컴포넌트에서 가져온 Novel 타입을 사용
+import { Novel } from "@/app/(page)/novel/[id]/page"; // 서버 컴포넌트에서 가져온 Novel 타입을 사용
 
 type NovelProps = {
   novel: Novel;

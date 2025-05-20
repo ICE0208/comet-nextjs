@@ -2,19 +2,19 @@
   display: flex;
   flex-direction: column;
   background-color: white;
-  padding: 2rem 2rem 0 2rem;
-  border-radius: 12px;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+  padding: 1rem 1rem 0 1rem;
+  border-radius: 16px;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.04);
   height: 100%;
   transition: all 0.2s ease;
 }
 
 .textarea {
   width: 100%;
-  height: calc(100% - 80px);
-  padding: 1.25rem;
-  border: 1px solid #e0e0e0;
-  border-radius: 8px;
+  height: calc(100% - 60px);
+  padding: 1rem;
+  border: 1px solid #e4e9f0;
+  border-radius: 12px;
   background-color: #fdfdfd;
   resize: none;
   font-size: 1rem;
@@ -27,16 +27,16 @@
 
 .textarea:focus {
   outline: none;
-  border-color: #4a90e2;
-  box-shadow: 0 0 0 3px rgba(74, 144, 226, 0.15);
+  border-color: #6366f1;
+  box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.15);
 }
 
 .checkboxContainer {
   display: flex;
   flex-wrap: wrap;
   align-items: center;
-  gap: 1.5rem;
-  padding-top: 1.5rem;
+  gap: 1rem;
+  padding-top: 0.75rem;
   justify-content: space-between;
 }
 
@@ -57,31 +57,56 @@
   width: 18px;
   height: 18px;
   cursor: pointer;
-  accent-color: #4a90e2;
+  accent-color: #6366f1;
 }
 
 .submitButton {
-  background-color: #4a90e2;
+  background-color: #6366f1;
   color: white;
   border: none;
-  border-radius: 8px;
-  padding: 0.75rem 1.5rem;
+  border-radius: 12px;
+  padding: 0.6rem 1.5rem;
   font-size: 0.95rem;
   font-weight: 600;
   cursor: pointer;
   transition: all 0.2s ease;
-  box-shadow: 0 2px 6px rgba(74, 144, 226, 0.25);
+  box-shadow: 0 2px 10px rgba(99, 102, 241, 0.25);
   margin-left: auto;
+  position: relative;
+  overflow: hidden;
 }
 
 .submitButton:hover {
-  background-color: #3a80d2;
+  background-color: #4f46e5;
   transform: translateY(-2px);
-  box-shadow: 0 4px 8px rgba(74, 144, 226, 0.3);
+  box-shadow: 0 4px 12px rgba(99, 102, 241, 0.3);
 }
 
 .submitButton:active {
   transform: translateY(0);
+}
+
+.submitButton::before {
+  content: "";
+  position: absolute;
+  top: -50%;
+  left: -50%;
+  width: 200%;
+  height: 200%;
+  background: rgba(255, 255, 255, 0.1);
+  transform: rotate(45deg);
+  transition: all 0.4s ease;
+  opacity: 0;
+}
+
+.submitButton:hover::before {
+  opacity: 1;
+  transform: rotate(45deg) translateY(-50%);
+}
+
+.submitting {
+  background-color: #6366f1;
+  opacity: 0.8;
 }
 
 .checkboxOptionsGroup {

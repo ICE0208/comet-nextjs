@@ -2,7 +2,7 @@ import React from "react";
 import Image from "next/image";
 import Link from "next/link";
 import styles from "./NovelItem.module.css";
-import { Novel } from "@/app/novel/page";
+import { Novel } from "@/app/(page)/novel/page";
 
 interface NovelItemProps {
   novel: Novel[number];

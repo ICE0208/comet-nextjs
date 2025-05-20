@@ -11,12 +11,13 @@ import {
 } from "@/utils/ai";
 import { useRouter } from "next/navigation";
 
-type AIResponse = Awaited<
+type WorkspaceHistory = Awaited<
   ReturnType<typeof getWorkspaceById>
->["history"][0]["aiResponse"];
+>["history"][number];
 
 interface PromptOutputProps {
-  savedAIResponse: AIResponse;
+  selectedHistory: WorkspaceHistory | null;
+  historyCount: number;
 }
 
 // 교정된 텍스트 컴포넌트 분리
@@ -27,7 +28,11 @@ const CorrectedText = ({ segment }: { segment: Segment }) => {
   const tooltipRef = useRef<HTMLDivElement>(null);
 
   if (!segment.correction) {
-    return <span style={{ wordSpacing: "normal" }}>{segment.text}</span>;
+    return (
+      <span style={{ wordSpacing: "normal", margin: "0 0.2em" }}>
+        {segment.text}
+      </span>
+    );
   }
 
   const handleMouseEnter = () => {
@@ -105,7 +110,7 @@ const CorrectedText = ({ segment }: { segment: Segment }) => {
   );
 };
 
-const PromptOutput = ({ savedAIResponse }: PromptOutputProps) => {
+const PromptOutput = ({ selectedHistory, historyCount }: PromptOutputProps) => {
   const outputData = usePromptStore((state) => state.outputData);
   const loadingState = usePromptStore((state) => state.loadingState);
   const error = usePromptStore((state) => state.error);
@@ -127,15 +132,28 @@ const PromptOutput = ({ savedAIResponse }: PromptOutputProps) => {
     []
   );
 
+  useEffect(() => {
+    if (historyCount === 0) {
+      setLoadingState("idle");
+    }
+  }, [historyCount, setLoadingState]);
+
   // 저장된 응답 데이터 설정
   useEffect(() => {
-    // 데이터 로드가 완료되었으므로 항상 idle 상태로 변경
-    setLoadingState("idle");
-
-    if (savedAIResponse) {
-      setOutputData(savedAIResponse);
+    if (!selectedHistory) {
+      return;
     }
-  }, [savedAIResponse, setOutputData, setLoadingState]);
+
+    if (selectedHistory.status === "COMPLETED") {
+      setOutputData(selectedHistory.aiResponse);
+      setLoadingState("idle");
+    } else if (selectedHistory.status === "PENDING") {
+      setLoadingState("correctionLoading");
+    } else if (selectedHistory.status === "ERROR") {
+      setOutputData(null);
+      setLoadingState("idle");
+    }
+  }, [selectedHistory, setOutputData, setLoadingState]);
 
   // 응답 데이터 파싱
   useEffect(() => {
@@ -200,8 +218,12 @@ const PromptOutput = ({ savedAIResponse }: PromptOutputProps) => {
     }
 
     // 데이터가 없는 상태 (로드 완료 후)
-    if (!outputData) {
+    if (!outputData && historyCount === 0) {
       return <p className={styles.emptyText}>아직 제출된 문장이 없습니다.</p>;
+    }
+
+    if (!outputData) {
+      return <p className={styles.errorText}>교열에 실패하였습니다.</p>;
     }
 
     // 데이터가 있지만 교정 데이터가 아직 파싱되지 않은 상태
@@ -226,10 +248,12 @@ const PromptOutput = ({ savedAIResponse }: PromptOutputProps) => {
               style={{ wordSpacing: "normal", letterSpacing: "-0.02em" }}
             >
               {line.segments.map((segment: Segment, i: number) => (
-                <CorrectedText
-                  key={i}
-                  segment={segment}
-                />
+                <div key={i}>
+                  <CorrectedText
+                    key={i}
+                    segment={segment}
+                  />
+                </div>
               ))}
             </div>
           ))}

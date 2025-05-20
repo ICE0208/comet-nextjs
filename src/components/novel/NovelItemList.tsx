@@ -2,7 +2,7 @@
 import React, { useEffect, useState } from "react";
 import NovelItem from "./NovelItem";
 import styles from "./NovelItemList.module.css";
-import { Novel } from "@/app/novel/page";
+import { Novel } from "@/app/(page)/novel/page";
 
 interface NovelItemListProps {
   data: Novel;

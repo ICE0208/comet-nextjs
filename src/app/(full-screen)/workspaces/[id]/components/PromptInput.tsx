@@ -7,18 +7,25 @@ import { submitWork } from "../actions";
 interface PromptInputProps {
   workspaceId: string;
   savedInputText: string;
+  setSelectedHistoryId: (historyId: string) => void;
 }
 
 const PromptInput = ({
   workspaceId,
   savedInputText: savedText,
+  setSelectedHistoryId,
 }: PromptInputProps) => {
   const [text, setText] = useState<string>(savedText);
-  const setOutputData = usePromptStore((state) => state.actions.setOutputData);
   const setLoadingState = usePromptStore(
     (state) => state.actions.setLoadingState
   );
   const loadingState = usePromptStore((state) => state.loadingState);
+
+  useEffect(() => {
+    if (savedText) {
+      setText(savedText);
+    }
+  }, [savedText]);
 
   // 컴포넌트 마운트 시 로딩 상태 확인 (디버깅용)
   useEffect(() => {
@@ -29,25 +36,48 @@ const PromptInput = ({
     setText(e.target.value);
   };
 
-  const handleSubmit = async () => {
-    console.log("현재 로딩 상태:", loadingState); // 디버깅용
+  // const listenToHistory = (historyId: string) => {
+  //   const eventSource = new EventSource(
+  //     `http://localhost:5005/events/${historyId}`
+  //   );
 
-    // idle 상태일 때만 교정 요청을 허용
-    if (!text.trim() || loadingState !== "idle") {
-      console.log("교정 요청 무시됨: 텍스트가 비어있거나 로딩 중");
-      return;
-    }
+  //   eventSource.onmessage = (event) => {
+  //     const { status, response } = JSON.parse(event.data) as {
+  //       response: string;
+  //       status: string;
+  //     };
+
+  //     if (status === "COMPLETED" && response) {
+  //       const aiResponse = JSON.parse(response) as AIResponse;
+  //       setOutputData(aiResponse);
+  //     }
+
+  //     if (status !== "PENDING") {
+  //       eventSource.close();
+  //       setLoadingState("idle");
+  //     }
+  //   };
+
+  //   eventSource.onerror = () => {
+  //     console.error("SSE 연결 실패");
+  //     eventSource.close();
+  //     setLoadingState("idle");
+  //   };
+  // };
+
+  const handleSubmit = async () => {
+    if (!text.trim() || loadingState !== "idle") return;
 
     try {
       setLoadingState("correctionLoading");
 
-      const newAIResponse = await submitWork(workspaceId, text);
+      const historyId = await submitWork(workspaceId, text);
 
-      setOutputData(newAIResponse);
+      setSelectedHistoryId(historyId);
+      // listenToHistory(historyId); // ← SSE 연결
     } catch (error) {
-      alert("텍스트 교정 중 오류가 발생했습니다. 다시 시도해주세요.");
+      alert("텍스트 교정 중 오류가 발생했습니다.");
       console.error("Submission error:", error);
-    } finally {
       setLoadingState("idle");
     }
   };
