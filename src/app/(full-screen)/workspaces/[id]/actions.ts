@@ -68,19 +68,29 @@ export async function submitWork(
     },
   });
 
-  fetch("https://icehome.hopto.org/correction", {
+  // History 업데이트를 위한 revalidatePath
+  revalidatePath(`/workspaces/${workspaceId}`);
+
+  // fetch 요청의 성공 여부를 체크하고
+  const aiRequest = await fetch("https://icehome.hopto.org/correction", {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
     },
     body: JSON.stringify({ text, historyId: newWorkspaceHistory.id }),
   });
-  // if (!aiResult.ok) {
-  //   throw new Error("AI 요청 실패");
-  // }
 
-  // History 업데이트를 위한 revalidatePath
-  revalidatePath(`/workspaces/${workspaceId}`);
+  // 실패하면 history 상태를 ERROR로 바꿔야지
+  if (!aiRequest.ok) {
+    await prisma.workspaceHistory.update({
+      where: { id: newWorkspaceHistory.id },
+      data: {
+        status: "ERROR",
+      },
+    });
+
+    throw new Error("AI 서버 요청 실패"); // 또는 별도 에러 핸들링
+  }
 
   return newWorkspaceHistory.id;
 }
