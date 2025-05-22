@@ -3,13 +3,9 @@ import React, { useEffect, useState, useRef } from "react";
 import styles from "./PromptOutput.module.css";
 import { usePromptStore } from "@/store/promptStore"; // Zustand 스토어 가져오기
 import { getWorkspaceById } from "../actions";
-import {
-  CorrectionData,
-  CorrectionLine,
-  Segment,
-  ProcessLiteraryTextResult,
-} from "@/utils/ai";
+import { CorrectionData, Segment, ProcessLiteraryTextResult } from "@/utils/ai";
 import { useRouter } from "next/navigation";
+import useCheckTextStore from "@/store/checkTextStore";
 
 type WorkspaceHistory = Awaited<
   ReturnType<typeof getWorkspaceById>
@@ -21,11 +17,19 @@ interface PromptOutputProps {
 }
 
 // 교정된 텍스트 컴포넌트 분리
-const CorrectedText = ({ segment }: { segment: Segment }) => {
+const CorrectedText = ({
+  segment,
+}: {
+  segment: Segment & { order: number };
+}) => {
   const [showTooltip, setShowTooltip] = useState(false);
   const [tooltipPosition, setTooltipPosition] = useState({ top: 0, left: 0 });
   const textRef = useRef<HTMLSpanElement>(null);
   const tooltipRef = useRef<HTMLDivElement>(null);
+  const setTargetText = useCheckTextStore(
+    (state) => state.actions.setTargetText
+  );
+  const setTextOrder = useCheckTextStore((state) => state.actions.setTextOrder);
 
   if (!segment.correction) {
     return (
@@ -36,6 +40,9 @@ const CorrectedText = ({ segment }: { segment: Segment }) => {
   }
 
   const handleMouseEnter = () => {
+    const originalText = segment.correction?.before ?? segment.text;
+    setTargetText(originalText);
+    setTextOrder(segment.order);
     if (textRef.current) {
       const rect = textRef.current.getBoundingClientRect();
       setTooltipPosition({
@@ -51,7 +58,11 @@ const CorrectedText = ({ segment }: { segment: Segment }) => {
       ref={textRef}
       className={styles.correctedText}
       onMouseEnter={handleMouseEnter}
-      onMouseLeave={() => setShowTooltip(false)}
+      onMouseLeave={() => {
+        setShowTooltip(false);
+        setTargetText("");
+        setTextOrder(0);
+      }}
     >
       {segment.text}
       {showTooltip && (
@@ -128,6 +139,7 @@ const PromptOutput = ({ selectedHistory, historyCount }: PromptOutputProps) => {
     () => () => {
       // 컴포넌트 언마운트 시 스토어 전체 초기화
       usePromptStore.getState().actions.resetStore();
+      useCheckTextStore.getState().actions.resetStore();
     },
     []
   );
@@ -236,18 +248,36 @@ const PromptOutput = ({ selectedHistory, historyCount }: PromptOutputProps) => {
     }
 
     // 데이터가 있고 교정 데이터가 파싱된 상태
+    // 같은 문장이 여러 번 나왔을 때 몇 번째 순서인지 확인 할 수 있도록 순서를 부여
+    // 0번째 순서부터 시작
+    const texts: { [key: string]: number } = {};
+    const correctionDataWithOrder = correctionData.map((line) => {
+      const segments = line.segments.map((segment) => {
+        const text = segment.text;
+        texts[text] = (texts[text] ?? -1) + 1;
+        const order = texts[text];
+        return {
+          ...segment,
+          order,
+        };
+      });
+      return {
+        segments,
+      };
+    });
+
     return (
       <div className={styles.promptContent}>
         <h3 className={styles.promptTitle}>교열된 문장</h3>
 
         <div className={styles.correctionResult}>
-          {correctionData.map((line: CorrectionLine, idx: number) => (
+          {correctionDataWithOrder.map((line, idx) => (
             <div
               key={idx}
               className={styles.correctionLine}
               style={{ wordSpacing: "normal", letterSpacing: "-0.02em" }}
             >
-              {line.segments.map((segment: Segment, i: number) => (
+              {line.segments.map((segment, i) => (
                 <div key={i}>
                   <CorrectedText
                     key={i}
