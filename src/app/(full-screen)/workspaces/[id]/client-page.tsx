@@ -44,6 +44,7 @@ const ClientWorkspacePage = ({ workspace }: ClientWorkspacePageProps) => {
   );
   const router = useRouter();
   useEffect(() => {
+    router.refresh();
     let eventSource: EventSource | null = null;
     if (selectedHistoryId) {
       const listenToHistory = (historyId: string) => {
@@ -57,9 +58,22 @@ const ClientWorkspacePage = ({ workspace }: ClientWorkspacePageProps) => {
             status: string;
           };
 
+          if (status === "PROCESSING" && response) {
+            const aiResponse = {
+              id: -1,
+              createdAt: new Date(),
+              workspaceHistoryId: historyId,
+              text: response,
+            };
+            setOutputData(aiResponse);
+            setLoadingState("processing");
+            // 서버 상태 최신화 - 히스토리 목록 갱신
+          }
+
           if (status === "COMPLETED" && response) {
             const aiResponse = JSON.parse(response) as AIResponse;
             setOutputData(aiResponse);
+            eventSource?.close();
             // 서버 상태 최신화 - 히스토리 목록 갱신
           }
 
@@ -67,7 +81,7 @@ const ClientWorkspacePage = ({ workspace }: ClientWorkspacePageProps) => {
             setOutputData(null);
           }
 
-          if (status !== "PENDING") {
+          if (status !== "PENDING" && status !== "PROCESSING") {
             router.refresh();
             eventSource?.close();
             setLoadingState("idle");

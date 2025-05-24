@@ -5,7 +5,11 @@ import { create } from "zustand";
 type OutputData = AIResponse;
 
 // 로딩 상태 타입 정의
-export type LoadingState = "idle" | "initialLoading" | "correctionLoading";
+export type LoadingState =
+  | "idle"
+  | "initialLoading"
+  | "correctionLoading"
+  | "processing";
 
 // 프롬프트 상태 관리 인터페이스
 interface PromptState {
