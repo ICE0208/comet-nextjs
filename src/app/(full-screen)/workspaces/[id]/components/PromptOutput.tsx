@@ -229,12 +229,11 @@ const PromptOutput = ({ selectedHistory, historyCount }: PromptOutputProps) => {
       );
     }
 
-    // 데이터가 없는 상태 (로드 완료 후)
-    if (!outputData && historyCount === 0) {
-      return <p className={styles.emptyText}>아직 제출된 문장이 없습니다.</p>;
-    }
-
     if (!outputData) {
+      if (historyCount === 0) {
+        return <p className={styles.emptyText}>아직 제출된 문장이 없습니다.</p>;
+      }
+
       return <p className={styles.errorText}>교열에 실패하였습니다.</p>;
     }
 
@@ -243,6 +242,14 @@ const PromptOutput = ({ selectedHistory, historyCount }: PromptOutputProps) => {
       return (
         <div className={styles.promptText}>
           <p>데이터를 처리하는 중입니다...</p>
+        </div>
+      );
+    }
+
+    if (loadingState === "processing" && correctionData.length === 0) {
+      return (
+        <div className={styles.promptText}>
+          <p>교정 데이터를 처리하는 중입니다...</p>
         </div>
       );
     }

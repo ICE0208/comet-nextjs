@@ -62,57 +62,43 @@ const PromptInput = ({
     }
 
     const textContent = textarea.value;
-    let foundIndex = -1;
 
     // targetText의 n번째 위치 찾기 (textOrder는 0부터 시작)
-    // 정확한 단어 경계를 확인하여 일치하는 텍스트 찾기
     const findExactTextOccurrence = (
       text: string,
       searchText: string,
       order: number
     ): number => {
-      // 정규식을 사용하여 단어 경계를 고려한 검색
-      // 단어 경계는 공백, 줄바꿈, 문장 부호 등으로 구분
+      if (!searchText || searchText.trim() === "") return -1;
       const pattern = new RegExp(
         `(^|[\\s\\n.,;!?])${escapeRegExp(searchText)}([\\s\\n.,;!?]|$)`,
         "g"
       );
-      pattern.lastIndex = 0; // 검색 시작 위치 초기화
+      pattern.lastIndex = 0;
 
       let count = 0;
       let match;
       while ((match = pattern.exec(text)) !== null) {
-        // 정확한 시작 위치 계산 (매치된 단어 경계를 제외한 실제 텍스트 위치)
         const exactStart = match.index + match[1].length;
-
-        if (count === order) {
-          return exactStart;
-        }
-
+        if (count === order) return exactStart;
         count++;
-        // 다음 검색을 위해 lastIndex 조정 (중복 매치 방지)
         pattern.lastIndex = exactStart + searchText.length;
       }
 
-      // 정규식으로 찾지 못한 경우 단순 indexOf로 시도
+      // 폴백으로 단순 검색
       if (count === 0) {
         let fallbackIndex = 0;
         let fallbackCount = 0;
-
         while (fallbackCount <= order) {
           const index = text.indexOf(searchText, fallbackIndex);
           if (index === -1) break;
-
-          if (fallbackCount === order) {
-            return index;
-          }
-
+          if (fallbackCount === order) return index;
           fallbackIndex = index + searchText.length;
           fallbackCount++;
         }
       }
 
-      return -1; // 찾지 못한 경우
+      return -1;
     };
 
     // 정규식 특수문자 이스케이프 함수
@@ -120,52 +106,15 @@ const PromptInput = ({
       string.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
 
     // 정확한 위치 찾기
-    foundIndex = findExactTextOccurrence(textContent, targetText, textOrder);
+    const foundIndex = findExactTextOccurrence(
+      textContent,
+      targetText,
+      textOrder
+    );
 
     if (foundIndex !== -1) {
-      // 현재 스크롤 위치 저장
-      const savedScrollTop = textarea.scrollTop;
-
-      // 선택된 텍스트의 위치 계산을 위한 임시 텍스트 생성
+      // 이전 방식으로 돌아가서 줄 전체에 하이라이트 적용
       const textBeforeTarget = textContent.substring(0, foundIndex);
-
-      // 임시 textarea 생성 및 스타일 복사
-      const tempTextarea = document.createElement("textarea");
-      tempTextarea.style.width = textarea.offsetWidth + "px";
-      tempTextarea.style.height = "auto";
-      tempTextarea.style.position = "absolute";
-      tempTextarea.style.left = "-9999px";
-      tempTextarea.style.top = "-9999px";
-      tempTextarea.style.whiteSpace = "pre-wrap";
-      tempTextarea.style.wordBreak =
-        window.getComputedStyle(textarea).wordBreak;
-      tempTextarea.style.font = window.getComputedStyle(textarea).font;
-      tempTextarea.style.lineHeight =
-        window.getComputedStyle(textarea).lineHeight;
-      tempTextarea.style.padding = window.getComputedStyle(textarea).padding;
-      tempTextarea.value = textBeforeTarget;
-
-      document.body.appendChild(tempTextarea);
-      const targetTop = tempTextarea.scrollHeight;
-      document.body.removeChild(tempTextarea);
-
-      // 선택된 텍스트가 화면의 40% 지점에 오도록 스크롤 조정
-      const scrollPosition = Math.max(
-        0,
-        targetTop - textarea.clientHeight * 0.4
-      );
-
-      // 줄바꿈과 공백을 보존하기 위해 HTML 엔티티로 변환
-      const formatText = (text: string) =>
-        text
-          .replace(/&/g, "&amp;")
-          .replace(/</g, "&lt;")
-          .replace(/>/g, "&gt;")
-          .replace(/\n/g, "<br>")
-          .replace(/ /g, "&nbsp;")
-          .replace(/\t/g, "&nbsp;&nbsp;&nbsp;&nbsp;");
-
-      // 대상 줄의 시작과 끝 인덱스 계산
       const linesBeforeTarget = textBeforeTarget.split("\n");
       const targetLineIndex = linesBeforeTarget.length - 1;
       const allLines = textContent.split("\n");
@@ -187,6 +136,16 @@ const PromptInput = ({
           ? lineStartIndices[targetLineIndex + 1] - 1
           : textContent.length;
 
+      // 줄바꿈과 공백을 보존하기 위해 HTML 엔티티로 변환
+      const formatText = (text: string) =>
+        text
+          .replace(/&/g, "&amp;")
+          .replace(/</g, "&lt;")
+          .replace(/>/g, "&gt;")
+          .replace(/\n/g, "<br>")
+          .replace(/ /g, "&nbsp;")
+          .replace(/\t/g, "&nbsp;&nbsp;&nbsp;&nbsp;");
+
       // 전체 HTML 생성
       let html = "";
 
@@ -196,7 +155,7 @@ const PromptInput = ({
       }
 
       // 대상 줄 (세로선 표시)
-      html += `<div class="${styles.lineIndicator}">`;
+      html += `<div class="${styles.lineIndicator}" style="white-space: pre-wrap; display: block;">`;
       html += formatText(textContent.substring(targetLineStart, targetLineEnd));
       html += "</div>";
 
@@ -208,7 +167,34 @@ const PromptInput = ({
       // 하이라이터에 HTML 적용
       highlighter.innerHTML = html;
 
-      // 스크롤 위치 조정을 위한 함수
+      // 텍스트 위치 계산을 위한 임시 요소
+      const tempTextarea = document.createElement("textarea");
+      tempTextarea.style.width = textarea.offsetWidth + "px";
+      tempTextarea.style.height = "auto";
+      tempTextarea.style.position = "absolute";
+      tempTextarea.style.left = "-9999px";
+      tempTextarea.style.top = "-9999px";
+      tempTextarea.style.whiteSpace = "pre-wrap";
+      tempTextarea.style.wordBreak =
+        window.getComputedStyle(textarea).wordBreak;
+      tempTextarea.style.font = window.getComputedStyle(textarea).font;
+      tempTextarea.style.lineHeight =
+        window.getComputedStyle(textarea).lineHeight;
+      tempTextarea.style.padding = window.getComputedStyle(textarea).padding;
+      tempTextarea.value = textBeforeTarget;
+
+      document.body.appendChild(tempTextarea);
+      const targetTop = tempTextarea.scrollHeight;
+      document.body.removeChild(tempTextarea);
+
+      // 선택된 텍스트가 화면의 40% 지점에 오도록 스크롤 조정
+      const savedScrollTop = textarea.scrollTop;
+      const scrollPosition = Math.max(
+        0,
+        targetTop - textarea.clientHeight * 0.4
+      );
+
+      // 스크롤 애니메이션
       let startTime: number | null = null;
       const duration = 300;
 
@@ -216,14 +202,10 @@ const PromptInput = ({
         if (!startTime) startTime = timestamp;
         const elapsed = timestamp - startTime;
         const progress = Math.min(elapsed / duration, 1);
-
-        // 더 빠른 easeOutQuad 이징 함수
         const easeProgress = 1 - (1 - progress) * (1 - progress);
 
-        // 현재 저장된 스크롤 위치에서 목표 위치로 부드럽게 이동
         textarea.scrollTop =
           savedScrollTop + (scrollPosition - savedScrollTop) * easeProgress;
-        // 하이라이터도 같은 스크롤 위치로 설정
         highlighter.scrollTop = textarea.scrollTop;
 
         if (progress < 1) {
@@ -231,7 +213,6 @@ const PromptInput = ({
         }
       };
 
-      // 애니메이션 시작
       requestAnimationFrame(animate);
     }
   }, [targetText, textOrder, text]);
