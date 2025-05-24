@@ -72,7 +72,7 @@ export async function submitWork(
   revalidatePath(`/workspaces/${workspaceId}`);
 
   // fetch 요청의 성공 여부를 체크하고
-  const aiRequest = await fetch("http://localhost:5005/correction", {
+  const aiRequest = await fetch("https://icehome.hopto.org/correction", {
     method: "POST",
     headers: {
       "Content-Type": "application/json",

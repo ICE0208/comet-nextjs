@@ -49,7 +49,7 @@ const ClientWorkspacePage = ({ workspace }: ClientWorkspacePageProps) => {
     if (selectedHistoryId) {
       const listenToHistory = (historyId: string) => {
         eventSource = new EventSource(
-          `http://localhost:5005/events/${historyId}`
+          `https://icehome.hopto.org/events/${historyId}`
         );
 
         eventSource.onmessage = (event) => {
