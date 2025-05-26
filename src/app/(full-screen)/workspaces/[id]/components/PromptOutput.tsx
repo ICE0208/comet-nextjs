@@ -3,10 +3,11 @@ import React, { useEffect, useState, useRef } from "react";
 import styles from "./PromptOutput.module.css";
 import { usePromptStore } from "@/store/promptStore"; // Zustand 스토어 가져오기
 import { getWorkspaceById } from "../actions";
-import { CorrectionData, Segment, ProcessLiteraryTextResult } from "@/utils/ai";
+import { CorrectionData, ProcessLiteraryTextResult } from "@/utils/ai";
 import { useRouter } from "next/navigation";
 import useCheckTextStore from "@/store/checkTextStore";
 import useChangedTextStore from "@/store/changedTextStore";
+import CorrectedText from "./CorrectedText";
 
 type WorkspaceHistory = Awaited<
   ReturnType<typeof getWorkspaceById>
@@ -16,117 +17,6 @@ interface PromptOutputProps {
   selectedHistory: WorkspaceHistory | null;
   historyCount: number;
 }
-
-// 교정된 텍스트 컴포넌트 분리
-const CorrectedText = ({
-  segment,
-}: {
-  segment: Segment & { order: number };
-}) => {
-  const [showTooltip, setShowTooltip] = useState(false);
-  const [tooltipPosition, setTooltipPosition] = useState({ top: 0, left: 0 });
-  const textRef = useRef<HTMLSpanElement>(null);
-  const tooltipRef = useRef<HTMLDivElement>(null);
-  const setTargetText = useCheckTextStore(
-    (state) => state.actions.setTargetText
-  );
-  const setTextOrder = useCheckTextStore((state) => state.actions.setTextOrder);
-
-  if (!segment.correction) {
-    return (
-      <span style={{ wordSpacing: "normal", margin: "0 0.2em" }}>
-        {segment.text}
-      </span>
-    );
-  }
-
-  const handleMouseEnter = () => {
-    const originalText = segment.correction?.before ?? segment.text;
-    setTargetText(originalText);
-    setTextOrder(segment.order);
-    if (textRef.current) {
-      const rect = textRef.current.getBoundingClientRect();
-      setTooltipPosition({
-        top: rect.top, // 텍스트 상단 위치
-        left: rect.left + rect.width / 2,
-      });
-    }
-    setShowTooltip(true);
-  };
-
-  return (
-    <div>
-      <span
-        ref={textRef}
-        className={styles.correctedText}
-        onMouseEnter={handleMouseEnter}
-        onMouseLeave={() => {
-          setShowTooltip(false);
-          setTargetText("");
-          setTextOrder(0);
-        }}
-      >
-        {segment.text}
-        {showTooltip && (
-          <div
-            ref={tooltipRef}
-            className={styles.tooltipContainer}
-            style={{
-              position: "fixed",
-              left: tooltipPosition.left,
-              transform: "translateX(-50%)",
-              zIndex: 9999,
-              bottom: `calc(100vh - ${tooltipPosition.top}px + 15px)`,
-            }}
-          >
-            <div
-              style={{
-                backgroundColor: "white",
-                color: "#333",
-                fontSize: "0.875rem",
-                fontWeight: "normal",
-                padding: "0.75rem 1rem",
-                borderRadius: "6px",
-                boxShadow: "0 4px 15px rgba(0, 0, 0, 0.15)",
-                whiteSpace: "normal",
-                textAlign: "left",
-                position: "relative",
-                maxWidth: "300px",
-                lineHeight: "1.5",
-                wordSpacing: "normal",
-              }}
-            >
-              <div style={{ marginBottom: "6px" }}>
-                <strong style={{ color: "#111" }}>원문:</strong>
-                <span style={{ color: "#666" }}>
-                  {segment.correction.before}
-                </span>
-              </div>
-              <div>
-                <strong style={{ color: "#111" }}>이유:</strong>
-                <span style={{ color: "#666" }}>
-                  {segment.correction.reason}
-                </span>
-              </div>
-              <div
-                style={{
-                  position: "absolute",
-                  top: "100%",
-                  left: "50%",
-                  transform: "translateX(-50%)",
-                  borderWidth: "8px",
-                  borderStyle: "solid",
-                  borderColor: "white transparent transparent transparent",
-                  filter: "drop-shadow(0 2px 2px rgba(0, 0, 0, 0.1))",
-                }}
-              />
-            </div>
-          </div>
-        )}
-      </span>
-    </div>
-  );
-};
 
 const PromptOutput = ({ selectedHistory, historyCount }: PromptOutputProps) => {
   const outputData = usePromptStore((state) => state.outputData);
@@ -374,10 +264,7 @@ const PromptOutput = ({ selectedHistory, historyCount }: PromptOutputProps) => {
             >
               {line.segments.map((segment, i) => (
                 <span key={i}>
-                  <CorrectedText
-                    key={i}
-                    segment={segment}
-                  />
+                  <CorrectedText segment={segment} />
                 </span>
               ))}
             </div>
