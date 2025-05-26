@@ -5,6 +5,7 @@ import { usePromptStore } from "@/store/promptStore";
 import { submitWork } from "../actions";
 import useCheckTextStore from "@/store/checkTextStore";
 import { RichTextarea } from "rich-textarea";
+import useChangedTextStore from "@/store/changedTextStore";
 
 interface PromptInputProps {
   workspaceId: string;
@@ -26,6 +27,7 @@ const PromptInput = ({
   const targetText = useCheckTextStore((state) => state.targetText);
   const textOrder = useCheckTextStore((state) => state.textOrder);
   const textareaRef = useRef<HTMLTextAreaElement>(null);
+  const changedText = useChangedTextStore((state) => state.changedText);
 
   useEffect(() => {
     if (savedText) {
@@ -100,11 +102,60 @@ const PromptInput = ({
     }
 
     return highlights;
-  }, [targetText, textOrder, text]); // 의존성 배열 추가
+  }, [targetText, textOrder, text]);
+
+  // 변경된 텍스트의 하이라이트를 위한 별도 로직
+  const getChangedHighlights = useCallback(() => {
+    if (!changedText || changedText.length === 0) {
+      return [];
+    }
+
+    const highlights: { start: number; end: number; isMatching: boolean }[] =
+      [];
+
+    // changedText 항목 하나씩 처리
+    for (const item of changedText) {
+      if (!item.text || !item.text.trim()) continue;
+
+      // 이 항목이 현재 targetText와 동일한지 확인 (보라색으로 표시할지 여부)
+      const isMatching =
+        item.text === targetText && item.textOrder === textOrder;
+
+      // 해당 텍스트 찾기
+      let currentPos = 0;
+      let count = 0;
+
+      while (currentPos < text.length) {
+        const foundPos = text.indexOf(item.text, currentPos);
+        if (foundPos === -1) break;
+
+        // 정확한 텍스트 순서 확인
+        if (count === item.textOrder) {
+          highlights.push({
+            start: foundPos,
+            end: foundPos + item.text.length,
+            isMatching,
+          });
+          break;
+        }
+
+        count++;
+        currentPos = foundPos + 1;
+      }
+    }
+
+    return highlights;
+  }, [changedText, text, targetText, textOrder]);
 
   // 하이라이트 스타일 설정 - 최소한의 스타일만 인라인으로 적용
   const highlightStyle = {
     backgroundColor: "rgba(99, 102, 241, 0.3)",
+    display: "inline",
+    position: "relative" as const,
+  };
+
+  const changedHighlightStyle = {
+    backgroundColor: "rgba(239, 68, 68, 0.2)",
     display: "inline",
     position: "relative" as const,
   };
@@ -119,6 +170,7 @@ const PromptInput = ({
 
     try {
       setLoadingState("correctionLoading");
+      useChangedTextStore.getState().actions.resetStore();
 
       const historyId = await submitWork(workspaceId, text);
 
@@ -132,19 +184,65 @@ const PromptInput = ({
 
   // RichTextarea 렌더러 함수
   const renderHighlights = (value: string) => {
-    if (!targetText || !targetText.trim() || !value) {
+    if (!value) return value;
+
+    // 두 하이라이트 배열을 모두 가져옴
+    const targetHighlights =
+      !targetText || !targetText.trim() ? [] : getHighlights();
+    const changedHighlights = getChangedHighlights();
+
+    // 하이라이트가 없으면 그대로 반환
+    if (targetHighlights.length === 0 && changedHighlights.length === 0) {
       return value;
     }
 
-    const highlights = getHighlights();
-    if (highlights.length === 0) {
-      return value;
+    // 모든 하이라이트를 하나의 배열로 합치고 타입 정보 추가
+    const allHighlights: Array<{
+      start: number;
+      end: number;
+      type: "target" | "changed";
+      isMatching?: boolean;
+    }> = [];
+
+    // targetHighlights 추가
+    for (const highlight of targetHighlights) {
+      allHighlights.push({
+        ...highlight,
+        type: "target",
+      });
     }
+
+    // changedHighlights 추가 (겹치지 않는 것만)
+    for (const highlight of changedHighlights) {
+      let isOverlapping = false;
+      for (const target of targetHighlights) {
+        if (
+          (highlight.start >= target.start && highlight.start < target.end) ||
+          (highlight.end > target.start && highlight.end <= target.end) ||
+          (highlight.start <= target.start && highlight.end >= target.end)
+        ) {
+          isOverlapping = true;
+          break;
+        }
+      }
+
+      if (!isOverlapping) {
+        allHighlights.push({
+          start: highlight.start,
+          end: highlight.end,
+          type: highlight.isMatching ? "target" : "changed",
+        });
+      }
+    }
+
+    // 시작 위치로 정렬
+    allHighlights.sort((a, b) => a.start - b.start);
 
     const result: React.ReactNode[] = [];
     let lastIndex = 0;
 
-    highlights.forEach(({ start, end }) => {
+    // 정렬된 하이라이트 순서대로 처리
+    allHighlights.forEach(({ start, end, type }) => {
       // 하이라이트 전 텍스트
       if (start > lastIndex) {
         result.push(
@@ -152,12 +250,16 @@ const PromptInput = ({
         );
       }
 
-      // 하이라이트된 텍스트 - 스타일은 CSS 모듈에서 정의
+      // 하이라이트된 텍스트
+      const className =
+        type === "target" ? "highlight-text" : "highlight-text-changed";
+      const style = type === "target" ? highlightStyle : changedHighlightStyle;
+
       result.push(
         <span
-          key={`highlight-${start}`}
-          style={highlightStyle}
-          className="highlight-text"
+          key={`highlight-${type}-${start}`}
+          style={style}
+          className={className}
         >
           {value.slice(start, end)}
         </span>

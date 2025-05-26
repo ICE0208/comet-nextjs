@@ -6,6 +6,7 @@ import { getWorkspaceById } from "../actions";
 import { CorrectionData, Segment, ProcessLiteraryTextResult } from "@/utils/ai";
 import { useRouter } from "next/navigation";
 import useCheckTextStore from "@/store/checkTextStore";
+import useChangedTextStore from "@/store/changedTextStore";
 
 type WorkspaceHistory = Awaited<
   ReturnType<typeof getWorkspaceById>
@@ -139,6 +140,9 @@ const PromptOutput = ({ selectedHistory, historyCount }: PromptOutputProps) => {
   const [correctionData, setCorrectionData] = useState<CorrectionData | null>(
     null
   );
+  const setMultipleChangedTexts = useChangedTextStore(
+    (state) => state.actions.setMultipleChangedTexts
+  );
 
   // 컴포넌트 언마운트 시 정리 - PromptOutput 컴포넌트에서만 resetStore 호출
   useEffect(
@@ -146,6 +150,7 @@ const PromptOutput = ({ selectedHistory, historyCount }: PromptOutputProps) => {
       // 컴포넌트 언마운트 시 스토어 전체 초기화
       usePromptStore.getState().actions.resetStore();
       useCheckTextStore.getState().actions.resetStore();
+      useChangedTextStore.getState().actions.resetStore();
     },
     []
   );
@@ -175,7 +180,10 @@ const PromptOutput = ({ selectedHistory, historyCount }: PromptOutputProps) => {
 
   // 응답 데이터 파싱
   useEffect(() => {
-    if (!outputData) return;
+    if (!outputData) {
+      setCorrectionData(null);
+      return;
+    }
 
     try {
       // AIResponse에서 텍스트를 파싱하여 ProcessLiteraryTextResult 형태로 변환
@@ -197,6 +205,46 @@ const PromptOutput = ({ selectedHistory, historyCount }: PromptOutputProps) => {
       router.push("/workspaces");
     }
   }, [outputData, router]);
+
+  // 데이터가 있고 교정 데이터가 파싱된 상태
+  // 같은 문장이 여러 번 나왔을 때 몇 번째 순서인지 확인 할 수 있도록 순서를 부여
+  // 0번째 순서부터 시작
+  const texts: { [key: string]: number } = {};
+  const correctionDataWithOrder = correctionData?.map((line) => {
+    const segments = line.segments.map((segment) => {
+      const text = segment.text;
+      texts[text] = (texts[text] ?? -1) + 1;
+      const order = texts[text];
+
+      return {
+        ...segment,
+        order,
+      };
+    });
+    return {
+      segments,
+    };
+  });
+
+  // 교정 데이터가 있을 때 correction이 있는 텍스트들만 changedTextStore에 저장
+  useEffect(() => {
+    if (correctionDataWithOrder && correctionDataWithOrder.length > 0) {
+      // 모든 세그먼트에서 correction이 있는 것들만 수집
+      const allCorrections = correctionDataWithOrder.flatMap((line) =>
+        line.segments
+          .filter((segment) => segment.correction)
+          .map((segment) => ({
+            text: segment.correction?.before || segment.text,
+            textOrder: segment.order,
+          }))
+      );
+
+      // 한번에 저장
+      setMultipleChangedTexts(allCorrections);
+    } else {
+      setMultipleChangedTexts([]);
+    }
+  }, [correctionDataWithOrder, setMultipleChangedTexts]);
 
   // loadingState에 따른 UI 표시를 처리하는 함수
   const renderContent = () => {
@@ -260,25 +308,6 @@ const PromptOutput = ({ selectedHistory, historyCount }: PromptOutputProps) => {
       );
     }
 
-    // 데이터가 있고 교정 데이터가 파싱된 상태
-    // 같은 문장이 여러 번 나왔을 때 몇 번째 순서인지 확인 할 수 있도록 순서를 부여
-    // 0번째 순서부터 시작
-    const texts: { [key: string]: number } = {};
-    const correctionDataWithOrder = correctionData.map((line) => {
-      const segments = line.segments.map((segment) => {
-        const text = segment.text;
-        texts[text] = (texts[text] ?? -1) + 1;
-        const order = texts[text];
-        return {
-          ...segment,
-          order,
-        };
-      });
-      return {
-        segments,
-      };
-    });
-
     return (
       <div className={styles.promptContent}>
         <div className={styles.promptTitleContainer}>
@@ -291,7 +320,7 @@ const PromptOutput = ({ selectedHistory, historyCount }: PromptOutputProps) => {
           )}
         </div>
         <div className={styles.correctionResult}>
-          {correctionDataWithOrder.map((line, idx) => (
+          {correctionDataWithOrder?.map((line, idx) => (
             <div
               key={idx}
               className={styles.correctionLine}

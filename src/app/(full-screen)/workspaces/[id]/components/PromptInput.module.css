@@ -186,3 +186,23 @@
   position: relative !important;
   box-decoration-break: clone !important;
 }
+
+/* 변경된 텍스트를 위한 빨간색 하이라이트 스타일 */
+.textareaWrapper :global(.highlight-text-changed) {
+  background-color: rgba(239, 68, 68, 0.2) !important;
+  border-bottom: 1px solid rgba(239, 68, 68, 0.6) !important;
+  box-shadow: none !important;
+  white-space: pre-wrap !important;
+  word-break: inherit !important;
+  word-spacing: inherit !important;
+  letter-spacing: inherit !important;
+  font-family: inherit !important;
+  font-size: inherit !important;
+  line-height: inherit !important;
+  padding: 0 !important;
+  margin: 0 !important;
+  border-radius: 0 !important;
+  display: inline !important;
+  position: relative !important;
+  box-decoration-break: clone !important;
+}
