@@ -54,70 +54,76 @@ const CorrectedText = ({
   };
 
   return (
-    <span
-      ref={textRef}
-      className={styles.correctedText}
-      onMouseEnter={handleMouseEnter}
-      onMouseLeave={() => {
-        setShowTooltip(false);
-        setTargetText("");
-        setTextOrder(0);
-      }}
-    >
-      {segment.text}
-      {showTooltip && (
-        <div
-          ref={tooltipRef}
-          className={styles.tooltipContainer}
-          style={{
-            position: "fixed",
-            left: tooltipPosition.left,
-            transform: "translateX(-50%)",
-            zIndex: 9999,
-            bottom: `calc(100vh - ${tooltipPosition.top}px + 15px)`,
-          }}
-        >
+    <div>
+      <span
+        ref={textRef}
+        className={styles.correctedText}
+        onMouseEnter={handleMouseEnter}
+        onMouseLeave={() => {
+          setShowTooltip(false);
+          setTargetText("");
+          setTextOrder(0);
+        }}
+      >
+        {segment.text}
+        {showTooltip && (
           <div
+            ref={tooltipRef}
+            className={styles.tooltipContainer}
             style={{
-              backgroundColor: "white",
-              color: "#333",
-              fontSize: "0.875rem",
-              fontWeight: "normal",
-              padding: "0.75rem 1rem",
-              borderRadius: "6px",
-              boxShadow: "0 4px 15px rgba(0, 0, 0, 0.15)",
-              whiteSpace: "normal",
-              textAlign: "left",
-              position: "relative",
-              maxWidth: "300px",
-              lineHeight: "1.5",
-              wordSpacing: "normal",
+              position: "fixed",
+              left: tooltipPosition.left,
+              transform: "translateX(-50%)",
+              zIndex: 9999,
+              bottom: `calc(100vh - ${tooltipPosition.top}px + 15px)`,
             }}
           >
-            <div style={{ marginBottom: "6px" }}>
-              <strong style={{ color: "#111" }}>원문:</strong>
-              <span style={{ color: "#666" }}>{segment.correction.before}</span>
-            </div>
-            <div>
-              <strong style={{ color: "#111" }}>이유:</strong>
-              <span style={{ color: "#666" }}>{segment.correction.reason}</span>
-            </div>
             <div
               style={{
-                position: "absolute",
-                top: "100%",
-                left: "50%",
-                transform: "translateX(-50%)",
-                borderWidth: "8px",
-                borderStyle: "solid",
-                borderColor: "white transparent transparent transparent",
-                filter: "drop-shadow(0 2px 2px rgba(0, 0, 0, 0.1))",
+                backgroundColor: "white",
+                color: "#333",
+                fontSize: "0.875rem",
+                fontWeight: "normal",
+                padding: "0.75rem 1rem",
+                borderRadius: "6px",
+                boxShadow: "0 4px 15px rgba(0, 0, 0, 0.15)",
+                whiteSpace: "normal",
+                textAlign: "left",
+                position: "relative",
+                maxWidth: "300px",
+                lineHeight: "1.5",
+                wordSpacing: "normal",
               }}
-            />
+            >
+              <div style={{ marginBottom: "6px" }}>
+                <strong style={{ color: "#111" }}>원문:</strong>
+                <span style={{ color: "#666" }}>
+                  {segment.correction.before}
+                </span>
+              </div>
+              <div>
+                <strong style={{ color: "#111" }}>이유:</strong>
+                <span style={{ color: "#666" }}>
+                  {segment.correction.reason}
+                </span>
+              </div>
+              <div
+                style={{
+                  position: "absolute",
+                  top: "100%",
+                  left: "50%",
+                  transform: "translateX(-50%)",
+                  borderWidth: "8px",
+                  borderStyle: "solid",
+                  borderColor: "white transparent transparent transparent",
+                  filter: "drop-shadow(0 2px 2px rgba(0, 0, 0, 0.1))",
+                }}
+              />
+            </div>
           </div>
-        </div>
-      )}
-    </span>
+        )}
+      </span>
+    </div>
   );
 };
 
