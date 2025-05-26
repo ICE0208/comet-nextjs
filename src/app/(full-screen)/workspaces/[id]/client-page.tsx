@@ -1,8 +1,8 @@
 "use client";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import styles from "./page.module.css";
 
-import PromptInput from "./components/PromptInput";
+import PromptInput, { PromptInputHandle } from "./components/PromptInput";
 import PromptOutput from "./components/PromptOutput";
 import Header from "./components/Header";
 import Footer from "./components/Footer";
@@ -43,6 +43,8 @@ const ClientWorkspacePage = ({ workspace }: ClientWorkspacePageProps) => {
     (state) => state.actions.setLoadingState
   );
   const router = useRouter();
+  const promptInputRef = useRef<PromptInputHandle>(null);
+
   useEffect(() => {
     router.refresh();
     let eventSource: EventSource | null = null;
@@ -105,6 +107,13 @@ const ClientWorkspacePage = ({ workspace }: ClientWorkspacePageProps) => {
     };
   }, [selectedHistoryId, setOutputData, setLoadingState, router]);
 
+  // 교정 결과 적용 핸들러
+  const handleApplyCorrections = (text: string) => {
+    if (promptInputRef.current) {
+      promptInputRef.current.setText(text);
+    }
+  };
+
   return (
     <div className={styles.container}>
       <Header onToggleHistory={toggleHistorySidebar} />
@@ -115,6 +124,7 @@ const ClientWorkspacePage = ({ workspace }: ClientWorkspacePageProps) => {
 
       <div className={styles.ioComponents}>
         <PromptInput
+          ref={promptInputRef}
           workspaceId={workspace.id}
           savedInputText={selectedHistory ? selectedHistory.userRequest : ""}
           setSelectedHistoryId={setSelectedHistoryId}
@@ -123,6 +133,7 @@ const ClientWorkspacePage = ({ workspace }: ClientWorkspacePageProps) => {
         <PromptOutput
           selectedHistory={selectedHistory}
           historyCount={historyCount}
+          onApplyCorrections={handleApplyCorrections}
         />
       </div>
 

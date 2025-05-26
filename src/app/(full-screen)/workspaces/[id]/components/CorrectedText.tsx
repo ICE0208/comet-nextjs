@@ -123,7 +123,7 @@ const CorrectedText = ({
             onClick={() => handleCancelIgnoreChangedText()}
           >
             <span className={styles.buttonIcon}>↺</span>
-            교정 적용하기
+            반영 적용하기
           </button>
         ) : (
           <button
@@ -131,7 +131,7 @@ const CorrectedText = ({
             onClick={() => handleIgnoreChangedText()}
           >
             <span className={styles.buttonIcon}>✕</span>
-            교정 무시하기
+            반영 무시하기
           </button>
         )}
       </div>

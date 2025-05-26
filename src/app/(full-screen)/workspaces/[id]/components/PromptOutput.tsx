@@ -17,9 +17,14 @@ type WorkspaceHistory = Awaited<
 interface PromptOutputProps {
   selectedHistory: WorkspaceHistory | null;
   historyCount: number;
+  onApplyCorrections?: (text: string) => void;
 }
 
-const PromptOutput = ({ selectedHistory, historyCount }: PromptOutputProps) => {
+const PromptOutput = ({
+  selectedHistory,
+  historyCount,
+  onApplyCorrections,
+}: PromptOutputProps) => {
   const outputData = usePromptStore((state) => state.outputData);
   const loadingState = usePromptStore((state) => state.loadingState);
   const error = usePromptStore((state) => state.error);
@@ -175,6 +180,45 @@ const PromptOutput = ({ selectedHistory, historyCount }: PromptOutputProps) => {
     }
   }, [correctionDataWithOrder, setMultipleChangedTexts]);
 
+  // 교정 결과를 적용하는 함수
+  const handleApplyCorrections = () => {
+    if (!correctionDataWithOrder || !onApplyCorrections) return;
+
+    let reconstructedText = "";
+
+    correctionDataWithOrder.forEach((line, lineIndex) => {
+      line.segments.forEach((segment, segmentIndex) => {
+        if (segmentIndex !== 0) {
+          reconstructedText += " ";
+        }
+
+        if (segment.correction) {
+          // correction이 있는 경우
+          const textWithOrder = JSON.stringify([segment.text, segment.order]);
+          const isIgnored = ignoreChangedTexts.has(textWithOrder);
+
+          if (isIgnored) {
+            // 무시된 경우 원본 텍스트 사용
+            reconstructedText += segment.correction.before;
+          } else {
+            // 적용된 경우 교정된 텍스트 사용
+            reconstructedText += segment.text;
+          }
+        } else {
+          // correction이 없는 경우 그대로 텍스트 사용
+          reconstructedText += segment.text;
+        }
+      });
+
+      // 마지막 line이 아닌 경우에만 문단 구분을 위한 더블 줄바꿈 추가
+      if (lineIndex < correctionDataWithOrder.length - 1) {
+        reconstructedText += "\n\n";
+      }
+    });
+
+    onApplyCorrections(reconstructedText);
+  };
+
   // loadingState에 따른 UI 표시를 처리하는 함수
   const renderContent = () => {
     // 에러 상태
@@ -293,11 +337,11 @@ const PromptOutput = ({ selectedHistory, historyCount }: PromptOutputProps) => {
             style={
               ignoreChangedTexts.size === changedTextCount ||
               loadingState === "processing"
-                ? { opacity: 0.5 }
+                ? { opacity: 0.5, pointerEvents: "none" }
                 : {}
             }
           >
-            <button>
+            <button onClick={handleApplyCorrections}>
               <FiCheckCircle style={{ marginRight: "8px" }} />
               {ignoreChangedTexts.size === 0
                 ? "전부 반영하기"
