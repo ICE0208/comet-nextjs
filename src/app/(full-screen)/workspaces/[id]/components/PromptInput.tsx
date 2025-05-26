@@ -6,17 +6,24 @@ import { submitWork } from "../actions";
 import useCheckTextStore from "@/store/checkTextStore";
 import { RichTextarea } from "rich-textarea";
 import useChangedTextStore from "@/store/changedTextStore";
+import { getWorkspaceById } from "../actions";
+
+type WorkspaceHistory = Awaited<
+  ReturnType<typeof getWorkspaceById>
+>["history"][number];
 
 interface PromptInputProps {
   workspaceId: string;
   savedInputText: string;
   setSelectedHistoryId: (historyId: string) => void;
+  selectedHistory?: WorkspaceHistory | null;
 }
 
 const PromptInput = ({
   workspaceId,
   savedInputText: savedText,
   setSelectedHistoryId,
+  selectedHistory,
 }: PromptInputProps) => {
   const [text, setText] = useState<string>(savedText);
   const setLoadingState = usePromptStore(
@@ -34,6 +41,25 @@ const PromptInput = ({
       setText(savedText);
     }
   }, [savedText]);
+
+  // selectedHistory가 바뀔 때 스크롤을 맨 위로 이동
+  useEffect(() => {
+    if (selectedHistory) {
+      requestAnimationFrame(() => {
+        const wrapper = document.querySelector(`.${styles.textareaWrapper}`);
+        const textareaElement = wrapper?.querySelector(
+          "textarea"
+        ) as HTMLTextAreaElement;
+
+        if (textareaElement) {
+          textareaElement.scrollTo({
+            top: 0,
+            behavior: "smooth",
+          });
+        }
+      });
+    }
+  }, [selectedHistory, styles.textareaWrapper]);
 
   // 텍스트 하이라이트를 위한 로직 - useCallback으로 감싸기
   const getHighlights = useCallback(() => {

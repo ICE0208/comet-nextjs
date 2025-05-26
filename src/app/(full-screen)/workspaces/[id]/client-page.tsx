@@ -118,6 +118,7 @@ const ClientWorkspacePage = ({ workspace }: ClientWorkspacePageProps) => {
           workspaceId={workspace.id}
           savedInputText={selectedHistory ? selectedHistory.userRequest : ""}
           setSelectedHistoryId={setSelectedHistoryId}
+          selectedHistory={selectedHistory}
         />
         <PromptOutput
           selectedHistory={selectedHistory}

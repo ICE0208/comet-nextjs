@@ -144,6 +144,45 @@ const PromptOutput = ({ selectedHistory, historyCount }: PromptOutputProps) => {
     (state) => state.actions.setMultipleChangedTexts
   );
 
+  // output 영역에 대한 ref 추가
+  const outputRef = useRef<HTMLDivElement>(null);
+  // correctionResult 영역에 대한 ref 추가
+  const resultRef = useRef<HTMLDivElement>(null);
+  // 이전 correctionData를 저장하기 위한 ref
+  const prevCorrectionDataRef = useRef<CorrectionData | null>(null);
+
+  // correctionData가 변경되고 idle 상태일 때 부드럽게 스크롤
+  useEffect(() => {
+    // idle 상태이고 correctionData가 있을 때만 스크롤
+    if (loadingState === "idle" && correctionData) {
+      // 이전 데이터와 비교해서 변경된 경우에만 스크롤
+      if (
+        JSON.stringify(prevCorrectionDataRef.current) !==
+        JSON.stringify(correctionData)
+      ) {
+        // 현재 correctionData 저장
+        prevCorrectionDataRef.current = correctionData;
+
+        // 부드러운 스크롤 실행
+        setTimeout(() => {
+          if (resultRef.current) {
+            resultRef.current.scrollTo({
+              top: 0,
+              behavior: "smooth",
+            });
+          }
+
+          if (outputRef.current) {
+            outputRef.current.scrollTo({
+              top: 0,
+              behavior: "smooth",
+            });
+          }
+        }, 100);
+      }
+    }
+  }, [correctionData, loadingState]);
+
   // 컴포넌트 언마운트 시 정리 - PromptOutput 컴포넌트에서만 resetStore 호출
   useEffect(
     () => () => {
@@ -209,22 +248,26 @@ const PromptOutput = ({ selectedHistory, historyCount }: PromptOutputProps) => {
   // 데이터가 있고 교정 데이터가 파싱된 상태
   // 같은 문장이 여러 번 나왔을 때 몇 번째 순서인지 확인 할 수 있도록 순서를 부여
   // 0번째 순서부터 시작
-  const texts: { [key: string]: number } = {};
-  const correctionDataWithOrder = correctionData?.map((line) => {
-    const segments = line.segments.map((segment) => {
-      const text = segment.text;
-      texts[text] = (texts[text] ?? -1) + 1;
-      const order = texts[text];
+  // texts 객체를 useMemo 내부로 이동하여 의존성 문제 해결
+  const correctionDataWithOrder = React.useMemo(() => {
+    const texts: { [key: string]: number } = {};
 
+    return correctionData?.map((line) => {
+      const segments = line.segments.map((segment) => {
+        const text = segment.text;
+        texts[text] = (texts[text] ?? -1) + 1;
+        const order = texts[text];
+
+        return {
+          ...segment,
+          order,
+        };
+      });
       return {
-        ...segment,
-        order,
+        segments,
       };
     });
-    return {
-      segments,
-    };
-  });
+  }, [correctionData]);
 
   // 교정 데이터가 있을 때 correction이 있는 텍스트들만 changedTextStore에 저장
   useEffect(() => {
@@ -319,7 +362,10 @@ const PromptOutput = ({ selectedHistory, historyCount }: PromptOutputProps) => {
             <div className={styles.loadingAnimation} />
           )}
         </div>
-        <div className={styles.correctionResult}>
+        <div
+          ref={resultRef}
+          className={styles.correctionResult}
+        >
           {correctionDataWithOrder?.map((line, idx) => (
             <div
               key={idx}
@@ -360,7 +406,12 @@ const PromptOutput = ({ selectedHistory, historyCount }: PromptOutputProps) => {
 
   return (
     <div className={styles.container}>
-      <div className={styles.output}>{renderContent()}</div>
+      <div
+        ref={outputRef}
+        className={styles.output}
+      >
+        {renderContent()}
+      </div>
     </div>
   );
 };
