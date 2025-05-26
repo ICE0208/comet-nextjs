@@ -115,6 +115,7 @@ const PromptInput = ({
 
   const handleSubmit = async () => {
     if (!text.trim() || loadingState !== "idle") return;
+    setOutputData(null);
 
     try {
       setLoadingState("correctionLoading");
@@ -125,7 +126,6 @@ const PromptInput = ({
     } catch (error) {
       alert("텍스트 교정 중 오류가 발생했습니다.");
       console.error("Submission error:", error);
-      setOutputData(null);
       setLoadingState("idle");
     }
   };

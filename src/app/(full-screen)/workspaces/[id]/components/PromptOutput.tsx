@@ -275,8 +275,15 @@ const PromptOutput = ({ selectedHistory, historyCount }: PromptOutputProps) => {
 
     return (
       <div className={styles.promptContent}>
-        <h3 className={styles.promptTitle}>교열된 문장</h3>
-
+        <div className={styles.promptTitleContainer}>
+          <h3 className={styles.promptTitle}>교정된 문장</h3>
+          <p className={styles.promptSubtitle}>
+            {loadingState === "processing" && "응답 받아오는 중..."}
+          </p>
+          {loadingState === "processing" && (
+            <div className={styles.loadingAnimation} />
+          )}
+        </div>
         <div className={styles.correctionResult}>
           {correctionDataWithOrder.map((line, idx) => (
             <div
@@ -294,6 +301,17 @@ const PromptOutput = ({ selectedHistory, historyCount }: PromptOutputProps) => {
               ))}
             </div>
           ))}
+          {loadingState === "processing" && (
+            <div
+              style={{
+                display: "flex",
+                justifyContent: "center",
+                height: "40px",
+              }}
+            >
+              <div className={styles.loadingAnimationBig} />
+            </div>
+          )}
         </div>
 
         <div className={styles.promptMeta}>
