@@ -14,6 +14,7 @@ import useCheckTextStore from "@/store/checkTextStore";
 import { RichTextarea } from "rich-textarea";
 import useChangedTextStore from "@/store/changedTextStore";
 import { getWorkspaceById } from "../actions";
+import { FaSpellCheck } from "react-icons/fa";
 
 type WorkspaceHistory = Awaited<
   ReturnType<typeof getWorkspaceById>
@@ -412,48 +413,58 @@ const PromptInput = forwardRef<PromptInputHandle, PromptInputProps>(
 
     return (
       <div className={styles.container}>
-        <div className={styles.textareaWrapper}>
-          <RichTextarea
-            ref={textareaRef}
-            value={text}
-            onChange={handleTextareaChange}
-            placeholder="교정할 텍스트를 입력해주세요..."
-            disabled={loadingState !== "idle"}
-            className={styles.textarea}
-            style={{
-              width: "100%",
-              height: "100%",
-              minHeight: "400px",
-              padding: "1rem",
-              border: "1px solid #e4e9f0",
-              borderRadius: "12px",
-              backgroundColor: "transparent",
-              resize: "none",
-              fontSize: "1rem",
-              lineHeight: 1.6,
-              whiteSpace: "pre-wrap",
-              overflowY: "auto",
-              fontFamily: "inherit",
-              position: "relative",
-              wordBreak: "break-word",
-              boxSizing: "border-box",
-            }}
-            required
-          >
-            {renderHighlights}
-          </RichTextarea>
-        </div>
-        <div className={styles.checkboxContainer}>
-          <button
-            className={`${styles.submitButton} ${loadingState === "correctionLoading" || loadingState === "processing" ? styles.submitting : ""}`}
-            onClick={handleSubmit}
-            disabled={isDisabled}
-          >
-            {loadingState === "correctionLoading" ||
-            loadingState === "processing"
-              ? "교정 중..."
-              : "교정하기"}
-          </button>
+        <div className={styles.inputArea}>
+          <div className={styles.inputTitleContainer}>
+            <div className={styles.inputTitle}>소설 입력</div>
+          </div>
+          <div className={styles.inputContent}>
+            <div className={styles.textareaWrapper}>
+              <RichTextarea
+                ref={textareaRef}
+                value={text}
+                onChange={handleTextareaChange}
+                placeholder="교정할 텍스트를 입력해주세요..."
+                disabled={loadingState !== "idle"}
+                className={styles.textarea}
+                style={{
+                  width: "100%",
+                  height: "100%",
+                  minHeight: "400px",
+                  padding: "1rem",
+                  border: "none",
+                  borderRadius: "0",
+                  backgroundColor: "transparent",
+                  resize: "none",
+                  fontSize: "1rem",
+                  lineHeight: 1.6,
+                  whiteSpace: "pre-wrap",
+                  overflowY: "auto",
+                  fontFamily: "inherit",
+                  position: "relative",
+                  wordBreak: "break-word",
+                  boxSizing: "border-box",
+                }}
+                required
+              >
+                {renderHighlights}
+              </RichTextarea>
+            </div>
+            <div className={styles.bottomContainer}>
+              <div className={styles.buttonContainer}>
+                <button
+                  className={`${styles.submitButton} ${loadingState === "correctionLoading" || loadingState === "processing" ? styles.submitting : ""}`}
+                  onClick={handleSubmit}
+                  disabled={isDisabled}
+                >
+                  <FaSpellCheck style={{ marginRight: "0.4rem" }} />
+                  {loadingState === "correctionLoading" ||
+                  loadingState === "processing"
+                    ? "교정 중..."
+                    : "교정하기"}
+                </button>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
     );
