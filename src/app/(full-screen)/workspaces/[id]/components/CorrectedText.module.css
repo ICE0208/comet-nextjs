@@ -1,0 +1,150 @@
+.correctionContainer {
+  position: relative;
+  margin-bottom: 16px;
+  padding: 0 0 0 8px;
+  background-color: transparent;
+  border-left: 2px solid rgba(16, 185, 129, 0.4);
+  border-radius: 0;
+  display: flex;
+  flex-direction: column;
+}
+
+.ignoredCorrectionContainer {
+  border-left: 2px solid rgba(102, 102, 102, 0.4);
+}
+
+.correctedText {
+  position: relative;
+  font-weight: 600;
+  color: #10b981;
+  background-color: rgba(16, 185, 129, 0.1);
+  padding: 0.2rem 0.4rem;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+  word-spacing: normal;
+  display: inline-block;
+  width: fit-content;
+  max-width: 100%;
+  line-height: 1.4;
+}
+
+.ignoreChangedText {
+  color: #666;
+  background-color: rgba(0, 0, 0, 0.1);
+}
+
+.correctedText:hover {
+  background-color: rgba(16, 185, 129, 0.2);
+}
+
+.ignoreChangedText:hover {
+  background-color: rgba(0, 0, 0, 0.2);
+}
+
+.tooltipContainer {
+  position: fixed;
+  transform: translateX(-50%);
+  z-index: 9999;
+  pointer-events: none;
+}
+
+.tooltipContent {
+  background-color: white;
+  color: #333;
+  font-size: 0.875rem;
+  font-weight: normal;
+  padding: 0.75rem 1rem;
+  border-radius: 6px;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.15);
+  white-space: normal;
+  text-align: left;
+  position: relative;
+  max-width: 300px;
+  line-height: 1.5;
+  word-spacing: normal;
+}
+
+.tooltipItem {
+  margin-bottom: 6px;
+}
+
+.tooltipItem:last-child {
+  margin-bottom: 0;
+}
+
+.tooltipItem strong {
+  color: #111;
+  margin-right: 4px;
+}
+
+.tooltipItem span {
+  color: #666;
+}
+
+.tooltipArrow {
+  position: absolute;
+  top: 100%;
+  left: 50%;
+  transform: translateX(-50%);
+  border-width: 8px;
+  border-style: solid;
+  border-color: white transparent transparent transparent;
+  filter: drop-shadow(0 2px 2px rgba(0, 0, 0, 0.1));
+}
+
+.normalText {
+  word-spacing: normal;
+  margin: 0 0.2em;
+}
+
+.buttonWrapper {
+  user-select: none;
+  display: flex;
+  justify-content: flex-start;
+  margin-top: 4px;
+  margin-left: 2px;
+}
+
+.actionButton,
+.ignoreButton {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 11px;
+  font-weight: 400;
+  padding: 2px 6px;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  background-color: transparent;
+}
+
+.actionButton {
+  color: #10b981;
+  border: 1px solid rgba(16, 185, 129, 0.2);
+}
+
+.actionButton:hover {
+  background-color: rgba(16, 185, 129, 0.05);
+}
+
+.ignoreButton {
+  color: #666;
+  border: 1px solid rgba(102, 102, 102, 0.2);
+}
+
+.ignoreButton:hover {
+  background-color: rgba(102, 102, 102, 0.05);
+}
+
+.buttonIcon {
+  margin-right: 2px;
+  font-size: 16px;
+  display: inline-flex;
+  justify-content: center;
+  align-items: center;
+  width: 16px;
+  height: 16px;
+  line-height: 1;
+}

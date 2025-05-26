@@ -3,9 +3,12 @@ import React, { useEffect, useState, useRef } from "react";
 import styles from "./PromptOutput.module.css";
 import { usePromptStore } from "@/store/promptStore"; // Zustand 스토어 가져오기
 import { getWorkspaceById } from "../actions";
-import { CorrectionData, Segment, ProcessLiteraryTextResult } from "@/utils/ai";
+import { CorrectionData, ProcessLiteraryTextResult } from "@/utils/ai";
 import { useRouter } from "next/navigation";
 import useCheckTextStore from "@/store/checkTextStore";
+import useChangedTextStore from "@/store/changedTextStore";
+import CorrectedText from "./CorrectedText";
+import { FiCheckCircle } from "react-icons/fi";
 
 type WorkspaceHistory = Awaited<
   ReturnType<typeof getWorkspaceById>
@@ -14,114 +17,14 @@ type WorkspaceHistory = Awaited<
 interface PromptOutputProps {
   selectedHistory: WorkspaceHistory | null;
   historyCount: number;
+  onApplyCorrections?: (text: string) => void;
 }
 
-// 교정된 텍스트 컴포넌트 분리
-const CorrectedText = ({
-  segment,
-}: {
-  segment: Segment & { order: number };
-}) => {
-  const [showTooltip, setShowTooltip] = useState(false);
-  const [tooltipPosition, setTooltipPosition] = useState({ top: 0, left: 0 });
-  const textRef = useRef<HTMLSpanElement>(null);
-  const tooltipRef = useRef<HTMLDivElement>(null);
-  const setTargetText = useCheckTextStore(
-    (state) => state.actions.setTargetText
-  );
-  const setTextOrder = useCheckTextStore((state) => state.actions.setTextOrder);
-
-  if (!segment.correction) {
-    return (
-      <span style={{ wordSpacing: "normal", margin: "0 0.2em" }}>
-        {segment.text}
-      </span>
-    );
-  }
-
-  const handleMouseEnter = () => {
-    const originalText = segment.correction?.before ?? segment.text;
-    setTargetText(originalText);
-    setTextOrder(segment.order);
-    if (textRef.current) {
-      const rect = textRef.current.getBoundingClientRect();
-      setTooltipPosition({
-        top: rect.top, // 텍스트 상단 위치
-        left: rect.left + rect.width / 2,
-      });
-    }
-    setShowTooltip(true);
-  };
-
-  return (
-    <span
-      ref={textRef}
-      className={styles.correctedText}
-      onMouseEnter={handleMouseEnter}
-      onMouseLeave={() => {
-        setShowTooltip(false);
-        setTargetText("");
-        setTextOrder(0);
-      }}
-    >
-      {segment.text}
-      {showTooltip && (
-        <div
-          ref={tooltipRef}
-          className={styles.tooltipContainer}
-          style={{
-            position: "fixed",
-            left: tooltipPosition.left,
-            transform: "translateX(-50%)",
-            zIndex: 9999,
-            bottom: `calc(100vh - ${tooltipPosition.top}px + 15px)`,
-          }}
-        >
-          <div
-            style={{
-              backgroundColor: "white",
-              color: "#333",
-              fontSize: "0.875rem",
-              fontWeight: "normal",
-              padding: "0.75rem 1rem",
-              borderRadius: "6px",
-              boxShadow: "0 4px 15px rgba(0, 0, 0, 0.15)",
-              whiteSpace: "normal",
-              textAlign: "left",
-              position: "relative",
-              maxWidth: "300px",
-              lineHeight: "1.5",
-              wordSpacing: "normal",
-            }}
-          >
-            <div style={{ marginBottom: "6px" }}>
-              <strong style={{ color: "#111" }}>원문:</strong>
-              <span style={{ color: "#666" }}>{segment.correction.before}</span>
-            </div>
-            <div>
-              <strong style={{ color: "#111" }}>이유:</strong>
-              <span style={{ color: "#666" }}>{segment.correction.reason}</span>
-            </div>
-            <div
-              style={{
-                position: "absolute",
-                top: "100%",
-                left: "50%",
-                transform: "translateX(-50%)",
-                borderWidth: "8px",
-                borderStyle: "solid",
-                borderColor: "white transparent transparent transparent",
-                filter: "drop-shadow(0 2px 2px rgba(0, 0, 0, 0.1))",
-              }}
-            />
-          </div>
-        </div>
-      )}
-    </span>
-  );
-};
-
-const PromptOutput = ({ selectedHistory, historyCount }: PromptOutputProps) => {
+const PromptOutput = ({
+  selectedHistory,
+  historyCount,
+  onApplyCorrections,
+}: PromptOutputProps) => {
   const outputData = usePromptStore((state) => state.outputData);
   const loadingState = usePromptStore((state) => state.loadingState);
   const error = usePromptStore((state) => state.error);
@@ -133,6 +36,18 @@ const PromptOutput = ({ selectedHistory, historyCount }: PromptOutputProps) => {
   const [correctionData, setCorrectionData] = useState<CorrectionData | null>(
     null
   );
+  const setMultipleChangedTexts = useChangedTextStore(
+    (state) => state.actions.setMultipleChangedTexts
+  );
+  const [ignoreChangedTexts, setIgnoreChangedTexts] = useState<Set<string>>(
+    new Set()
+  );
+  const [changedTextCount, setChangedTextCount] = useState(0);
+
+  // output 영역에 대한 ref 추가
+  const outputRef = useRef<HTMLDivElement>(null);
+  // correctionResult 영역에 대한 ref 추가
+  const resultRef = useRef<HTMLDivElement>(null);
 
   // 컴포넌트 언마운트 시 정리 - PromptOutput 컴포넌트에서만 resetStore 호출
   useEffect(
@@ -140,6 +55,7 @@ const PromptOutput = ({ selectedHistory, historyCount }: PromptOutputProps) => {
       // 컴포넌트 언마운트 시 스토어 전체 초기화
       usePromptStore.getState().actions.resetStore();
       useCheckTextStore.getState().actions.resetStore();
+      useChangedTextStore.getState().actions.resetStore();
     },
     []
   );
@@ -155,6 +71,24 @@ const PromptOutput = ({ selectedHistory, historyCount }: PromptOutputProps) => {
     if (!selectedHistory) {
       return;
     }
+    // 부드러운 스크롤 실행
+    setTimeout(() => {
+      if (resultRef.current) {
+        resultRef.current.scrollTo({
+          top: 0,
+          behavior: "smooth",
+        });
+      }
+
+      if (outputRef.current) {
+        outputRef.current.scrollTo({
+          top: 0,
+          behavior: "smooth",
+        });
+      }
+    }, 100);
+
+    setIgnoreChangedTexts(new Set());
 
     if (selectedHistory.status === "COMPLETED") {
       setOutputData(selectedHistory.aiResponse);
@@ -169,7 +103,10 @@ const PromptOutput = ({ selectedHistory, historyCount }: PromptOutputProps) => {
 
   // 응답 데이터 파싱
   useEffect(() => {
-    if (!outputData) return;
+    if (!outputData) {
+      setCorrectionData(null);
+      return;
+    }
 
     try {
       // AIResponse에서 텍스트를 파싱하여 ProcessLiteraryTextResult 형태로 변환
@@ -191,6 +128,96 @@ const PromptOutput = ({ selectedHistory, historyCount }: PromptOutputProps) => {
       router.push("/workspaces");
     }
   }, [outputData, router]);
+
+  // 데이터가 있고 교정 데이터가 파싱된 상태
+  // 같은 문장이 여러 번 나왔을 때 몇 번째 순서인지 확인 할 수 있도록 순서를 부여
+  // 0번째 순서부터 시작
+  // texts 객체를 useMemo 내부로 이동하여 의존성 문제 해결
+  const correctionDataWithOrder = React.useMemo(() => {
+    const texts: { [key: string]: number } = {};
+    let count = 0;
+
+    return correctionData?.map((line) => {
+      const segments = line.segments.map((segment) => {
+        const text = segment.text;
+        texts[text] = (texts[text] ?? -1) + 1;
+        const order = texts[text];
+
+        if (segment.correction) {
+          count++;
+        }
+
+        return {
+          ...segment,
+          order,
+        };
+      });
+
+      setChangedTextCount(count);
+      return {
+        segments,
+      };
+    });
+  }, [correctionData]);
+
+  // 교정 데이터가 있을 때 correction이 있는 텍스트들만 changedTextStore에 저장
+  useEffect(() => {
+    if (correctionDataWithOrder && correctionDataWithOrder.length > 0) {
+      // 모든 세그먼트에서 correction이 있는 것들만 수집
+      const allCorrections = correctionDataWithOrder.flatMap((line) =>
+        line.segments
+          .filter((segment) => segment.correction)
+          .map((segment) => ({
+            text: segment.correction?.before || segment.text,
+            textOrder: segment.order,
+          }))
+      );
+
+      // 한번에 저장
+      setMultipleChangedTexts(allCorrections);
+    } else {
+      setMultipleChangedTexts([]);
+    }
+  }, [correctionDataWithOrder, setMultipleChangedTexts]);
+
+  // 교정 결과를 적용하는 함수
+  const handleApplyCorrections = () => {
+    if (!correctionDataWithOrder || !onApplyCorrections) return;
+
+    let reconstructedText = "";
+
+    correctionDataWithOrder.forEach((line, lineIndex) => {
+      line.segments.forEach((segment, segmentIndex) => {
+        if (segmentIndex !== 0) {
+          reconstructedText += " ";
+        }
+
+        if (segment.correction) {
+          // correction이 있는 경우
+          const textWithOrder = JSON.stringify([segment.text, segment.order]);
+          const isIgnored = ignoreChangedTexts.has(textWithOrder);
+
+          if (isIgnored) {
+            // 무시된 경우 원본 텍스트 사용
+            reconstructedText += segment.correction.before;
+          } else {
+            // 적용된 경우 교정된 텍스트 사용
+            reconstructedText += segment.text;
+          }
+        } else {
+          // correction이 없는 경우 그대로 텍스트 사용
+          reconstructedText += segment.text;
+        }
+      });
+
+      // 마지막 line이 아닌 경우에만 문단 구분을 위한 더블 줄바꿈 추가
+      if (lineIndex < correctionDataWithOrder.length - 1) {
+        reconstructedText += "\n\n";
+      }
+    });
+
+    onApplyCorrections(reconstructedText);
+  };
 
   // loadingState에 따른 UI 표시를 처리하는 함수
   const renderContent = () => {
@@ -254,31 +281,22 @@ const PromptOutput = ({ selectedHistory, historyCount }: PromptOutputProps) => {
       );
     }
 
-    // 데이터가 있고 교정 데이터가 파싱된 상태
-    // 같은 문장이 여러 번 나왔을 때 몇 번째 순서인지 확인 할 수 있도록 순서를 부여
-    // 0번째 순서부터 시작
-    const texts: { [key: string]: number } = {};
-    const correctionDataWithOrder = correctionData.map((line) => {
-      const segments = line.segments.map((segment) => {
-        const text = segment.text;
-        texts[text] = (texts[text] ?? -1) + 1;
-        const order = texts[text];
-        return {
-          ...segment,
-          order,
-        };
-      });
-      return {
-        segments,
-      };
-    });
-
     return (
       <div className={styles.promptContent}>
-        <h3 className={styles.promptTitle}>교열된 문장</h3>
-
-        <div className={styles.correctionResult}>
-          {correctionDataWithOrder.map((line, idx) => (
+        <div className={styles.promptTitleContainer}>
+          <h3 className={styles.promptTitle}>교정된 문장</h3>
+          <p className={styles.promptSubtitle}>
+            {loadingState === "processing" && "응답 받아오는 중..."}
+          </p>
+          {loadingState === "processing" && (
+            <div className={styles.loadingAnimation} />
+          )}
+        </div>
+        <div
+          ref={resultRef}
+          className={styles.correctionResult}
+        >
+          {correctionDataWithOrder?.map((line, idx) => (
             <div
               key={idx}
               className={styles.correctionLine}
@@ -287,19 +305,49 @@ const PromptOutput = ({ selectedHistory, historyCount }: PromptOutputProps) => {
               {line.segments.map((segment, i) => (
                 <span key={i}>
                   <CorrectedText
-                    key={i}
                     segment={segment}
+                    setIgnoreChangedTexts={setIgnoreChangedTexts}
+                    ignoreChangedTexts={ignoreChangedTexts}
                   />
                 </span>
               ))}
             </div>
           ))}
+          {loadingState === "processing" && (
+            <div
+              style={{
+                display: "flex",
+                justifyContent: "center",
+                height: "40px",
+              }}
+            >
+              <div className={styles.loadingAnimationBig} />
+            </div>
+          )}
         </div>
 
-        <div className={styles.promptMeta}>
+        <div className={styles.bottomContainer}>
           <p className={styles.promptTime}>
-            {new Date(outputData.createdAt).toLocaleString("ko-KR")}
+            {loadingState === "processing"
+              ? "교정 데이터를 처리하는 중입니다..."
+              : new Date(outputData.createdAt).toLocaleString("ko-KR")}
           </p>
+          <div
+            className={styles.buttonContainer}
+            style={
+              ignoreChangedTexts.size === changedTextCount ||
+              loadingState === "processing"
+                ? { opacity: 0.5, pointerEvents: "none" }
+                : {}
+            }
+          >
+            <button onClick={handleApplyCorrections}>
+              <FiCheckCircle style={{ marginRight: "8px" }} />
+              {ignoreChangedTexts.size === 0
+                ? "전부 반영하기"
+                : `부분 반영하기 (${changedTextCount - ignoreChangedTexts.size}/${changedTextCount})`}
+            </button>
+          </div>
         </div>
       </div>
     );
@@ -307,7 +355,12 @@ const PromptOutput = ({ selectedHistory, historyCount }: PromptOutputProps) => {
 
   return (
     <div className={styles.container}>
-      <div className={styles.output}>{renderContent()}</div>
+      <div
+        ref={outputRef}
+        className={styles.output}
+      >
+        {renderContent()}
+      </div>
     </div>
   );
 };
