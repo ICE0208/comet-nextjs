@@ -8,6 +8,7 @@ import { useRouter } from "next/navigation";
 import useCheckTextStore from "@/store/checkTextStore";
 import useChangedTextStore from "@/store/changedTextStore";
 import CorrectedText from "./CorrectedText";
+import { FiCheckCircle } from "react-icons/fi";
 
 type WorkspaceHistory = Awaited<
   ReturnType<typeof getWorkspaceById>
@@ -33,45 +34,15 @@ const PromptOutput = ({ selectedHistory, historyCount }: PromptOutputProps) => {
   const setMultipleChangedTexts = useChangedTextStore(
     (state) => state.actions.setMultipleChangedTexts
   );
+  const [ignoreChangedTexts, setIgnoreChangedTexts] = useState<Set<string>>(
+    new Set()
+  );
+  const [changedTextCount, setChangedTextCount] = useState(0);
 
   // output 영역에 대한 ref 추가
   const outputRef = useRef<HTMLDivElement>(null);
   // correctionResult 영역에 대한 ref 추가
   const resultRef = useRef<HTMLDivElement>(null);
-  // 이전 correctionData를 저장하기 위한 ref
-  const prevCorrectionDataRef = useRef<CorrectionData | null>(null);
-
-  // correctionData가 변경되고 idle 상태일 때 부드럽게 스크롤
-  useEffect(() => {
-    // idle 상태이고 correctionData가 있을 때만 스크롤
-    if (loadingState === "idle" && correctionData) {
-      // 이전 데이터와 비교해서 변경된 경우에만 스크롤
-      if (
-        JSON.stringify(prevCorrectionDataRef.current) !==
-        JSON.stringify(correctionData)
-      ) {
-        // 현재 correctionData 저장
-        prevCorrectionDataRef.current = correctionData;
-
-        // 부드러운 스크롤 실행
-        setTimeout(() => {
-          if (resultRef.current) {
-            resultRef.current.scrollTo({
-              top: 0,
-              behavior: "smooth",
-            });
-          }
-
-          if (outputRef.current) {
-            outputRef.current.scrollTo({
-              top: 0,
-              behavior: "smooth",
-            });
-          }
-        }, 100);
-      }
-    }
-  }, [correctionData, loadingState]);
 
   // 컴포넌트 언마운트 시 정리 - PromptOutput 컴포넌트에서만 resetStore 호출
   useEffect(
@@ -95,6 +66,24 @@ const PromptOutput = ({ selectedHistory, historyCount }: PromptOutputProps) => {
     if (!selectedHistory) {
       return;
     }
+    // 부드러운 스크롤 실행
+    setTimeout(() => {
+      if (resultRef.current) {
+        resultRef.current.scrollTo({
+          top: 0,
+          behavior: "smooth",
+        });
+      }
+
+      if (outputRef.current) {
+        outputRef.current.scrollTo({
+          top: 0,
+          behavior: "smooth",
+        });
+      }
+    }, 100);
+
+    setIgnoreChangedTexts(new Set());
 
     if (selectedHistory.status === "COMPLETED") {
       setOutputData(selectedHistory.aiResponse);
@@ -141,6 +130,7 @@ const PromptOutput = ({ selectedHistory, historyCount }: PromptOutputProps) => {
   // texts 객체를 useMemo 내부로 이동하여 의존성 문제 해결
   const correctionDataWithOrder = React.useMemo(() => {
     const texts: { [key: string]: number } = {};
+    let count = 0;
 
     return correctionData?.map((line) => {
       const segments = line.segments.map((segment) => {
@@ -148,11 +138,17 @@ const PromptOutput = ({ selectedHistory, historyCount }: PromptOutputProps) => {
         texts[text] = (texts[text] ?? -1) + 1;
         const order = texts[text];
 
+        if (segment.correction) {
+          count++;
+        }
+
         return {
           ...segment,
           order,
         };
       });
+
+      setChangedTextCount(count);
       return {
         segments,
       };
@@ -264,7 +260,11 @@ const PromptOutput = ({ selectedHistory, historyCount }: PromptOutputProps) => {
             >
               {line.segments.map((segment, i) => (
                 <span key={i}>
-                  <CorrectedText segment={segment} />
+                  <CorrectedText
+                    segment={segment}
+                    setIgnoreChangedTexts={setIgnoreChangedTexts}
+                    ignoreChangedTexts={ignoreChangedTexts}
+                  />
                 </span>
               ))}
             </div>
@@ -282,10 +282,28 @@ const PromptOutput = ({ selectedHistory, historyCount }: PromptOutputProps) => {
           )}
         </div>
 
-        <div className={styles.promptMeta}>
+        <div className={styles.bottomContainer}>
           <p className={styles.promptTime}>
-            {new Date(outputData.createdAt).toLocaleString("ko-KR")}
+            {loadingState === "processing"
+              ? "교정 데이터를 처리하는 중입니다..."
+              : new Date(outputData.createdAt).toLocaleString("ko-KR")}
           </p>
+          <div
+            className={styles.buttonContainer}
+            style={
+              ignoreChangedTexts.size === changedTextCount ||
+              loadingState === "processing"
+                ? { opacity: 0.5 }
+                : {}
+            }
+          >
+            <button>
+              <FiCheckCircle style={{ marginRight: "8px" }} />
+              {ignoreChangedTexts.size === 0
+                ? "전부 반영하기"
+                : `부분 반영하기 (${changedTextCount - ignoreChangedTexts.size}/${changedTextCount})`}
+            </button>
+          </div>
         </div>
       </div>
     );

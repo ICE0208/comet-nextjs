@@ -431,11 +431,13 @@ const PromptInput = ({
       </div>
       <div className={styles.checkboxContainer}>
         <button
-          className={`${styles.submitButton} ${loadingState === "correctionLoading" ? styles.submitting : ""}`}
+          className={`${styles.submitButton} ${loadingState === "correctionLoading" || loadingState === "processing" ? styles.submitting : ""}`}
           onClick={handleSubmit}
           disabled={isDisabled}
         >
-          {loadingState === "correctionLoading" ? "교정 중..." : "교정하기"}
+          {loadingState === "correctionLoading" || loadingState === "processing"
+            ? "교정 중..."
+            : "교정하기"}
         </button>
       </div>
     </div>
