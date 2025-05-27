@@ -257,6 +257,25 @@ const PromptOutput = ({
     }
 
     if (!outputData) {
+      if (loadingState === "processing") {
+        return (
+          <div className={styles.loadingContainer}>
+            <div className={styles.loadingIndicator}>
+              <div className={styles.correctionLoadingAnimation}>
+                <span />
+                <span />
+                <span />
+                <span />
+              </div>
+              <p className={styles.loadingText}>
+                교정 데이터를 처리하는 중입니다...
+              </p>
+              <p className={styles.loadingSubtext}>잠시만 기다려주세요</p>
+            </div>
+          </div>
+        );
+      }
+
       if (historyCount === 0) {
         return <p className={styles.emptyText}>아직 제출된 문장이 없습니다.</p>;
       }
