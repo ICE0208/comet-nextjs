@@ -1,0 +1,86 @@
+.overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 1000;
+}
+
+/* 고정 네비게이션 버튼 추가 */
+.fixedNavigation {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 16px;
+  z-index: 1003;
+  padding: 16px;
+  background-color: #00000077;
+  /* backdrop-filter: blur(8px); */
+  border-top: 1px solid rgba(255, 255, 255, 0.2);
+  animation: slideUp 0.5s ease;
+}
+
+.fixedNavigation button {
+  padding: 12px 24px;
+  font-size: 16px;
+  font-weight: 700;
+  border: 2px solid #ffffff;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  /* box-shadow: 4px 4px 0 rgba(0, 0, 0, 0.9); */
+}
+
+.fixedPrevButton {
+  background-color: #fff;
+  color: #000;
+}
+
+.fixedPrevButton:hover {
+  background-color: #f3f4f6;
+  transform: translate(-2px, -2px);
+  box-shadow: 6px 6px 0 rgba(0, 0, 0, 0.9);
+}
+
+.fixedNextButton {
+  background-color: #3182ce;
+  color: white;
+}
+
+.fixedNextButton:hover {
+  background-color: #2b6cb0;
+  transform: translate(-2px, -2px);
+  box-shadow: 6px 6px 0 rgba(0, 0, 0, 0.9);
+}
+
+.stepCounter {
+  font-size: 16px;
+  font-weight: 700;
+  color: white;
+  background-color: rgba(0, 0, 0, 0.7);
+  padding: 8px 16px;
+  border-radius: 20px;
+}
+
+@keyframes slideUp {
+  from {
+    transform: translateY(100%);
+  }
+  to {
+    transform: translateY(0);
+  }
+}
+
+.fixedPrevButton,
+.fixedNextButton {
+  transition:
+    transform 0.3s ease,
+    box-shadow 0.3s ease;
+}

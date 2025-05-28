@@ -7,6 +7,7 @@ import GridView from "./components/GridView";
 import ListView from "./components/ListView";
 import TopBar from "./components/TopBar";
 import WorkspaceModal from "./components/WorkspaceModal";
+import TutorialModal from "../../../components/portals/TutorialModal";
 import {
   getWorkspaceList,
   createWorkspace,
@@ -27,9 +28,15 @@ export default function PromptListPage() {
     id: string;
     title: string;
   } | null>(null);
+  const [showTutorial, setShowTutorial] = useState(true);
 
   const router = useRouter();
   const queryClient = useQueryClient();
+
+  // 튜토리얼 닫기
+  const handleTutorialClose = () => {
+    setShowTutorial(false);
+  };
 
   // ===== React Query 데이터 가져오기 =====
   // 워크스페이스 목록 조회 (읽기)
@@ -269,6 +276,12 @@ export default function PromptListPage() {
         initialValue={editingChat?.title || ""}
         mode={modalMode}
         isLoading={isLoading}
+      />
+
+      {/* 튜토리얼 모달 */}
+      <TutorialModal
+        isOpen={showTutorial}
+        onClose={handleTutorialClose}
       />
     </>
   );

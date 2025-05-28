@@ -1,0 +1,123 @@
+import React, { useState } from "react";
+import styles from "./TutorialModal.module.css";
+import ReactPortal from "./ReactPortal";
+import TutorialSteps, { TutorialStep } from "../tutorial/TutorialSteps";
+
+interface TutorialModalProps {
+  isOpen: boolean;
+  onClose: () => void;
+}
+
+const tutorialSteps: TutorialStep[] = [
+  {
+    title: "작업 공간 사용 가이드",
+    content: "코멧의 작업 공간에서 할 수 있는 것들을 단계별로 알아보겠습니다.",
+    step: 1,
+    position: {
+      top: 500,
+      bottom: 1,
+      left: 1,
+      right: 750,
+    },
+    // 메인 작업 공간 전체를 하이라이트
+    targetSelector:
+      "div[class*='container']:not([class*='emptyStateContainer'])",
+  },
+  {
+    title: "1. 작업 생성하기",
+    content:
+      "오른쪽 상단의 '새 작업 만들기' 버튼을 클릭하여 새로운 작업을 시작할 수 있습니다.",
+    step: 2,
+    position: {
+      top: 125,
+      bottom: 1,
+      left: 1,
+      right: 420,
+    },
+    // 새 작업 만들기 버튼
+    targetSelector: "button[class*='createButton']",
+  },
+  {
+    title: "2. 작업 관리하기",
+    content:
+      "그리드 또는 리스트 뷰로 작업을 확인하고, 정렬 방식을 선택할 수 있습니다.",
+    step: 3,
+    position: {
+      top: 125,
+      bottom: 1,
+      left: 1,
+      right: 1400,
+    },
+    // 뷰 토글 버튼들을 하이라이트
+    targetSelector: "div[class*='viewToggle']",
+  },
+  {
+    title: "3. 작업 편집하기",
+    content:
+      "각 작업 카드의 옵션 메뉴를 통해 이름 변경, 삭제 등의 작업을 수행할 수 있습니다.",
+    step: 4,
+    position: {
+      top: 225,
+      bottom: 1,
+      left: 1,
+      right: 680,
+    },
+    // 작업 카드의 옵션 메뉴 버튼
+    targetSelector: "div[class*='card']:first-child button[class*='optionBtn']",
+  },
+];
+
+const TutorialModal = ({ isOpen, onClose }: TutorialModalProps) => {
+  const [step, setStep] = useState<number>(1);
+
+  const currentStep =
+    tutorialSteps.find((s) => s.step === step) || tutorialSteps[0];
+
+  const handleNextStep = () => {
+    if (step < tutorialSteps.length) {
+      setStep(step + 1);
+    } else {
+      onClose();
+    }
+  };
+
+  const handlePrevStep = () => {
+    if (step > 1) {
+      setStep(step - 1);
+    }
+  };
+
+  if (!isOpen) return null;
+
+  return (
+    <ReactPortal>
+      <div className={styles.overlay} />
+      <TutorialSteps {...currentStep} />
+
+      {/* 하단에 고정된 네비게이션 버튼 */}
+      <div className={styles.fixedNavigation}>
+        {step > 1 && (
+          <button
+            className={styles.fixedPrevButton}
+            onClick={handlePrevStep}
+          >
+            이전
+          </button>
+        )}
+
+        <span className={styles.stepCounter}>
+          {step} / {tutorialSteps.length}
+        </span>
+
+        <button
+          className={styles.fixedNextButton}
+          onClick={handleNextStep}
+        >
+          {step === tutorialSteps.length ? "완료" : "다음"}
+        </button>
+      </div>
+    </ReactPortal>
+  );
+};
+
+export default TutorialModal;
