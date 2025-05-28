@@ -51,7 +51,7 @@
   position: relative;
   width: 100%;
   flex: 1;
-  min-height: 400px;
+  overflow: hidden;
   display: flex;
 }
 
@@ -148,7 +148,6 @@
   letter-spacing: normal;
   text-indent: 0;
   box-sizing: border-box;
-  min-height: 200px !important;
   flex: 1;
 }
 
