@@ -50,7 +50,7 @@ const ClientWorkspacePage = ({ workspace }: ClientWorkspacePageProps) => {
     if (selectedHistoryId) {
       const listenToHistory = (historyId: string) => {
         eventSource = new EventSource(
-          `https://icehome.hopto.org/events/${historyId}`
+          `${process.env.NEXT_PUBLIC_NEST_SERVER}/events/${historyId}`
         );
 
         eventSource.onmessage = (event) => {

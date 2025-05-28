@@ -54,7 +54,6 @@ const PromptInput = forwardRef<PromptInputHandle, PromptInputProps>(
     const textOrder = useCheckTextStore((state) => state.textOrder);
     const textareaRef = useRef<HTMLTextAreaElement>(null);
     const changedText = useChangedTextStore((state) => state.changedText);
-
     useEffect(() => {
       if (savedText) {
         setText(savedText);
@@ -226,9 +225,16 @@ const PromptInput = forwardRef<PromptInputHandle, PromptInputProps>(
         setLoadingState("correctionLoading");
         useChangedTextStore.getState().actions.resetStore();
 
-        const historyId = await submitWork(workspaceId, text);
+        const { newWorkspaceHistoryId, success } = await submitWork(
+          workspaceId,
+          text
+        );
 
-        setSelectedHistoryId(historyId);
+        setSelectedHistoryId(newWorkspaceHistoryId);
+        if (!success) {
+          alert("텍스트 교정 중 오류가 발생했습니다.");
+          setLoadingState("idle");
+        }
       } catch (error) {
         alert("텍스트 교정 중 오류가 발생했습니다.");
         console.error("Submission error:", error);

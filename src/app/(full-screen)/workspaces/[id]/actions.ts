@@ -72,13 +72,16 @@ export async function submitWork(
   revalidatePath(`/workspaces/${workspaceId}`);
 
   // fetch 요청의 성공 여부를 체크하고
-  const aiRequest = await fetch("https://icehome.hopto.org/correction", {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-    },
-    body: JSON.stringify({ text, historyId: newWorkspaceHistory.id }),
-  });
+  const aiRequest = await fetch(
+    `${process.env.NEXT_PUBLIC_NEST_SERVER}/correction`,
+    {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ text, historyId: newWorkspaceHistory.id }),
+    }
+  );
 
   // 실패하면 history 상태를 ERROR로 바꿔야지
   if (!aiRequest.ok) {
@@ -89,10 +92,10 @@ export async function submitWork(
       },
     });
 
-    throw new Error("AI 서버 요청 실패"); // 또는 별도 에러 핸들링
+    return { newWorkspaceHistoryId: newWorkspaceHistory.id, success: false };
   }
 
-  return newWorkspaceHistory.id;
+  return { newWorkspaceHistoryId: newWorkspaceHistory.id, success: true };
 }
 
 export async function toggleFavorite(historyId: string) {
