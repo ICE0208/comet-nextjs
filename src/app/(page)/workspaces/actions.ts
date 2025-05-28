@@ -150,3 +150,35 @@ export async function deleteWorkspace(id: string) {
     return { success: false, error: "작업 삭제에 실패했습니다." };
   }
 }
+
+export async function updateUserTutorialStatus() {
+  const currentUser = await getCurrentUser();
+  if (!currentUser) {
+    redirect("/");
+  }
+
+  await prisma.user.update({
+    where: {
+      id: currentUser.id,
+    },
+    data: {
+      isTutorial: true,
+    },
+  });
+}
+
+export async function resetUserTutorialStatus() {
+  const currentUser = await getCurrentUser();
+  if (!currentUser) {
+    redirect("/");
+  }
+
+  await prisma.user.update({
+    where: {
+      id: currentUser.id,
+    },
+    data: {
+      isTutorial: false,
+    },
+  });
+}

@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import styles from "./page.module.css";
 import { WorkItem, SortType, ViewType } from "./types";
 import GridView from "./components/GridView";
@@ -13,9 +13,14 @@ import {
   createWorkspace,
   updateWorkspaceTitle,
   deleteWorkspace,
+  resetUserTutorialStatus,
 } from "./actions";
 import { useRouter } from "next/navigation";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
+
+interface UserData {
+  isTutorial: boolean;
+}
 
 export default function PromptListPage() {
   // ===== 상태 관리 =====
@@ -28,7 +33,8 @@ export default function PromptListPage() {
     id: string;
     title: string;
   } | null>(null);
-  const [showTutorial, setShowTutorial] = useState(true);
+  const [showTutorial, setShowTutorial] = useState(false);
+  const [tutorialKey, setTutorialKey] = useState(0);
 
   const router = useRouter();
   const queryClient = useQueryClient();
@@ -54,6 +60,28 @@ export default function PromptListPage() {
       }
     },
   });
+
+  // 사용자 정보 조회
+  const { data: userData } = useQuery<UserData>({
+    queryKey: ["user"],
+    queryFn: async () => {
+      const response = await fetch("/api/user");
+      if (!response.ok) {
+        throw new Error("Failed to fetch user data");
+      }
+      return response.json();
+    },
+  });
+
+  // 사용자가 튜토리얼을 보지 않았다면 튜토리얼 표시
+  useEffect(() => {
+    const checkTutorialStatus = () => {
+      if (userData && !userData.isTutorial) {
+        setShowTutorial(true);
+      }
+    };
+    checkTutorialStatus();
+  }, [userData]);
 
   // ===== React Query 변경 작업 =====
   // 워크스페이스 삭제 (삭제)
@@ -193,6 +221,14 @@ export default function PromptListPage() {
     router.push(`/workspaces/${id}`);
   };
 
+  // 도움말 보기 버튼 클릭
+  const handleShowTutorial = async () => {
+    await resetUserTutorialStatus();
+    queryClient.invalidateQueries({ queryKey: ["user"] });
+    setShowTutorial(true);
+    setTutorialKey(Date.now());
+  };
+
   // ===== 렌더링 함수 =====
   // 현재 선택된 뷰에 따라 컴포넌트 렌더링
   const renderViewComponent = () => {
@@ -250,7 +286,15 @@ export default function PromptListPage() {
   return (
     <>
       <div className={styles.container}>
-        <div className={styles.title}>나의 작업 공간</div>
+        <div className={styles.titleContainer}>
+          <div className={styles.title}>나의 작업 공간</div>
+          <button
+            className={styles.helpButton}
+            onClick={handleShowTutorial}
+          >
+            도움말 보기
+          </button>
+        </div>
 
         {/* 탑 바 컴포넌트 */}
         <TopBar
@@ -280,6 +324,7 @@ export default function PromptListPage() {
 
       {/* 튜토리얼 모달 */}
       <TutorialModal
+        key={tutorialKey}
         isOpen={showTutorial}
         onClose={handleTutorialClose}
       />

@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import styles from "./TutorialModal.module.css";
 import ReactPortal from "./ReactPortal";
 import TutorialSteps, { TutorialStep } from "../tutorial/TutorialSteps";
+import { updateUserTutorialStatus } from "@/app/(page)/workspaces/actions";
 
 interface TutorialModalProps {
   isOpen: boolean;
@@ -73,10 +74,12 @@ const TutorialModal = ({ isOpen, onClose }: TutorialModalProps) => {
   const currentStep =
     tutorialSteps.find((s) => s.step === step) || tutorialSteps[0];
 
-  const handleNextStep = () => {
+  const handleNextStep = async () => {
     if (step < tutorialSteps.length) {
       setStep(step + 1);
     } else {
+      // 튜토리얼 완료 시 isTutorial 상태 업데이트
+      await updateUserTutorialStatus();
       onClose();
     }
   };
