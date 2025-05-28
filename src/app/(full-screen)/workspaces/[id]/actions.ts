@@ -149,3 +149,55 @@ export async function toggleFavorite(historyId: string) {
     success: true,
   };
 }
+
+export async function updateHistoryName(
+  historyId: string,
+  historyName: string
+) {
+  // 로그인 여부 확인
+  const currentUser = await getCurrentUser();
+  if (!currentUser) {
+    redirect("/");
+  }
+
+  const history = await prisma.workspaceHistory.findUnique({
+    where: {
+      id: historyId,
+    },
+    select: {
+      workspace: {
+        select: {
+          userId: true,
+          id: true,
+        },
+      },
+    },
+  });
+
+  // 히스토리 존재 여부 확인
+  if (!history) {
+    redirect("/workspaces");
+  }
+
+  // 히스토리 소유자 확인
+  const owner = history.workspace.userId;
+  if (owner !== currentUser.id) {
+    redirect("/workspaces");
+  }
+
+  // 히스토리 이름 업데이트
+  await prisma.workspaceHistory.update({
+    where: {
+      id: historyId,
+    },
+    data: {
+      historyName: historyName.trim() || null, // 빈 문자열이면 null로 설정
+    },
+  });
+
+  revalidatePath(`/workspaces/${history.workspace.id}`);
+
+  return {
+    success: true,
+  };
+}

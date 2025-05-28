@@ -43,7 +43,7 @@
   align-items: center;
   justify-content: center;
   padding: 6px;
-  border-radius: 4px;
+  border-radius: 6px;
   transition: all 0.2s ease;
 }
 
@@ -60,7 +60,7 @@
 
 .filterButton {
   flex: 1;
-  padding: 8px 16px;
+  padding: 10px 16px;
   border: 1px solid #e5e7eb;
   border-radius: 6px;
   background-color: white;
@@ -85,39 +85,48 @@
 .historyList {
   display: flex;
   flex-direction: column;
-  gap: 10px;
+  gap: 8px;
   overflow-y: auto;
   flex: 1;
-  padding: 1px;
+  padding: 4px 1px 12px 1px;
+  max-height: none;
+  height: auto;
 }
 
 .historyItem {
-  padding: 15px;
-  border-radius: 8px;
-  background-color: #f9fafb;
-  border: 1px solid #e5e7eb;
+  padding: 14px 16px;
+  border-radius: 10px;
+  background-color: #fafafa;
+  border: 1px solid #f0f0f0;
   cursor: pointer;
   transition: all 0.2s ease;
   position: relative;
-  margin: 1px 0;
+  margin: 2px 0;
+  min-height: 88px;
+  max-height: none;
+  height: auto;
+  display: flex;
+  align-items: center;
+  flex-shrink: 0;
 }
 
 .historyItem:hover {
-  background-color: #f5f3ff;
-  border-color: #c4b5fd;
+  background-color: #f8f9ff;
+  border-color: #e0e7ff;
   transform: translateY(-1px);
   z-index: 1;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
 }
 
 .selected {
-  background-color: #eef2ff;
-  border-color: #818cf8;
-  box-shadow: 0 2px 4px rgba(129, 140, 248, 0.1);
+  background-color: #f0f4ff;
+  border-color: #6366f1;
+  box-shadow: 0 2px 8px rgba(99, 102, 241, 0.1);
 }
 
 .selected:hover {
-  background-color: #e0e7ff;
-  border-color: #6366f1;
+  background-color: #e8efff;
+  border-color: #5b5ff1;
 }
 
 .selected .historyItemText {
@@ -132,21 +141,29 @@
 .historyItemContent {
   display: flex;
   flex-direction: column;
-  gap: 8px;
+  width: 100%;
+  min-height: 56px;
+  height: auto;
+  justify-content: space-between;
+  flex-shrink: 0;
 }
 
 .historyItemHeader {
   display: flex;
   justify-content: space-between;
   align-items: flex-start;
-  gap: 2px;
+  gap: 8px;
+  min-height: 43px;
+  height: auto;
+  align-items: center;
+  flex-shrink: 0;
 }
 
 .historyItemText {
   margin: 0;
   font-size: 0.95rem;
   color: #1f2937;
-  line-height: 1.5;
+  line-height: 1.4;
   overflow: hidden;
   text-overflow: ellipsis;
   display: -webkit-box;
@@ -157,27 +174,34 @@
 
 .historyDate {
   font-size: 0.8rem;
-  color: #6b7280;
+  color: #9ca3af;
+  font-weight: 500;
 }
 
 .starButton {
-  padding: 4px;
+  padding: 6px;
   border: none;
   background: none;
   cursor: pointer;
-  color: #9ca3af;
+  color: #d1d5db;
   transition: all 0.2s ease;
   display: flex;
   align-items: center;
   justify-content: center;
+  border-radius: 6px;
 }
 
 .starButton:hover {
   color: #fbbf24;
+  background-color: rgba(251, 191, 36, 0.08);
 }
 
 .starButton.active {
-  color: #fbbf24;
+  color: #f59e0b;
+}
+
+.starButton.active:hover {
+  background-color: rgba(245, 158, 11, 0.08);
 }
 
 .starButton.loading {
@@ -198,11 +222,12 @@
   align-items: center;
   justify-content: center;
   height: 150px;
-  color: #6b7280;
+  color: #9ca3af;
   font-size: 0.95rem;
-  background-color: #f9fafb;
-  border-radius: 8px;
+  background-color: #fafafa;
+  border-radius: 10px;
   border: 1px dashed #e5e7eb;
+  margin: 12px 0;
 }
 
 /* 오버레이 (사이드바가 열렸을 때 배경 어둡게) */
@@ -219,4 +244,115 @@
 
 .overlayVisible {
   display: block;
+}
+
+/* 새로운 히스토리 아이템 푸터 스타일 */
+.historyItemFooter {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 6px;
+}
+
+/* 편집 버튼 스타일 */
+.editButton {
+  padding: 6px;
+  border: none;
+  background: none;
+  cursor: pointer;
+  color: #d1d5db;
+  transition: all 0.2s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 6px;
+  flex-shrink: 0;
+}
+
+.editButton:hover {
+  color: #6366f1;
+  background-color: #f0f4ff;
+}
+
+/* 편집 컨테이너 스타일 */
+.editContainer {
+  display: flex;
+  flex-direction: row;
+  gap: 8px;
+  width: 100%;
+  height: 40px;
+  align-items: center;
+}
+
+.editInput {
+  flex: 1;
+  padding: 8px 12px;
+  border: 1.5px solid #e5e7eb;
+  border-radius: 8px;
+  font-size: 0.9rem;
+  color: #1f2937;
+  background-color: white;
+  transition: all 0.2s ease;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+  font-family: inherit;
+  height: 36px;
+}
+
+.editInput:focus {
+  outline: none;
+  border-color: #6366f1;
+  box-shadow:
+    0 0 0 3px rgba(99, 102, 241, 0.1),
+    0 1px 3px rgba(0, 0, 0, 0.05);
+}
+
+.editButtons {
+  display: flex;
+  gap: 6px;
+  align-items: center;
+  flex-shrink: 0;
+}
+
+.editSaveButton,
+.editCancelButton {
+  padding: 8px;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.75rem;
+  transition: all 0.2s ease;
+  width: 32px;
+  height: 32px;
+  flex-shrink: 0;
+}
+
+.editSaveButton {
+  background-color: #f8fafc;
+  color: #64748b;
+  border: 1px solid #e2e8f0;
+}
+
+.editSaveButton:hover {
+  background-color: #10b981;
+  color: white;
+  border-color: #10b981;
+  transform: translateY(-1px);
+  box-shadow: 0 2px 8px rgba(16, 185, 129, 0.2);
+}
+
+.editCancelButton {
+  background-color: #f8fafc;
+  color: #64748b;
+  border: 1px solid #e2e8f0;
+}
+
+.editCancelButton:hover {
+  background-color: #ef4444;
+  color: white;
+  border-color: #ef4444;
+  transform: translateY(-1px);
+  box-shadow: 0 2px 8px rgba(239, 68, 68, 0.2);
 }
