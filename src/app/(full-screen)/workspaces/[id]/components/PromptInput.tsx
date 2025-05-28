@@ -42,6 +42,7 @@ const PromptInput = forwardRef<PromptInputHandle, PromptInputProps>(
     ref
   ) => {
     const [text, setText] = useState<string>(savedText);
+    const [isPro, setIsPro] = useState<boolean>(false);
     const setLoadingState = usePromptStore(
       (state) => state.actions.setLoadingState
     );
@@ -212,6 +213,13 @@ const PromptInput = forwardRef<PromptInputHandle, PromptInputProps>(
 
     const handleSubmit = async () => {
       if (!text.trim() || loadingState !== "idle") return;
+
+      // Pro 모드일 때 관리자 문의 메시지 표시
+      if (isPro) {
+        alert("프로모드를 이용하기 위해서는 관리자에게 문의주세요");
+        return;
+      }
+
       setOutputData(null);
 
       try {
@@ -451,6 +459,18 @@ const PromptInput = forwardRef<PromptInputHandle, PromptInputProps>(
             </div>
             <div className={styles.bottomContainer}>
               <div className={styles.buttonContainer}>
+                {/* Pro 모드 토글 */}
+                <div className={styles.proToggleContainer}>
+                  <span className={styles.proToggleLabel}>Pro 모드</span>
+                  <button
+                    className={`${styles.proToggle} ${isPro ? styles.proToggleActive : ""}`}
+                    onClick={() => setIsPro(!isPro)}
+                    disabled={loadingState !== "idle"}
+                  >
+                    <div className={styles.proToggleSlider} />
+                  </button>
+                </div>
+
                 <button
                   className={`${styles.submitButton} ${loadingState === "correctionLoading" || loadingState === "processing" ? styles.submitting : ""}`}
                   onClick={handleSubmit}
