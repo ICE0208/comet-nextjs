@@ -9,7 +9,8 @@ export type LoadingState =
   | "idle"
   | "initialLoading"
   | "correctionLoading"
-  | "processing";
+  | "processing"
+  | "networkError";
 
 // 프롬프트 상태 관리 인터페이스
 interface PromptState {

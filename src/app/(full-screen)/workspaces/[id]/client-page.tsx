@@ -46,7 +46,6 @@ const ClientWorkspacePage = ({ workspace }: ClientWorkspacePageProps) => {
   const promptInputRef = useRef<PromptInputHandle>(null);
 
   useEffect(() => {
-    router.refresh();
     let eventSource: EventSource | null = null;
     if (selectedHistoryId) {
       const listenToHistory = (historyId: string) => {
@@ -90,10 +89,10 @@ const ClientWorkspacePage = ({ workspace }: ClientWorkspacePageProps) => {
           }
         };
 
-        eventSource.onerror = () => {
-          console.error("SSE 연결 실패");
+        eventSource.onerror = (error) => {
+          console.error("SSE 연결 실패", error);
           eventSource?.close();
-          setLoadingState("idle");
+          setLoadingState("networkError");
         };
       };
 
@@ -102,6 +101,7 @@ const ClientWorkspacePage = ({ workspace }: ClientWorkspacePageProps) => {
 
     return () => {
       if (eventSource) {
+        console.log("eventSource.close()");
         eventSource.close();
       }
     };
