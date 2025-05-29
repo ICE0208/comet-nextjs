@@ -1,7 +1,11 @@
 "use client";
 import { useState } from "react";
 import styles from "./HistorySidebar.module.css";
-import { getWorkspaceById, toggleFavorite } from "../actions";
+import {
+  getWorkspaceById,
+  toggleFavorite,
+  updateHistoryName,
+} from "../actions";
 
 // 히스토리 항목의 타입 정의
 type HistoryItem = Awaited<
@@ -27,6 +31,12 @@ const HistorySidebar: React.FC<HistorySidebarProps> = ({
   const [loadingStates, setLoadingStates] = useState<Record<string, boolean>>(
     {}
   );
+  const [editingHistoryId, setEditingHistoryId] = useState<string | null>(null);
+  const [editText, setEditText] = useState("");
+
+  // 히스토리 이름 표시 로직: historyName이 있으면 표시, 없으면 userRequest 표시
+  const getDisplayText = (item: HistoryItem) =>
+    item.historyName || item.userRequest;
 
   const getHistoryDate = (item: HistoryItem) => {
     if (item.aiResponse) {
@@ -62,6 +72,31 @@ const HistorySidebar: React.FC<HistorySidebarProps> = ({
       await toggleFavorite(historyId);
     } finally {
       setLoadingStates((prev) => ({ ...prev, [historyId]: false }));
+    }
+  };
+
+  const handleEditStart = (item: HistoryItem, e: React.MouseEvent) => {
+    e.stopPropagation();
+    setEditingHistoryId(item.id);
+    // 편집 시에도 현재 표시되는 텍스트를 사용
+    setEditText(getDisplayText(item));
+  };
+
+  const handleEditCancel = () => {
+    setEditingHistoryId(null);
+    setEditText("");
+  };
+
+  const handleEditSave = async () => {
+    if (!editingHistoryId) return;
+
+    try {
+      await updateHistoryName(editingHistoryId, editText);
+      setEditingHistoryId(null);
+      setEditText("");
+    } catch (error) {
+      console.error("히스토리 이름 업데이트 실패:", error);
+      alert("히스토리 이름 업데이트에 실패했습니다.");
     }
   };
 
@@ -124,11 +159,108 @@ const HistorySidebar: React.FC<HistorySidebarProps> = ({
             >
               <div className={styles.historyItemContent}>
                 <div className={styles.historyItemHeader}>
-                  <p className={styles.historyItemText}>
-                    {item.userRequest.length > 50
-                      ? `${item.userRequest.substring(0, 50)}...`
-                      : item.userRequest}
-                  </p>
+                  {editingHistoryId === item.id ? (
+                    <div className={styles.editContainer}>
+                      <input
+                        type="text"
+                        value={editText}
+                        onChange={(e) => setEditText(e.target.value)}
+                        className={styles.editInput}
+                        onClick={(e) => e.stopPropagation()}
+                        onKeyDown={(e) => {
+                          if (e.key === "Enter") {
+                            e.stopPropagation();
+                            handleEditSave();
+                          }
+                          if (e.key === "Escape") {
+                            e.stopPropagation();
+                            handleEditCancel();
+                          }
+                        }}
+                        autoFocus
+                        placeholder="히스토리 이름 입력"
+                      />
+                      <div className={styles.editButtons}>
+                        <button
+                          className={styles.editSaveButton}
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            handleEditSave();
+                          }}
+                          title="저장"
+                        >
+                          <svg
+                            xmlns="http://www.w3.org/2000/svg"
+                            width="14"
+                            height="14"
+                            viewBox="0 0 24 24"
+                            fill="none"
+                            stroke="currentColor"
+                            strokeWidth="2.5"
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                          >
+                            <polyline points="20 6 9 17 4 12" />
+                          </svg>
+                        </button>
+                        <button
+                          className={styles.editCancelButton}
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            handleEditCancel();
+                          }}
+                          title="취소"
+                        >
+                          <svg
+                            xmlns="http://www.w3.org/2000/svg"
+                            width="14"
+                            height="14"
+                            viewBox="0 0 24 24"
+                            fill="none"
+                            stroke="currentColor"
+                            strokeWidth="2.5"
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                          >
+                            <path d="M18 6L6 18M6 6l12 12" />
+                          </svg>
+                        </button>
+                      </div>
+                    </div>
+                  ) : (
+                    <>
+                      <p className={styles.historyItemText}>
+                        {getDisplayText(item).length > 50
+                          ? `${getDisplayText(item).substring(0, 50)}...`
+                          : getDisplayText(item)}
+                      </p>
+                      <button
+                        className={styles.editButton}
+                        onClick={(e) => handleEditStart(item, e)}
+                        title="히스토리 이름 수정"
+                      >
+                        <svg
+                          xmlns="http://www.w3.org/2000/svg"
+                          width="16"
+                          height="16"
+                          viewBox="0 0 24 24"
+                          fill="none"
+                          stroke="currentColor"
+                          strokeWidth="2"
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                        >
+                          <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7" />
+                          <path d="m18.5 2.5 3 3L12 15l-4 1 1-4 9.5-9.5z" />
+                        </svg>
+                      </button>
+                    </>
+                  )}
+                </div>
+                <div className={styles.historyItemFooter}>
+                  <span className={styles.historyDate}>
+                    {getHistoryDate(item)}
+                  </span>
                   <button
                     className={`${styles.starButton} ${item.historyFavorite ? styles.active : ""} ${loadingStates[item.id] ? styles.loading : ""}`}
                     onClick={(e) => {
@@ -136,11 +268,12 @@ const HistorySidebar: React.FC<HistorySidebarProps> = ({
                       handleToggleFavorite(item.id);
                     }}
                     disabled={loadingStates[item.id]}
+                    title="즐겨찾기"
                   >
                     <svg
                       xmlns="http://www.w3.org/2000/svg"
-                      width="20"
-                      height="20"
+                      width="18"
+                      height="18"
                       viewBox="0 0 24 24"
                       fill={item.historyFavorite ? "currentColor" : "none"}
                       stroke="currentColor"
@@ -152,9 +285,6 @@ const HistorySidebar: React.FC<HistorySidebarProps> = ({
                     </svg>
                   </button>
                 </div>
-                <span className={styles.historyDate}>
-                  {getHistoryDate(item)}
-                </span>
               </div>
             </div>
           ))

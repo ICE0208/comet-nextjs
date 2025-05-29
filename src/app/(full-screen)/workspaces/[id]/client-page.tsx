@@ -46,12 +46,11 @@ const ClientWorkspacePage = ({ workspace }: ClientWorkspacePageProps) => {
   const promptInputRef = useRef<PromptInputHandle>(null);
 
   useEffect(() => {
-    router.refresh();
     let eventSource: EventSource | null = null;
     if (selectedHistoryId) {
       const listenToHistory = (historyId: string) => {
         eventSource = new EventSource(
-          `https://icehome.hopto.org/events/${historyId}`
+          `${process.env.NEXT_PUBLIC_NEST_SERVER}/events/${historyId}`
         );
 
         eventSource.onmessage = (event) => {
@@ -59,6 +58,8 @@ const ClientWorkspacePage = ({ workspace }: ClientWorkspacePageProps) => {
             response: string;
             status: string;
           };
+
+          if (status === "DUMMY") return;
 
           if (status === "PROCESSING" && response) {
             const aiResponse = {
@@ -90,10 +91,10 @@ const ClientWorkspacePage = ({ workspace }: ClientWorkspacePageProps) => {
           }
         };
 
-        eventSource.onerror = () => {
-          console.error("SSE 연결 실패");
+        eventSource.onerror = (error) => {
+          console.error("SSE 연결 실패", error);
           eventSource?.close();
-          setLoadingState("idle");
+          setLoadingState("networkError");
         };
       };
 
@@ -102,6 +103,7 @@ const ClientWorkspacePage = ({ workspace }: ClientWorkspacePageProps) => {
 
     return () => {
       if (eventSource) {
+        console.log("eventSource.close()");
         eventSource.close();
       }
     };

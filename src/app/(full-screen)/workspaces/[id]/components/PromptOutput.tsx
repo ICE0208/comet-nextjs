@@ -27,7 +27,6 @@ const PromptOutput = ({
 }: PromptOutputProps) => {
   const outputData = usePromptStore((state) => state.outputData);
   const loadingState = usePromptStore((state) => state.loadingState);
-  const error = usePromptStore((state) => state.error);
   const setOutputData = usePromptStore((state) => state.actions.setOutputData);
   const setLoadingState = usePromptStore(
     (state) => state.actions.setLoadingState
@@ -222,8 +221,14 @@ const PromptOutput = ({
   // loadingState에 따른 UI 표시를 처리하는 함수
   const renderContent = () => {
     // 에러 상태
-    if (error) {
-      return <p className={styles.errorText}>{error}</p>;
+    if (loadingState === "networkError") {
+      return (
+        <p className={styles.errorText}>
+          네트워크 오류가 발생했습니다.
+          <br />
+          새로고침 후 다시 시도해주세요.
+        </p>
+      );
     }
 
     // 초기 로딩 상태 (페이지 첫 로드)

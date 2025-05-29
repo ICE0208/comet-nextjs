@@ -42,6 +42,7 @@ const PromptInput = forwardRef<PromptInputHandle, PromptInputProps>(
     ref
   ) => {
     const [text, setText] = useState<string>(savedText);
+    const [isPro, setIsPro] = useState<boolean>(false);
     const setLoadingState = usePromptStore(
       (state) => state.actions.setLoadingState
     );
@@ -53,7 +54,6 @@ const PromptInput = forwardRef<PromptInputHandle, PromptInputProps>(
     const textOrder = useCheckTextStore((state) => state.textOrder);
     const textareaRef = useRef<HTMLTextAreaElement>(null);
     const changedText = useChangedTextStore((state) => state.changedText);
-
     useEffect(() => {
       if (savedText) {
         setText(savedText);
@@ -212,15 +212,29 @@ const PromptInput = forwardRef<PromptInputHandle, PromptInputProps>(
 
     const handleSubmit = async () => {
       if (!text.trim() || loadingState !== "idle") return;
+
+      // Pro 모드일 때 관리자 문의 메시지 표시
+      if (isPro) {
+        alert("프로모드를 이용하기 위해서는 관리자에게 문의주세요");
+        return;
+      }
+
       setOutputData(null);
 
       try {
         setLoadingState("correctionLoading");
         useChangedTextStore.getState().actions.resetStore();
 
-        const historyId = await submitWork(workspaceId, text);
+        const { newWorkspaceHistoryId, success } = await submitWork(
+          workspaceId,
+          text
+        );
 
-        setSelectedHistoryId(historyId);
+        setSelectedHistoryId(newWorkspaceHistoryId);
+        if (!success) {
+          alert("텍스트 교정 중 오류가 발생했습니다.");
+          setLoadingState("idle");
+        }
       } catch (error) {
         alert("텍스트 교정 중 오류가 발생했습니다.");
         console.error("Submission error:", error);
@@ -429,7 +443,6 @@ const PromptInput = forwardRef<PromptInputHandle, PromptInputProps>(
                 style={{
                   width: "100%",
                   height: "100%",
-                  minHeight: "400px",
                   padding: "1rem",
                   border: "none",
                   borderRadius: "0",
@@ -451,6 +464,18 @@ const PromptInput = forwardRef<PromptInputHandle, PromptInputProps>(
             </div>
             <div className={styles.bottomContainer}>
               <div className={styles.buttonContainer}>
+                {/* Pro 모드 토글 */}
+                <div className={styles.proToggleContainer}>
+                  <span className={styles.proToggleLabel}>Pro 모드</span>
+                  <button
+                    className={`${styles.proToggle} ${isPro ? styles.proToggleActive : ""}`}
+                    onClick={() => setIsPro(!isPro)}
+                    disabled={loadingState !== "idle"}
+                  >
+                    <div className={styles.proToggleSlider} />
+                  </button>
+                </div>
+
                 <button
                   className={`${styles.submitButton} ${loadingState === "correctionLoading" || loadingState === "processing" ? styles.submitting : ""}`}
                   onClick={handleSubmit}
