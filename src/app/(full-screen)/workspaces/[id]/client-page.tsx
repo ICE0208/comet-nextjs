@@ -59,6 +59,8 @@ const ClientWorkspacePage = ({ workspace }: ClientWorkspacePageProps) => {
             status: string;
           };
 
+          if (status === "DUMMY") return;
+
           if (status === "PROCESSING" && response) {
             const aiResponse = {
               id: -1,
