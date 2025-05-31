@@ -9,7 +9,7 @@
 
   /* transform: translate(-4px, -4px);
   transition: all 0.3s ease; */
-  animation: fadeIn 0.5s;
+  /* animation: ease-in-out 0.5s; */
 
   /* 말풍선 꼬리 효과 - 기본 왼쪽 방향 */
   &:before {
@@ -18,25 +18,28 @@
     width: 20px;
     height: 20px;
     background-color: white;
-    left: -10px;
     top: 50%;
-    transform: translateY(-50%) rotate(45deg);
   }
 }
 
 /* 오른쪽 방향 화살표 클래스 */
 .arrowRight {
+  /* transform: translateX(-10px); */
   &:before {
-    left: auto !important;
-    right: -10px !important;
-
-    transform: translateY(-50%) rotate(45deg) !important;
+    left: auto;
+    right: -10px;
+    transform: translateY(-50%) rotate(45deg);
   }
 }
 
 /* 왼쪽 방향 화살표 클래스 (기본값) */
 .arrowLeft {
   /* 기본 스타일 유지 */
+  &:before {
+    left: -10px;
+    right: auto;
+    transform: translateY(-50%) rotate(45deg);
+  }
 }
 
 @keyframes fadeIn {
