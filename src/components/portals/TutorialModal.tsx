@@ -99,14 +99,17 @@ const TutorialModal = ({ isOpen, onClose }: TutorialModalProps) => {
 
       {/* 하단에 고정된 네비게이션 버튼 */}
       <div className={styles.fixedNavigation}>
-        {step > 1 && (
-          <button
-            className={styles.fixedPrevButton}
-            onClick={handlePrevStep}
-          >
-            이전
-          </button>
-        )}
+        <button
+          className={styles.fixedPrevButton}
+          style={{
+            opacity: step === 1 ? 0.5 : 1,
+            cursor: step === 1 ? "not-allowed" : "pointer",
+          }}
+          disabled={step === 1}
+          onClick={step === 1 ? undefined : handlePrevStep}
+        >
+          이전
+        </button>
 
         <span className={styles.stepCounter}>
           {step} / {tutorialSteps.length}
