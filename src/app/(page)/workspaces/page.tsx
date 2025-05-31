@@ -83,6 +83,15 @@ export default function PromptListPage() {
     checkTutorialStatus();
   }, [userData]);
 
+  useEffect(() => {
+    if (showTutorial) {
+      window.scrollTo(0, 0);
+      document.body.style.overflow = "hidden";
+    } else {
+      document.body.style.overflow = "auto";
+    }
+  }, [showTutorial]);
+
   // ===== React Query 변경 작업 =====
   // 워크스페이스 삭제 (삭제)
   const deleteWorkspaceMutation = useMutation({
