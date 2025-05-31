@@ -1,6 +1,7 @@
 "use client";
-import React from "react";
+import React, { useState } from "react";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import styles from "../page.module.css";
 import { IconButtonProps, QueueStatus } from "../types";
 import { HEADER_BUTTONS } from "../constants";
@@ -29,9 +30,16 @@ const IconButton: React.FC<IconButtonProps> = ({
  */
 interface QueueStatusBarProps {
   queueStatus: QueueStatus;
+  isRefreshing?: boolean;
 }
 
-const QueueStatusBar: React.FC<QueueStatusBarProps> = ({ queueStatus }) => {
+const QueueStatusBar: React.FC<QueueStatusBarProps> = ({
+  queueStatus,
+  isRefreshing = false,
+}) => {
+  const router = useRouter();
+  const [localRefreshing, setLocalRefreshing] = useState(false);
+
   const currentJobs = queueStatus.totalUserJobs;
   const totalSlots = queueStatus.totalUserJobs + queueStatus.availableSlots;
   const percentage = totalSlots > 0 ? (currentJobs / totalSlots) * 100 : 0;
@@ -50,6 +58,54 @@ const QueueStatusBar: React.FC<QueueStatusBarProps> = ({ queueStatus }) => {
     return styles.queueTextHigh;
   };
 
+  const handleRefresh = async () => {
+    setLocalRefreshing(true);
+    router.refresh();
+
+    setTimeout(() => {
+      setLocalRefreshing(false);
+    }, 800);
+  };
+
+  const isCurrentlyRefreshing = isRefreshing || localRefreshing;
+
+  if (isCurrentlyRefreshing) {
+    return (
+      <div className={styles.queueStatusContainer}>
+        <div className={styles.queueBar}>
+          <div
+            className={styles.queueBarSkeleton}
+            style={{ width: "100%" }}
+          />
+        </div>
+        <span className={styles.queueTextSkeleton}>
+          <span className={styles.skeletonText} />
+        </span>
+        <button
+          className={styles.queueRefreshButton}
+          disabled
+        >
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            width="12"
+            height="12"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            strokeWidth="2"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+          >
+            <path d="M3 12a9 9 0 0 1 9-9 9.75 9.75 0 0 1 6.74 2.74L21 8" />
+            <path d="M21 3v5h-5" />
+            <path d="M21 12a9 9 0 0 1-9 9 9.75 9.75 0 0 1-6.74-2.74L3 16" />
+            <path d="M3 21v-5h5" />
+          </svg>
+        </button>
+      </div>
+    );
+  }
+
   return (
     <div className={styles.queueStatusContainer}>
       <div className={styles.queueBar}>
@@ -63,6 +119,28 @@ const QueueStatusBar: React.FC<QueueStatusBarProps> = ({ queueStatus }) => {
         <span className={styles.queueSeparator}>/</span>
         <span className={styles.queueNumbers}>{totalSlots}</span>
       </span>
+      <button
+        className={styles.queueRefreshButton}
+        onClick={handleRefresh}
+        title="큐 상태 새로고침"
+      >
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          width="12"
+          height="12"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          strokeWidth="2"
+          strokeLinecap="round"
+          strokeLinejoin="round"
+        >
+          <path d="M3 12a9 9 0 0 1 9-9 9.75 9.75 0 0 1 6.74 2.74L21 8" />
+          <path d="M21 3v5h-5" />
+          <path d="M21 12a9 9 0 0 1-9 9 9.75 9.75 0 0 1-6.74-2.74L3 16" />
+          <path d="M3 21v-5h5" />
+        </svg>
+      </button>
     </div>
   );
 };
