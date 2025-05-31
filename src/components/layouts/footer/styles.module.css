@@ -1,41 +1,100 @@
-.footer{
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    background-color: #f5f6f7;
-    border-top: 1.6px solid #f4f4f4;
+.footer {
+  display: flex;
+  flex-direction: column;
+  background-color: #fafafa;
+  padding: 30px 0 20px;
+  font-family:
+    -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen, Ubuntu,
+    Cantarell, "Open Sans", "Helvetica Neue", sans-serif;
 }
 
-.title{
-    font-size: 32px;
-    font-weight: 500;
-    margin: 32px 0;
+.divider {
+  width: 100%;
+  height: 1px;
+  background: linear-gradient(
+    to right,
+    transparent,
+    rgba(0, 0, 0, 0.05),
+    transparent
+  );
+  margin-bottom: 20px;
 }
 
-.description{
-    display: flex;
+.footer_content {
+  display: flex;
+  gap: 80px;
+  width: 100%;
+  max-width: 1200px;
+  padding: 0 80px;
+  box-sizing: border-box;
+}
+
+.title {
+  display: flex;
+  gap: 8px;
+  font-size: 36px;
+  font-weight: 600;
+  color: #333;
+  margin: 0 0 30px;
+  letter-spacing: 0.5px;
+}
+
+.description {
+  font-size: 13px;
+  color: #666;
+  line-height: 1.6;
+  max-width: 800px;
+  margin-bottom: 30px;
+}
+
+.description p {
+  margin: 3px 0;
+}
+.description span {
+  margin: 3px 16px;
+}
+
+.under_line {
+  display: flex;
+  justify-content: space-between;
+  width: 100%;
+  font-size: 12px;
+  color: #888;
+  padding: 20px 20px 0px 20px;
+  border-top: 1px solid rgba(0, 0, 0, 0.05);
+  box-sizing: border-box;
+}
+
+.under_line_right {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.under_line_right div {
+  cursor: pointer;
+  transition: color 0.2s ease;
+}
+
+.under_line_right div:hover {
+  color: #333;
+}
+
+@media (max-width: 768px) {
+  .footer_content {
+    flex-direction: column;
+    gap: 20px;
+  }
+
+  .under_line {
     flex-direction: column;
     align-items: center;
-    font-size: 14px;
-    font-weight: 400;
-    padding: 0 0 32px 0;
-}
-.description p{
-    margin: 6px 0;
-}
-.under_line{
-    display: flex;
-    justify-content: space-between;
-    border-top: 1px solid #000;
-    width: 95%;
-    font-size: 12px;
-    color: #505050;
-    padding: 4px 40px;
-}
-.under_line_right{
-    display: flex;
-    align-items: center;
-}
-.under_line_right div{
-    padding: 0 8px;
+    gap: 12px;
+    padding: 20px 10px;
+  }
+
+  .under_line_right {
+    flex-direction: column;
+    gap: 8px;
+  }
 }
