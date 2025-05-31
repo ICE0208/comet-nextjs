@@ -4,6 +4,7 @@ import { getCurrentUser } from "@/lib/auth";
 import { redirect } from "next/navigation";
 import prisma from "@/lib/prisma";
 import { revalidatePath } from "next/cache";
+import { QueueStatus } from "./types";
 
 export async function getQueueStatus() {
   const currentUser = await getCurrentUser();
@@ -71,6 +72,23 @@ export async function submitWork(
     redirect("/workspaces");
   }
 
+  // 큐 상태 확인
+  //   {
+  //     "totalUserJobs": 0,
+  //     "runningJobs": 0,
+  //     "availableSlots": 3
+  // }
+  const queueStatus = (await getQueueStatus()) as QueueStatus;
+  if (queueStatus.availableSlots <= 0) {
+    revalidatePath(`/workspaces/${workspaceId}`);
+    return {
+      newWorkspaceHistoryId: null,
+      success: false,
+      loadingState: "queueFullError",
+      message: "큐가 가득 찼습니다. 잠시 후 다시 시도해주세요.",
+    };
+  }
+
   // 워크스페이스 히스토리 생성
   const newWorkspaceHistory = await prisma.workspaceHistory.create({
     data: {
@@ -104,12 +122,20 @@ export async function submitWork(
       },
     });
 
-    return { newWorkspaceHistoryId: newWorkspaceHistory.id, success: false };
+    return {
+      newWorkspaceHistoryId: newWorkspaceHistory.id,
+      success: false,
+      message: "AI 요청에 실패했습니다. 잠시 후 다시 시도해주세요.",
+    };
   }
 
   revalidatePath(`/workspaces/${workspaceId}`);
 
-  return { newWorkspaceHistoryId: newWorkspaceHistory.id, success: true };
+  return {
+    newWorkspaceHistoryId: newWorkspaceHistory.id,
+    success: true,
+    message: "AI 요청이 성공적으로 전송되었습니다.",
+  };
 }
 
 export async function toggleFavorite(historyId: string) {

@@ -93,6 +93,7 @@ const ClientWorkspacePage = ({
             // 서버 상태 최신화 - 히스토리 목록 갱신, 큐 상태 갱신
             router.refresh();
             eventSource?.close();
+
             setLoadingState("idle");
           }
         };
