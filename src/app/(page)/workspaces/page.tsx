@@ -90,6 +90,9 @@ export default function PromptListPage() {
     } else {
       document.body.style.overflow = "auto";
     }
+    return () => {
+      document.body.style.overflow = "auto"; // 컴포넌트 언마운트 시 스크롤 복원
+    };
   }, [showTutorial]);
 
   // ===== React Query 변경 작업 =====
