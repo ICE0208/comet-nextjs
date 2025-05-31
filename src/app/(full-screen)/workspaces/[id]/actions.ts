@@ -6,14 +6,14 @@ import prisma from "@/lib/prisma";
 import { revalidatePath } from "next/cache";
 import { QueueStatus } from "./types";
 
-export async function getQueueStatus() {
+export async function getQueueStatus(isPro?: boolean) {
   const currentUser = await getCurrentUser();
   if (!currentUser) {
     redirect("/");
   }
 
   const queueStatus = await fetch(
-    `${process.env.NEXT_PUBLIC_NEST_SERVER}/correction/status?userId=${currentUser.id}`
+    `${process.env.NEXT_PUBLIC_NEST_SERVER}/correction/status?userId=${currentUser.id}&isPro=${isPro ? "true" : "false"}`
   );
   return await queueStatus.json();
 }
@@ -52,8 +52,8 @@ export async function getWorkspaceById(id: string) {
 
 export async function submitWork(
   workspaceId: string,
-  text: string
-  // selectedOptions: string[]
+  text: string,
+  isPro?: boolean
 ) {
   const currentUser = await getCurrentUser();
   if (!currentUser) {
@@ -78,7 +78,7 @@ export async function submitWork(
   //     "runningJobs": 0,
   //     "availableSlots": 3
   // }
-  const queueStatus = (await getQueueStatus()) as QueueStatus;
+  const queueStatus = (await getQueueStatus(isPro)) as QueueStatus;
   if (queueStatus.availableSlots <= 0) {
     revalidatePath(`/workspaces/${workspaceId}`);
     return {
@@ -103,7 +103,7 @@ export async function submitWork(
 
   // fetch 요청의 성공 여부를 체크하고
   const aiRequest = await fetch(
-    `${process.env.NEXT_PUBLIC_NEST_SERVER}/correction`,
+    `${process.env.NEXT_PUBLIC_NEST_SERVER}/correction?isPro=${isPro ? "true" : "false"}`,
     {
       method: "POST",
       headers: {
