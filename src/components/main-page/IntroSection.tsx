@@ -14,12 +14,6 @@ const IntroSection = () => (
         </p>
         <div className={styles.buttonGroup}>
           <Link
-            href="/novel"
-            className={`${styles.button} ${styles.primaryButton}`}
-          >
-            작품 둘러보기
-          </Link>
-          <Link
             href="/workspaces"
             className={`${styles.button} ${styles.secondaryButton}`}
           >
@@ -27,17 +21,6 @@ const IntroSection = () => (
           </Link>
         </div>
         <div className={styles.features}>
-          <div className={styles.featureItem}>
-            <div className={styles.featureIcon}>
-              <Image
-                src="/icons/book-open.svg"
-                alt="독서"
-                width={24}
-                height={24}
-              />
-            </div>
-            <span>수천 개의 다양한 작품</span>
-          </div>
           <div className={styles.featureItem}>
             <div className={styles.featureIcon}>
               <Image
