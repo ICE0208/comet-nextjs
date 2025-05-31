@@ -23,6 +23,7 @@ const TutorialSteps = ({ title, content, position, targetSelector }: Props) => {
   const [tooltipPosition, setTooltipPosition] = useState({
     top: `${position.top}px`,
     left: `${position.right}px`,
+    arrowClass: "",
   });
 
   // 하이라이트 대상이 준비되었을 때 말풍선 위치 조정
@@ -36,7 +37,10 @@ const TutorialSteps = ({ title, content, position, targetSelector }: Props) => {
         const spaceOnRight = window.innerWidth - rect.right > 350;
         const tooltipLeft = spaceOnRight
           ? rect.right + 20
-          : Math.max(10, rect.right - 200);
+          : Math.max(10, rect.right - 420);
+
+        // 말풍선 화살표 방향 결정
+        const arrowClass = spaceOnRight ? styles.arrowLeft : styles.arrowRight;
 
         // 상하 위치 계산 - 가능하면 중앙에 맞춤
         const tooltipTop = Math.max(
@@ -47,6 +51,7 @@ const TutorialSteps = ({ title, content, position, targetSelector }: Props) => {
         setTooltipPosition({
           top: `${tooltipTop}px`,
           left: `${tooltipLeft}px`,
+          arrowClass,
         });
       }
     }
@@ -58,6 +63,7 @@ const TutorialSteps = ({ title, content, position, targetSelector }: Props) => {
       setTooltipPosition({
         top: `${position.top}px`,
         left: `${position.right}px`,
+        arrowClass: "",
       });
     }
   }, [targetSelector, position]);
@@ -70,9 +76,10 @@ const TutorialSteps = ({ title, content, position, targetSelector }: Props) => {
         onHighlightReady={adjustTooltipPosition}
       />
       <div
-        className={styles.container}
+        className={`${styles.container} ${tooltipPosition.arrowClass}`}
         style={{
-          ...tooltipPosition,
+          top: tooltipPosition.top,
+          left: tooltipPosition.left,
         }}
       >
         <h3>{title}</h3>

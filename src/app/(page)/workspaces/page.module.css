@@ -12,9 +12,10 @@
 
 .titleContainer {
   display: flex;
-  justify-content: space-between;
+  justify-content: flex-start;
   align-items: center;
   margin-bottom: 24px;
+  width: 100%;
 }
 
 .title {
@@ -33,6 +34,8 @@
   color: #4b5563;
   cursor: pointer;
   transition: all 0.2s ease;
+  margin-left: auto;
+  margin-right: 12px;
 }
 
 .helpButton:hover {

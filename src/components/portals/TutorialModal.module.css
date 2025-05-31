@@ -7,7 +7,7 @@
   z-index: 1000;
 }
 
-/* 고정 네비게이션 버튼 추가 */
+/* 고정 네비게이션 버튼 */
 .fixedNavigation {
   position: fixed;
   bottom: 0;
@@ -16,71 +16,73 @@
   display: flex;
   justify-content: center;
   align-items: center;
-  gap: 16px;
+  gap: 20px;
   z-index: 1003;
   padding: 16px;
-  background-color: #00000077;
-  /* backdrop-filter: blur(8px); */
-  border-top: 1px solid rgba(255, 255, 255, 0.2);
-  animation: slideUp 0.5s ease;
+  background-color: rgba(0, 0, 0, 0.7);
+  backdrop-filter: blur(8px);
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+  animation: slideUp 0.3s ease;
 }
 
 .fixedNavigation button {
-  padding: 12px 24px;
-  font-size: 16px;
-  font-weight: 700;
-  border: 2px solid #ffffff;
-  border-radius: 8px;
+  padding: 10px 20px;
+  font-size: 14px;
+  font-weight: 600;
+  border: none;
+  border-radius: 6px;
   cursor: pointer;
   transition: all 0.2s ease;
-  text-transform: uppercase;
-  letter-spacing: 0.5px;
-  /* box-shadow: 4px 4px 0 rgba(0, 0, 0, 0.9); */
+  letter-spacing: 0.3px;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
 }
 
 .fixedPrevButton {
-  background-color: #fff;
-  color: #000;
+  background-color: #f8f9fa;
+  color: #333;
 }
 
 .fixedPrevButton:hover {
-  background-color: #f3f4f6;
-  transform: translate(-2px, -2px);
-  box-shadow: 6px 6px 0 rgba(0, 0, 0, 0.9);
+  background-color: #e9ecef;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
 }
 
 .fixedNextButton {
-  background-color: #3182ce;
+  background-color: #4dabf7;
   color: white;
 }
 
 .fixedNextButton:hover {
-  background-color: #2b6cb0;
-  transform: translate(-2px, -2px);
-  box-shadow: 6px 6px 0 rgba(0, 0, 0, 0.9);
+  background-color: #339af0;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
 }
 
 .stepCounter {
-  font-size: 16px;
-  font-weight: 700;
+  font-size: 14px;
+  font-weight: 500;
   color: white;
-  background-color: rgba(0, 0, 0, 0.7);
-  padding: 8px 16px;
+  background-color: rgba(0, 0, 0, 0.5);
+  padding: 6px 12px;
   border-radius: 20px;
 }
 
 @keyframes slideUp {
   from {
     transform: translateY(100%);
+    opacity: 0;
   }
   to {
     transform: translateY(0);
+    opacity: 1;
   }
 }
 
 .fixedPrevButton,
 .fixedNextButton {
   transition:
-    transform 0.3s ease,
-    box-shadow 0.3s ease;
+    transform 0.2s ease,
+    box-shadow 0.2s ease,
+    background-color 0.2s ease;
 }

@@ -27,10 +27,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body
-        className={`${geistSans.variable} ${geistMono.variable}`}
-        id="mybody"
-      >
+      <body className={`${geistSans.variable} ${geistMono.variable}`}>
         <Providers>
           {children}
           <Header />

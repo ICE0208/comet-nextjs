@@ -11,24 +11,10 @@ interface TutorialModalProps {
 
 const tutorialSteps: TutorialStep[] = [
   {
-    title: "작업 공간 사용 가이드",
-    content: "코멧의 작업 공간에서 할 수 있는 것들을 단계별로 알아보겠습니다.",
-    step: 1,
-    position: {
-      top: 500,
-      bottom: 1,
-      left: 1,
-      right: 750,
-    },
-    // 메인 작업 공간 전체를 하이라이트
-    targetSelector:
-      "div[class*='container']:not([class*='emptyStateContainer'])",
-  },
-  {
-    title: "1. 작업 생성하기",
+    title: "작업 생성하기",
     content:
       "오른쪽 상단의 '새 작업 만들기' 버튼을 클릭하여 새로운 작업을 시작할 수 있습니다.",
-    step: 2,
+    step: 1,
     position: {
       top: 125,
       bottom: 1,
@@ -39,10 +25,10 @@ const tutorialSteps: TutorialStep[] = [
     targetSelector: "button[class*='createButton']",
   },
   {
-    title: "2. 작업 관리하기",
+    title: "작업 관리하기",
     content:
       "그리드 또는 리스트 뷰로 작업을 확인하고, 정렬 방식을 선택할 수 있습니다.",
-    step: 3,
+    step: 2,
     position: {
       top: 125,
       bottom: 1,
@@ -53,10 +39,10 @@ const tutorialSteps: TutorialStep[] = [
     targetSelector: "div[class*='viewToggle']",
   },
   {
-    title: "3. 작업 편집하기",
+    title: "작업 편집하기",
     content:
       "각 작업 카드의 옵션 메뉴를 통해 이름 변경, 삭제 등의 작업을 수행할 수 있습니다.",
-    step: 4,
+    step: 3,
     position: {
       top: 225,
       bottom: 1,
@@ -65,6 +51,20 @@ const tutorialSteps: TutorialStep[] = [
     },
     // 작업 카드의 옵션 메뉴 버튼
     targetSelector: "div[class*='card']:first-child button[class*='optionBtn']",
+  },
+  {
+    title: "도움말",
+    content:
+      "도움말 버튼을 클릭하여 튜토리얼을 다시 볼 수 있습니다. 언제든지 도움말을 확인하세요",
+    step: 4,
+    position: {
+      top: 95,
+      bottom: 1,
+      left: 1,
+      right: 100,
+    },
+    // 도움말 버튼
+    targetSelector: "button[class*='helpButton']",
   },
 ];
 
