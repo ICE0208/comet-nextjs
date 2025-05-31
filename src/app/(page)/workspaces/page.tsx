@@ -270,6 +270,27 @@ export default function PromptListPage() {
       );
     }
 
+    if (showTutorial && works.length === 0) {
+      return (
+        <GridView
+          chats={[
+            {
+              id: "0",
+              title: "나의 작업!",
+              _count: { history: 7 },
+              createdAt: new Date(),
+              lastUsedAt: new Date(),
+            },
+          ]}
+          optionOpenId={null}
+          setOptionOpenId={() => {}}
+          handleCardClick={() => {}}
+          handleRename={() => {}}
+          handleDelete={() => {}}
+        />
+      );
+    }
+
     // 작업이 없을 때
     if (works.length === 0) {
       return (
