@@ -1,0 +1,9 @@
+.highlightOverlay {
+  position: fixed;
+
+  box-shadow: 0 0 0 4000px rgba(0, 0, 0, 0.6);
+  border-radius: 4px;
+  z-index: 1000;
+  pointer-events: none;
+  animation: pulse 2s infinite;
+}

@@ -10,12 +10,37 @@
   min-height: 100vh;
 }
 
-.title {
-  font-size: 32px;
-  font-weight: bold;
-  margin-bottom: 40px;
-  text-align: center;
+.titleContainer {
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  margin-bottom: 24px;
   width: 100%;
+}
+
+.title {
+  font-size: 24px;
+  font-weight: 700;
+  color: #1a1a1a;
+}
+
+.helpButton {
+  padding: 8px 16px;
+  background-color: #f3f4f6;
+  border: 1px solid #e5e7eb;
+  border-radius: 6px;
+  font-size: 14px;
+  font-weight: 500;
+  color: #4b5563;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  margin-left: auto;
+  margin-right: 12px;
+}
+
+.helpButton:hover {
+  background-color: #e5e7eb;
+  color: #1f2937;
 }
 
 @media (max-width: 1300px) {
