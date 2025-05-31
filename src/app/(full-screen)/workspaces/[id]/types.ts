@@ -44,4 +44,10 @@ export type PromptOutputProps = {
   savedAIResponse: AIResponseItem | null;
 };
 
+export type QueueStatus = {
+  totalUserJobs: number;
+  runningJobs: number;
+  availableSlots: number;
+};
+
 export type WorkspaceWithHistory = Awaited<ReturnType<typeof getWorkspaceById>>;

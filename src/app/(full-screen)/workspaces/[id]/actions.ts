@@ -5,6 +5,18 @@ import { redirect } from "next/navigation";
 import prisma from "@/lib/prisma";
 import { revalidatePath } from "next/cache";
 
+export async function getQueueStatus() {
+  const currentUser = await getCurrentUser();
+  if (!currentUser) {
+    redirect("/");
+  }
+
+  const queueStatus = await fetch(
+    `${process.env.NEXT_PUBLIC_NEST_SERVER}/correction/status?userId=${currentUser.id}`
+  );
+  return await queueStatus.json();
+}
+
 export async function getWorkspaceById(id: string) {
   const currentUser = await getCurrentUser();
   if (!currentUser) {
@@ -94,6 +106,8 @@ export async function submitWork(
 
     return { newWorkspaceHistoryId: newWorkspaceHistory.id, success: false };
   }
+
+  revalidatePath(`/workspaces/${workspaceId}`);
 
   return { newWorkspaceHistoryId: newWorkspaceHistory.id, success: true };
 }
