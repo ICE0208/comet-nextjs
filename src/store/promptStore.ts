@@ -10,7 +10,8 @@ export type LoadingState =
   | "initialLoading"
   | "correctionLoading"
   | "processing"
-  | "networkError";
+  | "networkError"
+  | "queueFullError";
 
 // 프롬프트 상태 관리 인터페이스
 interface PromptState {

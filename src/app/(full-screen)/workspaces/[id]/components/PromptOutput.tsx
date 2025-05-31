@@ -89,8 +89,13 @@ const PromptOutput = ({
 
     setIgnoreChangedTexts(new Set());
 
+    if (loadingState === "queueFullError") {
+      return;
+    }
+
     if (selectedHistory.status === "COMPLETED") {
       setOutputData(selectedHistory.aiResponse);
+      console.log("5");
       setLoadingState("idle");
     } else if (selectedHistory.status === "PENDING") {
       setLoadingState("correctionLoading");
@@ -218,6 +223,8 @@ const PromptOutput = ({
     onApplyCorrections(reconstructedText);
   };
 
+  console.log(loadingState);
+
   // loadingState에 따른 UI 표시를 처리하는 함수
   const renderContent = () => {
     // 에러 상태
@@ -278,6 +285,14 @@ const PromptOutput = ({
               <p className={styles.loadingSubtext}>잠시만 기다려주세요</p>
             </div>
           </div>
+        );
+      }
+
+      if (loadingState === "queueFullError") {
+        return (
+          <p className={styles.errorText}>
+            큐가 가득 찼습니다. 잠시 후 다시 시도해주세요.
+          </p>
         );
       }
 

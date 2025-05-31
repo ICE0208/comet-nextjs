@@ -210,8 +210,20 @@ const PromptInput = forwardRef<PromptInputHandle, PromptInputProps>(
       setText(e.target.value);
     };
 
+    // 버튼 비활성화 로직 - loadingState가 idle이 아니면 비활성화
+    const isButtonDisabled =
+      (loadingState !== "idle" &&
+        loadingState !== "queueFullError" &&
+        loadingState !== "networkError") ||
+      !text.trim();
+
+    const isTextareaDisabled =
+      loadingState !== "idle" &&
+      loadingState !== "queueFullError" &&
+      loadingState !== "networkError";
+
     const handleSubmit = async () => {
-      if (!text.trim() || loadingState !== "idle") return;
+      if (isButtonDisabled) return;
 
       // Pro 모드일 때 관리자 문의 메시지 표시
       if (isPro) {
@@ -225,15 +237,29 @@ const PromptInput = forwardRef<PromptInputHandle, PromptInputProps>(
         setLoadingState("correctionLoading");
         useChangedTextStore.getState().actions.resetStore();
 
-        const { newWorkspaceHistoryId, success } = await submitWork(
-          workspaceId,
-          text
-        );
+        const {
+          newWorkspaceHistoryId,
+          success,
+          message,
+          loadingState: newLoadingState,
+        } = await submitWork(workspaceId, text);
 
-        setSelectedHistoryId(newWorkspaceHistoryId);
+        if (newWorkspaceHistoryId) {
+          setSelectedHistoryId(newWorkspaceHistoryId);
+        }
+
         if (!success) {
-          alert("텍스트 교정 중 오류가 발생했습니다.");
-          setLoadingState("idle");
+          if (message) {
+            alert(message);
+          } else {
+            alert("텍스트 교정 중 오류가 발생했습니다.");
+          }
+
+          if (newLoadingState === "queueFullError") {
+            setLoadingState("queueFullError");
+          } else {
+            setLoadingState("idle");
+          }
         }
       } catch (error) {
         alert("텍스트 교정 중 오류가 발생했습니다.");
@@ -415,10 +441,7 @@ const PromptInput = forwardRef<PromptInputHandle, PromptInputProps>(
           console.error("Error in scroll handling:", error);
         }
       });
-    }, [targetText, textOrder, text, styles.textareaWrapper, getHighlights]);
-
-    // 버튼 비활성화 로직 - loadingState가 idle이 아니면 비활성화
-    const isDisabled = loadingState !== "idle" || !text.trim();
+    }, [targetText, textOrder, text, getHighlights]);
 
     // ref를 통해 setText 함수 노출
     useImperativeHandle(ref, () => ({
@@ -438,7 +461,7 @@ const PromptInput = forwardRef<PromptInputHandle, PromptInputProps>(
                 value={text}
                 onChange={handleTextareaChange}
                 placeholder="교정할 텍스트를 입력해주세요..."
-                disabled={loadingState !== "idle"}
+                disabled={isTextareaDisabled}
                 className={styles.textarea}
                 style={{
                   width: "100%",
@@ -479,7 +502,7 @@ const PromptInput = forwardRef<PromptInputHandle, PromptInputProps>(
                 <button
                   className={`${styles.submitButton} ${loadingState === "correctionLoading" || loadingState === "processing" ? styles.submitting : ""}`}
                   onClick={handleSubmit}
-                  disabled={isDisabled}
+                  disabled={isButtonDisabled}
                 >
                   <FaSpellCheck style={{ marginRight: "0.4rem" }} />
                   {loadingState === "correctionLoading" ||

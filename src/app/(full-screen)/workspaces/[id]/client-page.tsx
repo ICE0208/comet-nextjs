@@ -11,6 +11,7 @@ import { WorkspaceWithHistory } from "./types";
 import { usePromptStore } from "@/store/promptStore";
 import { AIResponse } from "@prisma/client";
 import { useRouter } from "next/navigation";
+import { QueueStatus } from "./types";
 /**
  * ClientWorkspacePage 컴포넌트
  * 워크스페이스의 메인 클라이언트 컴포넌트
@@ -19,13 +20,19 @@ import { useRouter } from "next/navigation";
  */
 interface ClientWorkspacePageProps {
   workspace: WorkspaceWithHistory;
+  queueStatus: QueueStatus;
 }
 
-const ClientWorkspacePage = ({ workspace }: ClientWorkspacePageProps) => {
+const ClientWorkspacePage = ({
+  workspace,
+  queueStatus,
+}: ClientWorkspacePageProps) => {
   const [isHistorySidebarOpen, setIsHistorySidebarOpen] = useState(false);
   const [selectedHistoryId, setSelectedHistoryId] = useState(
     workspace.history.length > 0 ? workspace.history[0].id : null
   );
+
+  console.log(queueStatus);
 
   // 최근 히스토리에서 입력 텍스트와 AI 응답 추출
   const selectedHistory =
@@ -70,14 +77,12 @@ const ClientWorkspacePage = ({ workspace }: ClientWorkspacePageProps) => {
             };
             setOutputData(aiResponse);
             setLoadingState("processing");
-            // 서버 상태 최신화 - 히스토리 목록 갱신
           }
 
           if (status === "COMPLETED" && response) {
             const aiResponse = JSON.parse(response) as AIResponse;
             setOutputData(aiResponse);
             eventSource?.close();
-            // 서버 상태 최신화 - 히스토리 목록 갱신
           }
 
           if (status === "ERROR") {
@@ -85,8 +90,10 @@ const ClientWorkspacePage = ({ workspace }: ClientWorkspacePageProps) => {
           }
 
           if (status !== "PENDING" && status !== "PROCESSING") {
+            // 서버 상태 최신화 - 히스토리 목록 갱신, 큐 상태 갱신
             router.refresh();
             eventSource?.close();
+
             setLoadingState("idle");
           }
         };
@@ -118,7 +125,10 @@ const ClientWorkspacePage = ({ workspace }: ClientWorkspacePageProps) => {
 
   return (
     <div className={styles.container}>
-      <Header onToggleHistory={toggleHistorySidebar} />
+      <Header
+        onToggleHistory={toggleHistorySidebar}
+        queueStatus={queueStatus}
+      />
 
       <div className={styles.header}>
         <h1 className={styles.title}>{workspace.title}</h1>
