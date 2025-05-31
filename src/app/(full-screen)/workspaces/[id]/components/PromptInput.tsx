@@ -225,12 +225,6 @@ const PromptInput = forwardRef<PromptInputHandle, PromptInputProps>(
     const handleSubmit = async () => {
       if (isButtonDisabled) return;
 
-      // Pro 모드일 때 관리자 문의 메시지 표시
-      if (isPro) {
-        alert("프로모드를 이용하기 위해서는 관리자에게 문의주세요");
-        return;
-      }
-
       setOutputData(null);
 
       try {
@@ -242,7 +236,7 @@ const PromptInput = forwardRef<PromptInputHandle, PromptInputProps>(
           success,
           message,
           loadingState: newLoadingState,
-        } = await submitWork(workspaceId, text);
+        } = await submitWork(workspaceId, text, isPro);
 
         if (newWorkspaceHistoryId) {
           setSelectedHistoryId(newWorkspaceHistoryId);
