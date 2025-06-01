@@ -6,69 +6,109 @@
   margin: 0 auto;
   padding: 40px;
   margin-top: 60px;
-  background: #ffffff;
   min-height: 100vh;
+  position: relative;
+  z-index: 1;
 }
 
 .titleContainer {
   display: flex;
   justify-content: flex-start;
   align-items: center;
-  margin-bottom: 24px;
+  margin-bottom: 32px;
   width: 100%;
+  padding-bottom: 16px;
+  border-bottom: 2px solid #f1f5f9;
 }
 
 .title {
-  font-size: 24px;
+  font-size: 28px;
   font-weight: 700;
-  color: #1a1a1a;
+  color: #1e293b;
+  letter-spacing: -0.5px;
+  position: relative;
 }
 
 .helpButton {
-  padding: 8px 16px;
-  background-color: #f3f4f6;
-  border: 1px solid #e5e7eb;
+  padding: 10px 20px;
+  background-color: #4f46e5;
+  color: #fff;
+  border: none;
   border-radius: 6px;
   font-size: 14px;
   font-weight: 500;
-  color: #4b5563;
   cursor: pointer;
   transition: all 0.2s ease;
   margin-left: auto;
   margin-right: 12px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
 .helpButton:hover {
-  background-color: #e5e7eb;
-  color: #1f2937;
+  background-color: #4338ca;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
 }
 
 @media (max-width: 1300px) {
   .container {
     padding: 40px 32px;
+    margin: 0 16px;
+    margin-top: 60px;
   }
 }
 
 @media (max-width: 768px) {
   .container {
     padding: 32px 24px;
+    margin: 0 12px;
+    margin-top: 60px;
   }
 
   .title {
     max-width: 100%;
-    font-size: 28px;
-    margin-bottom: 32px;
+    font-size: 24px;
+    margin-bottom: 24px;
   }
 }
 
 @media (max-width: 480px) {
   .container {
     padding: 24px 16px;
+    margin: 0 8px;
+    margin-top: 60px;
   }
 
   .title {
-    font-size: 24px;
-    margin-bottom: 24px;
+    font-size: 22px;
+    margin-bottom: 20px;
+  }
+}
+
+.card,
+.listItem {
+  background: #ffffff;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+  border-radius: 10px;
+  border: 1px solid #f1f5f9;
+  transition: all 0.2s ease;
+  animation: cardFadeIn 0.4s ease-out;
+}
+
+.card:hover,
+.listItem:hover {
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+  transform: translateY(-2px);
+}
+
+@keyframes cardFadeIn {
+  0% {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
   }
 }
 
@@ -77,27 +117,52 @@
   justify-content: center;
   align-items: center;
   width: 100%;
-  min-height: 200px;
-  margin-top: 20px;
+  min-height: 300px;
+  margin-top: 32px;
+  background: #ffffff;
+  border-radius: 10px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+  position: relative;
 }
 
 .emptyState {
   max-width: 500px;
-  padding: 20px;
+  padding: 32px;
   text-align: center;
+  position: relative;
+  z-index: 1;
 }
 
 .emptyState p {
-  font-size: 1.3rem;
-  color: #555;
+  font-size: 1.2rem;
+  color: #64748b;
   margin: 0;
   line-height: 1.8;
+  font-weight: 500;
+}
+
+.emptyStateAnimation {
+  width: 80px;
+  height: 80px;
+  margin: 0 auto 18px auto;
+  display: block;
+  animation: floatY 2s ease-in-out infinite alternate;
+}
+
+@keyframes floatY {
+  0% {
+    transform: translateY(0);
+  }
+  100% {
+    transform: translateY(-10px);
+  }
 }
 
 .loadingText {
-  color: #666;
-  font-size: 1.3rem;
+  color: #64748b;
+  font-size: 1.2rem;
   margin: 0;
+  font-weight: 500;
   animation: pulse 1.5s infinite ease-in-out;
 }
 
@@ -111,4 +176,9 @@
   100% {
     opacity: 0.6;
   }
+}
+
+/* accent color 예시 */
+.accent {
+  color: #4f46e5;
 }
