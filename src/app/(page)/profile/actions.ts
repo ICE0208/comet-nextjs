@@ -132,7 +132,6 @@ export const getTokenStats = async () => {
             orderBy: {
               createdAt: "desc",
             },
-            take: 100, // 최근 100개 항목만
           },
         },
       },
@@ -184,7 +183,7 @@ export const getTokenStats = async () => {
   const tokenLimit = 1000000; // 월 한도
 
   // 3. 최근 토큰 사용 내역 (표 형태)
-  const recentUsage = completedHistory.slice(0, 50).map((h) => {
+  const recentUsage = completedHistory.map((h) => {
     const inputTokens = h.userRequest.length * 2;
     const outputTokens = h.aiResponse ? h.aiResponse.text.length * 2 : 0;
     const totalTokens = inputTokens + outputTokens;

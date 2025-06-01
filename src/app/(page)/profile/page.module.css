@@ -514,6 +514,7 @@
   width: 100%;
   border-collapse: collapse;
   font-size: 0.875rem;
+  table-layout: fixed;
 }
 
 .usageTable th {
@@ -526,7 +527,33 @@
   font-size: 0.75rem;
   text-transform: uppercase;
   letter-spacing: 0.05em;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
+
+/* 각 컬럼별 고정 너비 설정 */
+.usageTable th:nth-child(1) {
+  width: 140px;
+} /* 날짜 */
+.usageTable th:nth-child(2) {
+  width: 120px;
+} /* 워크스페이스 */
+.usageTable th:nth-child(3) {
+  width: 80px;
+} /* 모드 */
+.usageTable th:nth-child(4) {
+  width: auto;
+} /* 요청 내용 (나머지 공간) */
+.usageTable th:nth-child(5) {
+  width: 100px;
+} /* 입력 토큰 */
+.usageTable th:nth-child(6) {
+  width: 100px;
+} /* 출력 토큰 */
+.usageTable th:nth-child(7) {
+  width: 100px;
+} /* 총 토큰 */
 
 /* 모드 컬럼(3번째)과 토큰 컬럼들(5,6,7번째) 가운데 정렬 */
 .usageTable th:nth-child(3),
@@ -541,11 +568,21 @@
   border-bottom: 1px solid #f3f4f6;
   color: #374151;
   vertical-align: top;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
 /* 모드 컬럼 가운데 정렬 */
 .usageTable td:nth-child(3) {
   text-align: center;
+}
+
+/* 요청 내용 컬럼은 한 줄로 제한 */
+.usageTable td:nth-child(4) {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 .usageTable tbody tr:hover {
@@ -577,7 +614,6 @@
 }
 
 .requestCell {
-  max-width: 300px;
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
@@ -591,7 +627,6 @@
 }
 
 .workspaceCell {
-  max-width: 150px;
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;

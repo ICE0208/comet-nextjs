@@ -39,6 +39,10 @@ export default function ProfilePage() {
   const [currentView, setCurrentView] = useState<ViewType>("overview");
   const [selectedPeriod, setSelectedPeriod] = useState<"7d" | "30d">("7d");
 
+  // 페이지네이션 상태 추가
+  const [currentPage, setCurrentPage] = useState(1);
+  const [itemsPerPage] = useState(20); // 페이지당 아이템 수를 20개로 변경
+
   useEffect(() => {
     const fetchData = async () => {
       setLoading(true);
@@ -67,6 +71,8 @@ export default function ProfilePage() {
       top: 0,
       behavior: "smooth",
     });
+    // 뷰 전환 시 페이지를 1로 초기화
+    setCurrentPage(1);
   }, [currentView]);
 
   const handleRefresh = async () => {
@@ -159,6 +165,42 @@ export default function ProfilePage() {
       `${date.getMonth() + 1}월 ${date.getDate().toString().padStart(2, "0")}일`;
 
     return `${formatDateRange(startDate)} - ${formatDateRange(today)}`;
+  };
+
+  // 페이지네이션 헬퍼 함수들
+  const getSortedUsageData = () => {
+    if (!tokenStats?.recentUsage) return [];
+    return tokenStats.recentUsage.sort(
+      (a, b) => new Date(b.date).getTime() - new Date(a.date).getTime()
+    );
+  };
+
+  const getTotalPages = () => {
+    const sortedData = getSortedUsageData();
+    return Math.ceil(sortedData.length / itemsPerPage);
+  };
+
+  const getCurrentPageData = () => {
+    const sortedData = getSortedUsageData();
+    const startIndex = (currentPage - 1) * itemsPerPage;
+    const endIndex = startIndex + itemsPerPage;
+    return sortedData.slice(startIndex, endIndex);
+  };
+
+  const handlePageChange = (newPage: number) => {
+    const totalPages = getTotalPages();
+    if (newPage >= 1 && newPage <= totalPages) {
+      setCurrentPage(newPage);
+    }
+  };
+
+  const getDisplayRange = () => {
+    const sortedData = getSortedUsageData();
+    if (sortedData.length === 0) return { start: 0, end: 0, total: 0 };
+
+    const start = (currentPage - 1) * itemsPerPage + 1;
+    const end = Math.min(currentPage * itemsPerPage, sortedData.length);
+    return { start, end, total: sortedData.length };
   };
 
   // 큐 상태 바 컴포넌트
@@ -554,7 +596,7 @@ export default function ProfilePage() {
             </tr>
           </thead>
           <tbody>
-            {tokenStats?.recentUsage.map((usage) => (
+            {getCurrentPageData().map((usage) => (
               <tr key={usage.id}>
                 <td className={styles.dateCell}>{formatDate(usage.date)}</td>
                 <td className={styles.workspaceCell}>{usage.workspace}</td>
@@ -576,7 +618,7 @@ export default function ProfilePage() {
                   {formatNumber(usage.totalTokens)}
                 </td>
               </tr>
-            )) || []}
+            ))}
           </tbody>
         </table>
 
@@ -589,18 +631,25 @@ export default function ProfilePage() {
 
       {tokenStats?.recentUsage && tokenStats.recentUsage.length > 0 && (
         <div className={styles.tableFooter}>
-          <span>1 - {tokenStats.recentUsage.length}개 항목 표시 중</span>
+          <span>
+            {getDisplayRange().start} - {getDisplayRange().end}개 항목 표시 중
+            (총 {getDisplayRange().total}개)
+          </span>
           <div className={styles.pagination}>
             <button
               className={styles.pageBtn}
-              disabled
+              disabled={currentPage === 1}
+              onClick={() => handlePageChange(currentPage - 1)}
             >
               이전
             </button>
-            <span className={styles.pageInfo}>페이지 1 / 1</span>
+            <span className={styles.pageInfo}>
+              페이지 {currentPage} / {getTotalPages()}
+            </span>
             <button
               className={styles.pageBtn}
-              disabled
+              disabled={currentPage === getTotalPages()}
+              onClick={() => handlePageChange(currentPage + 1)}
             >
               다음
             </button>
