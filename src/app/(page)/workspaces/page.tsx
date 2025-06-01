@@ -74,6 +74,14 @@ export default function PromptListPage() {
     },
   });
 
+  // 페이지 로드 시 스크롤 초기화
+  useEffect(() => {
+    document.scrollingElement?.scrollTo({
+      top: 0,
+      behavior: "smooth",
+    });
+  }, []);
+
   // 사용자가 튜토리얼을 보지 않았다면 튜토리얼 표시
   useEffect(() => {
     const checkTutorialStatus = () => {
