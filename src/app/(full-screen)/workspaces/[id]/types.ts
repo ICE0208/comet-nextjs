@@ -50,4 +50,17 @@ export type QueueStatus = {
   availableSlots: number;
 };
 
+export type QueueStatusAll = {
+  basic: {
+    totalUserJobs: number;
+    runningJobs: number;
+    availableSlots: number;
+  };
+  pro: {
+    totalUserJobs: number;
+    runningJobs: number;
+    availableSlots: number;
+  };
+};
+
 export type WorkspaceWithHistory = Awaited<ReturnType<typeof getWorkspaceById>>;

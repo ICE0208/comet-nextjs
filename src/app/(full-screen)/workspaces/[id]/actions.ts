@@ -6,6 +6,18 @@ import prisma from "@/lib/prisma";
 import { revalidatePath } from "next/cache";
 import { QueueStatus } from "./types";
 
+export async function getQueueStatusAll() {
+  const currentUser = await getCurrentUser();
+  if (!currentUser) {
+    redirect("/");
+  }
+
+  const queueStatus = await fetch(
+    `${process.env.NEXT_PUBLIC_NEST_SERVER}/correction/status/all?userId=${currentUser.id}`
+  );
+  return await queueStatus.json();
+}
+
 export async function getQueueStatus(isPro?: boolean) {
   const currentUser = await getCurrentUser();
   if (!currentUser) {
