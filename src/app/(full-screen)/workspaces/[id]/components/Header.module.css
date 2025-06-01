@@ -216,3 +216,51 @@
     opacity: 0.4;
   }
 }
+
+/* 커스텀 툴팁 스타일 */
+.customTooltip {
+  position: fixed;
+  background-color: rgba(0, 0, 0, 0.9);
+  color: white;
+  font-size: 0.75rem;
+  font-weight: 500;
+  padding: 0.5rem 0.75rem;
+  border-radius: 6px;
+  white-space: nowrap;
+  z-index: 9999;
+  pointer-events: none;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  max-width: min(300px, 80vw); /* Header 툴팁은 조금 더 작게 */
+}
+
+.tooltipTop {
+  /* 위쪽 배치 시 기본 스타일 */
+}
+
+.tooltipBottom {
+  /* 아래쪽 배치 시 기본 스타일 */
+}
+
+.tooltipArrow {
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+  border-width: 6px;
+  border-style: solid;
+}
+
+.arrowBottom {
+  /* 화살표가 아래쪽을 향함 (툴팁이 위에 있을 때) */
+  top: 100%;
+  border-color: rgba(0, 0, 0, 0.9) transparent transparent transparent;
+  filter: drop-shadow(0 2px 2px rgba(0, 0, 0, 0.15));
+  z-index: 1; /* 툴팁 내용 위에 */
+}
+
+.arrowTop {
+  /* 화살표가 위쪽을 향함 (툴팁이 아래에 있을 때) */
+  bottom: 100%;
+  border-color: transparent transparent rgba(0, 0, 0, 0.9) transparent;
+  filter: drop-shadow(0 -2px 2px rgba(0, 0, 0, 0.15));
+  z-index: 1; /* 툴팁 내용 위에 */
+}

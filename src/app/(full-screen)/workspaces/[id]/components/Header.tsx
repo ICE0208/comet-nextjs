@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation";
 import styles from "./Header.module.css";
 import { IconButtonProps, QueueStatus, QueueStatusAll } from "../types";
 import { HEADER_BUTTONS } from "../constants";
+import { useAdaptiveTooltip } from "@/hooks/useAdaptiveTooltip";
 
 /**
  * IconButton 컴포넌트
@@ -80,6 +81,10 @@ interface HeaderProps {
 const Header: React.FC<HeaderProps> = ({ onToggleHistory, queueStatus }) => {
   const router = useRouter();
   const [isRefreshing, setIsRefreshing] = useState(false);
+  const { tooltipPosition, handleMouseEnter } = useAdaptiveTooltip({
+    offset: 8,
+  });
+  const [showTooltip, setShowTooltip] = useState(false);
 
   const handleRefresh = async () => {
     setIsRefreshing(true);
@@ -88,6 +93,16 @@ const Header: React.FC<HeaderProps> = ({ onToggleHistory, queueStatus }) => {
     setTimeout(() => {
       setIsRefreshing(false);
     }, 800);
+  };
+
+  const tooltipStyle = {
+    position: "fixed" as const,
+    left: tooltipPosition.left,
+    transform: tooltipPosition.transform,
+    zIndex: 9999,
+    ...(tooltipPosition.placement === "top"
+      ? { bottom: tooltipPosition.bottom }
+      : { top: tooltipPosition.top }),
   };
 
   return (
@@ -129,7 +144,11 @@ const Header: React.FC<HeaderProps> = ({ onToggleHistory, queueStatus }) => {
           <button
             className={styles.queueRefreshButton}
             onClick={handleRefresh}
-            title="작업 현황 새로고침"
+            onMouseEnter={(e) => {
+              handleMouseEnter(e);
+              setShowTooltip(true);
+            }}
+            onMouseLeave={() => setShowTooltip(false)}
             disabled={isRefreshing}
           >
             <svg
@@ -149,6 +168,25 @@ const Header: React.FC<HeaderProps> = ({ onToggleHistory, queueStatus }) => {
               <path d="M21 12a9 9 0 0 1-9 9 9.75 9.75 0 0 1-6.74-2.74L3 16" />
               <path d="M3 21v-5h5" />
             </svg>
+            {showTooltip && (
+              <div
+                className={`${styles.customTooltip} ${
+                  tooltipPosition.placement === "bottom"
+                    ? styles.tooltipBottom
+                    : styles.tooltipTop
+                }`}
+                style={tooltipStyle}
+              >
+                작업 현황 새로고침
+                <div
+                  className={`${styles.tooltipArrow} ${
+                    tooltipPosition.placement === "bottom"
+                      ? styles.arrowTop
+                      : styles.arrowBottom
+                  }`}
+                />
+              </div>
+            )}
           </button>
         </div>
         <IconButton
