@@ -2,7 +2,7 @@
 import React, { useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import styles from "../page.module.css";
+import styles from "./Header.module.css";
 import { IconButtonProps, QueueStatus } from "../types";
 import { HEADER_BUTTONS } from "../constants";
 
