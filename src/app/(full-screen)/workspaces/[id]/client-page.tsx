@@ -13,6 +13,7 @@ import { usePromptStore } from "@/store/promptStore";
 import { useTutorial } from "@/hooks/useTutorial";
 import { AIResponse } from "@prisma/client";
 import { useRouter } from "next/navigation";
+import { updateIsCorrectionTutorial } from "./actions";
 /**
  * ClientWorkspacePage 컴포넌트
  * 워크스페이스의 메인 클라이언트 컴포넌트
@@ -64,6 +65,7 @@ const ClientWorkspacePage = ({
   useEffect(() => {
     if (!isCorrectionTutorial) {
       openTutorial(1);
+      updateIsCorrectionTutorial(true);
     }
   }, [isCorrectionTutorial, openTutorial]);
 
