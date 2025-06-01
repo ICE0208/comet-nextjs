@@ -234,6 +234,11 @@ export default function PromptListPage() {
     router.push(`/workspaces/${id}`);
   };
 
+  // 항목 호버 - prefetch 실행
+  const handleCardHover = (id: string) => {
+    router.prefetch(`/workspaces/${id}`);
+  };
+
   // 도움말 보기 버튼 클릭
   const handleShowTutorial = async () => {
     if (view === "list") {
@@ -253,6 +258,7 @@ export default function PromptListPage() {
       optionOpenId,
       setOptionOpenId,
       handleCardClick,
+      handleCardHover,
       handleRename: handleRenameClick,
       handleDelete,
     };
@@ -286,6 +292,7 @@ export default function PromptListPage() {
           optionOpenId={null}
           setOptionOpenId={() => {}}
           handleCardClick={() => {}}
+          handleCardHover={() => {}}
           handleRename={() => {}}
           handleDelete={() => {}}
         />
