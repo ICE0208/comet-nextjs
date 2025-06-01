@@ -31,8 +31,6 @@ const ClientWorkspacePage = ({
     workspace.history.length > 0 ? workspace.history[0].id : null
   );
 
-  console.log(queueStatus);
-
   // 최근 히스토리에서 입력 텍스트와 AI 응답 추출
   const selectedHistory =
     workspace.history.find((history) => history.id === selectedHistoryId) ||

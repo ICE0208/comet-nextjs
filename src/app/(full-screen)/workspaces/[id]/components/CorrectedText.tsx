@@ -2,20 +2,15 @@ import React, { useState, useRef } from "react";
 import styles from "./CorrectedText.module.css";
 import { Segment } from "@/utils/ai";
 import useCheckTextStore from "@/store/checkTextStore";
+import useIgnoreChangedTextStore from "@/store/ignoreChangedTextStore";
 import { useAdaptiveTooltip } from "@/hooks/useAdaptiveTooltip";
 
 interface CorrectedTextProps {
   segment: Segment & { order: number };
-  setIgnoreChangedTexts: React.Dispatch<React.SetStateAction<Set<string>>>;
-  ignoreChangedTexts: Set<string>;
 }
 
 // 교정된 텍스트 컴포넌트
-const CorrectedText = ({
-  segment,
-  setIgnoreChangedTexts,
-  ignoreChangedTexts,
-}: CorrectedTextProps) => {
+const CorrectedText = ({ segment }: CorrectedTextProps) => {
   const [showTooltip, setShowTooltip] = useState(false);
   const textRef = useRef<HTMLSpanElement>(null);
   const tooltipRef = useRef<HTMLDivElement>(null);
@@ -27,6 +22,16 @@ const CorrectedText = ({
     (state) => state.actions.setTargetText
   );
   const setTextOrder = useCheckTextStore((state) => state.actions.setTextOrder);
+
+  const ignoreChangedTexts = useIgnoreChangedTextStore(
+    (state) => state.ignoreChangedTexts
+  );
+  const addIgnoreChangedText = useIgnoreChangedTextStore(
+    (state) => state.actions.addIgnoreChangedText
+  );
+  const removeIgnoreChangedText = useIgnoreChangedTextStore(
+    (state) => state.actions.removeIgnoreChangedText
+  );
 
   if (!segment.correction) {
     return <span className={styles.normalText}>{segment.text}</span>;
@@ -43,21 +48,19 @@ const CorrectedText = ({
   };
 
   const handleIgnoreChangedText = () => {
-    setIgnoreChangedTexts((prev) => {
-      const newSet = new Set(prev);
-      const textWithOrder = JSON.stringify([segment.text, segment.order]);
-      newSet.add(textWithOrder);
-      return newSet;
-    });
+    const textWithOrder = JSON.stringify([
+      segment.correction?.before || segment.text,
+      segment.order,
+    ]);
+    addIgnoreChangedText(textWithOrder);
   };
 
   const handleCancelIgnoreChangedText = () => {
-    setIgnoreChangedTexts((prev) => {
-      const newSet = new Set(prev);
-      const textWithOrder = JSON.stringify([segment.text, segment.order]);
-      newSet.delete(textWithOrder);
-      return newSet;
-    });
+    const textWithOrder = JSON.stringify([
+      segment.correction?.before || segment.text,
+      segment.order,
+    ]);
+    removeIgnoreChangedText(textWithOrder);
   };
 
   const tooltipStyle = {
@@ -73,7 +76,12 @@ const CorrectedText = ({
   return (
     <div
       className={`${styles.correctionContainer} ${
-        ignoreChangedTexts.has(JSON.stringify([segment.text, segment.order]))
+        ignoreChangedTexts.has(
+          JSON.stringify([
+            segment.correction?.before || segment.text,
+            segment.order,
+          ])
+        )
           ? styles.ignoredCorrectionContainer
           : ""
       }`}
@@ -81,7 +89,12 @@ const CorrectedText = ({
       <span
         ref={textRef}
         className={`${styles.correctedText} ${
-          ignoreChangedTexts.has(JSON.stringify([segment.text, segment.order]))
+          ignoreChangedTexts.has(
+            JSON.stringify([
+              segment.correction?.before || segment.text,
+              segment.order,
+            ])
+          )
             ? styles.ignoreChangedText
             : ""
         }`}
@@ -92,12 +105,20 @@ const CorrectedText = ({
           setTextOrder(0);
         }}
       >
-        {ignoreChangedTexts.has(JSON.stringify([segment.text, segment.order]))
+        {ignoreChangedTexts.has(
+          JSON.stringify([
+            segment.correction?.before || segment.text,
+            segment.order,
+          ])
+        )
           ? segment.correction.before
           : segment.text}
         {showTooltip &&
           !ignoreChangedTexts.has(
-            JSON.stringify([segment.text, segment.order])
+            JSON.stringify([
+              segment.correction?.before || segment.text,
+              segment.order,
+            ])
           ) && (
             <div
               ref={tooltipRef}
@@ -131,7 +152,10 @@ const CorrectedText = ({
 
       <div className={styles.buttonWrapper}>
         {ignoreChangedTexts.has(
-          JSON.stringify([segment.text, segment.order])
+          JSON.stringify([
+            segment.correction?.before || segment.text,
+            segment.order,
+          ])
         ) ? (
           <button
             className={styles.actionButton}
