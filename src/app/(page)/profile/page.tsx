@@ -11,8 +11,20 @@ import {
   Tooltip,
 } from "recharts";
 import styles from "./page.module.css";
-import { profileInfoAction, getTokenStats } from "./actions";
+import { profileInfoAction, getTokenStats, getQueueStatusAll } from "./actions";
 import Badge from "@/components/ui/Badge";
+
+// 큐 상태 타입 정의
+type QueueStatus = {
+  totalUserJobs: number;
+  runningJobs: number;
+  availableSlots: number;
+};
+
+type QueueStatusAll = {
+  basic: QueueStatus;
+  pro: QueueStatus;
+};
 
 type ProfileInfo = Awaited<ReturnType<typeof profileInfoAction>>;
 type TokenStats = Awaited<ReturnType<typeof getTokenStats>>;
@@ -21,7 +33,9 @@ type ViewType = "overview" | "usage";
 export default function ProfilePage() {
   const [profileInfo, setProfileInfo] = useState<ProfileInfo | null>(null);
   const [tokenStats, setTokenStats] = useState<TokenStats | null>(null);
+  const [queueStatus, setQueueStatus] = useState<QueueStatusAll | null>(null);
   const [loading, setLoading] = useState(true);
+  const [isRefreshing, setIsRefreshing] = useState(false);
   const [currentView, setCurrentView] = useState<ViewType>("overview");
   const [selectedPeriod, setSelectedPeriod] = useState<"7d" | "30d">("7d");
 
@@ -29,10 +43,14 @@ export default function ProfilePage() {
     const fetchData = async () => {
       setLoading(true);
       try {
-        const profile = await profileInfoAction();
-        const stats = await getTokenStats();
+        const [profile, stats, queue] = await Promise.all([
+          profileInfoAction(),
+          getTokenStats(),
+          getQueueStatusAll(),
+        ]);
         setProfileInfo(profile);
         setTokenStats(stats);
+        setQueueStatus(queue);
       } catch (error) {
         console.error("Failed to fetch data:", error);
       } finally {
@@ -42,6 +60,28 @@ export default function ProfilePage() {
 
     fetchData();
   }, []);
+
+  // 뷰 전환 시 스크롤을 맨 위로 이동
+  useEffect(() => {
+    window.scrollTo({
+      top: 0,
+      behavior: "smooth",
+    });
+  }, [currentView]);
+
+  const handleRefresh = async () => {
+    setIsRefreshing(true);
+    try {
+      const queue = await getQueueStatusAll();
+      setQueueStatus(queue);
+    } catch (error) {
+      console.error("Failed to refresh queue status:", error);
+    } finally {
+      setTimeout(() => {
+        setIsRefreshing(false);
+      }, 800);
+    }
+  };
 
   if (!profileInfo || loading) {
     return (
@@ -121,9 +161,108 @@ export default function ProfilePage() {
     return `${formatDateRange(startDate)} - ${formatDateRange(today)}`;
   };
 
+  // 큐 상태 바 컴포넌트
+  const QueueStatusBar = ({
+    queueStatus,
+    label,
+    isRefreshing,
+  }: {
+    queueStatus: QueueStatus;
+    label: string;
+    isRefreshing: boolean;
+  }) => {
+    const currentJobs = queueStatus.totalUserJobs;
+    const totalSlots = queueStatus.totalUserJobs + queueStatus.availableSlots;
+    const percentage = totalSlots > 0 ? (currentJobs / totalSlots) * 100 : 0;
+
+    if (isRefreshing) {
+      return (
+        <div className={styles.queueStatusBar}>
+          <div className={styles.queueBarHeader}>
+            <span className={styles.queueLabel}>{label} 작업 현황</span>
+            <span className={styles.queuePercentage}>새로고침 중...</span>
+          </div>
+          <div className={styles.queueProgressBar}>
+            <div className={styles.queueProgressSkeleton} />
+          </div>
+          <div className={styles.queueStats}>
+            <span>현재 작업: --개</span>
+            <span>사용 가능: --개</span>
+          </div>
+        </div>
+      );
+    }
+
+    return (
+      <div className={styles.queueStatusBar}>
+        <div className={styles.queueBarHeader}>
+          <span className={styles.queueLabel}>{label} 작업 현황</span>
+          <span className={styles.queuePercentage}>
+            {percentage.toFixed(0)}% 사용 중
+          </span>
+        </div>
+        <div className={styles.queueProgressBar}>
+          <div
+            className={styles.queueProgressFill}
+            style={{ width: `${percentage}%` }}
+          />
+        </div>
+        <div className={styles.queueStats}>
+          <span>현재 작업: {currentJobs}개</span>
+          <span>사용 가능: {queueStatus.availableSlots}개</span>
+        </div>
+      </div>
+    );
+  };
+
   // Overview 뷰 렌더링
   const renderOverview = () => (
     <>
+      {/* 큐 상태 정보 */}
+      {queueStatus && (
+        <div className={styles.queueSection}>
+          <div className={styles.queueSectionHeader}>
+            <h3 className={styles.queueSectionTitle}>작업 현황</h3>
+            <button
+              className={styles.refreshBtn}
+              onClick={handleRefresh}
+              disabled={isRefreshing}
+            >
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                width="16"
+                height="16"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="2"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                className={isRefreshing ? styles.refreshSpinner : ""}
+              >
+                <path d="M3 12a9 9 0 0 1 9-9 9.75 9.75 0 0 1 6.74 2.74L21 8" />
+                <path d="M21 3v5h-5" />
+                <path d="M21 12a9 9 0 0 1-9 9 9.75 9.75 0 0 1-6.74-2.74L3 16" />
+                <path d="M3 21v-5h5" />
+              </svg>
+              새로고침
+            </button>
+          </div>
+          <div className={styles.queueBarsContainer}>
+            <QueueStatusBar
+              queueStatus={queueStatus.basic}
+              label="Basic"
+              isRefreshing={isRefreshing}
+            />
+            <QueueStatusBar
+              queueStatus={queueStatus.pro}
+              label="Pro"
+              isRefreshing={isRefreshing}
+            />
+          </div>
+        </div>
+      )}
+
       {/* 사용량 정보 */}
       <div className={styles.usageOverview}>
         <div className={styles.usageStats}>

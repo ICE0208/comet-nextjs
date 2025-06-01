@@ -271,3 +271,24 @@ export const getTokenStats = async () => {
     dailyUsage,
   };
 };
+
+export const getQueueStatusAll = async () => {
+  const currentUser = await getCurrentUser();
+  if (!currentUser) {
+    redirect("/");
+  }
+
+  try {
+    const queueStatus = await fetch(
+      `${process.env.NEXT_PUBLIC_NEST_SERVER}/correction/status/all?userId=${currentUser.id}`
+    );
+    return await queueStatus.json();
+  } catch (error) {
+    console.error("Failed to fetch queue status:", error);
+    // 에러 시 기본값 반환
+    return {
+      basic: { totalUserJobs: 0, runningJobs: 0, availableSlots: 3 },
+      pro: { totalUserJobs: 0, runningJobs: 0, availableSlots: 3 },
+    };
+  }
+};
