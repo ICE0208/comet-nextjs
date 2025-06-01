@@ -107,6 +107,7 @@ export async function submitWork(
       workspaceId,
       userRequest: text,
       status: "PENDING",
+      withPro: isPro || false,
     },
   });
 

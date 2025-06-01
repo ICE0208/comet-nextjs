@@ -6,6 +6,7 @@ import {
   toggleFavorite,
   updateHistoryName,
 } from "../actions";
+import Badge from "@/components/ui/Badge";
 
 // 히스토리 항목의 타입 정의
 type HistoryItem = Awaited<
@@ -268,7 +269,8 @@ const HistorySidebar: React.FC<HistorySidebarProps> = ({
                     className={styles.historyDate}
                     style={{ color: getHistoryDateColor(item) }}
                   >
-                    {getHistoryDate(item)}
+                    {getHistoryDate(item)}{" "}
+                    {item.withPro && <Badge variant="pro">Pro</Badge>}
                   </span>
                   <button
                     className={`${styles.starButton} ${item.historyFavorite ? styles.active : ""} ${loadingStates[item.id] ? styles.loading : ""}`}
