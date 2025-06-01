@@ -15,12 +15,13 @@ datasource db {
 }
 
 model User {
-  id           Int      @id @default(autoincrement())
-  userId       String   @unique
-  email        String   @unique
-  hashPassword String
-  createdAt    DateTime @default(now())
-  isTutorial   Boolean  @default(false)
+  id                   Int      @id @default(autoincrement())
+  userId               String   @unique
+  email                String   @unique
+  hashPassword         String
+  createdAt            DateTime @default(now())
+  isTutorial           Boolean  @default(false)
+  isCorrectionTutorial Boolean  @default(false)
 
   following  Follow[]        @relation("FollowingRelation")
   followers  Follow[]        @relation("FollowerRelation")
