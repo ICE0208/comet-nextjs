@@ -82,12 +82,12 @@ export default function ProfileDropdown({ user }: ProfileDropdownProps) {
                   마이페이지
                 </div>
                 <li className={styles.dropdownDivider} />
-                <div
+                {/* <div
                   className={styles.dropdownItem}
                   onClick={() => handleMenuItemClick("/settings")}
                 >
                   설정
-                </div>
+                </div> */}
                 <li className={styles.dropdownDivider} />
                 <div
                   className={styles.dropdownItem}
