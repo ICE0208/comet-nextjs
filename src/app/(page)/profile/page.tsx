@@ -2,309 +2,504 @@
 
 import { useEffect, useState } from "react";
 import Image from "next/image";
+import {
+  LineChart,
+  Line,
+  XAxis,
+  YAxis,
+  ResponsiveContainer,
+  Tooltip,
+} from "recharts";
 import styles from "./page.module.css";
-import { novelLibraryAction, profileInfoAction } from "./actions";
-import { WorkViewer } from "./components/WorkViewer";
+import { profileInfoAction, getTokenStats } from "./actions";
+import Badge from "@/components/ui/Badge";
 
 type ProfileInfo = Awaited<ReturnType<typeof profileInfoAction>>;
-type NovelLibrary = Awaited<ReturnType<typeof novelLibraryAction>>;
+type TokenStats = Awaited<ReturnType<typeof getTokenStats>>;
+type ViewType = "overview" | "usage";
 
 export default function ProfilePage() {
-  const [activeTab, setActiveTab] = useState<"works" | "liked">("works");
-
   const [profileInfo, setProfileInfo] = useState<ProfileInfo | null>(null);
-  const [novelLibrary, setNovelLibrary] = useState<NovelLibrary | null>(null);
+  const [tokenStats, setTokenStats] = useState<TokenStats | null>(null);
+  const [loading, setLoading] = useState(true);
+  const [currentView, setCurrentView] = useState<ViewType>("overview");
+  const [selectedPeriod, setSelectedPeriod] = useState<"7d" | "30d">("7d");
 
   useEffect(() => {
     const fetchData = async () => {
-      const [profile, library] = await Promise.all([
-        profileInfoAction(),
-        novelLibraryAction(),
-      ]);
-      setProfileInfo(profile);
-      setNovelLibrary(library);
+      setLoading(true);
+      try {
+        const profile = await profileInfoAction();
+        const stats = await getTokenStats();
+        setProfileInfo(profile);
+        setTokenStats(stats);
+      } catch (error) {
+        console.error("Failed to fetch data:", error);
+      } finally {
+        setLoading(false);
+      }
     };
 
     fetchData();
   }, []);
 
+  if (!profileInfo || loading) {
+    return (
+      <div className={styles.container}>
+        <div className={styles.loading}>데이터를 불러오는 중...</div>
+      </div>
+    );
+  }
+
+  const formatNumber = (num: number) => num.toLocaleString();
+  const formatDate = (date: Date) => {
+    const d = new Date(date);
+    return `${d.getMonth() + 1}월 ${d.getDate()}일, ${d.getHours().toString().padStart(2, "0")}:${d.getMinutes().toString().padStart(2, "0")}`;
+  };
+
+  // 기간별 데이터 필터링
+  const getFilteredData = () => {
+    if (!tokenStats) return [];
+
+    const days = selectedPeriod === "7d" ? 7 : 30;
+    return tokenStats.dailyUsage.slice(-days);
+  };
+
+  // 선택된 기간의 통계 계산
+  const getPeriodStats = () => {
+    if (!tokenStats) return { corrections: 0, tokens: 0, proUsage: 0 };
+
+    const days = selectedPeriod === "7d" ? 7 : 30;
+    const periodData = tokenStats.dailyUsage.slice(-days);
+
+    const corrections = periodData.reduce(
+      (total, day) => total + day.corrections,
+      0
+    );
+    const tokens = periodData.reduce((total, day) => total + day.tokens, 0);
+
+    // Pro 사용량은 recentUsage에서 계산 (dailyUsage에는 Pro/Basic 구분이 없음)
+    const currentDate = new Date();
+    const periodHistory = tokenStats.recentUsage.filter((usage) => {
+      const usageDate = new Date(usage.date);
+      const diffTime = currentDate.getTime() - usageDate.getTime();
+      const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+      return diffDays <= days;
+    });
+    const proUsage = periodHistory.filter(
+      (usage) => usage.kind === "Pro"
+    ).length;
+
+    return { corrections, tokens, proUsage };
+  };
+
+  // 현재 월 토큰 사용량 계산 (dailyUsage 기반)
+  const getCurrentMonthTokens = () => {
+    if (!tokenStats) return 0;
+
+    const currentDate = new Date();
+    const currentMonth = currentDate.getMonth() + 1;
+
+    return tokenStats.dailyUsage
+      .filter((day) => {
+        const [month] = day.date.split("/").map(Number);
+        return month === currentMonth;
+      })
+      .reduce((total, day) => total + day.tokens, 0);
+  };
+
+  // 동적 날짜 범위 생성
+  const getDateRange = () => {
+    const today = new Date();
+    const days = selectedPeriod === "7d" ? 7 : 30;
+    const startDate = new Date(today);
+    startDate.setDate(today.getDate() - days + 1);
+
+    const formatDateRange = (date: Date) =>
+      `${date.getMonth() + 1}월 ${date.getDate().toString().padStart(2, "0")}일`;
+
+    return `${formatDateRange(startDate)} - ${formatDateRange(today)}`;
+  };
+
+  // Overview 뷰 렌더링
+  const renderOverview = () => (
+    <>
+      {/* 사용량 정보 */}
+      <div className={styles.usageOverview}>
+        <div className={styles.usageStats}>
+          <div className={styles.primaryStat}>
+            <span className={styles.usageNumber}>
+              {formatNumber(getCurrentMonthTokens())}
+            </span>
+            <span className={styles.usageLimit}>
+              / {formatNumber(tokenStats?.tokenLimit || 100000)}
+            </span>
+          </div>
+          <div className={styles.usageLabel}>
+            {new Date().getMonth() + 1}월 토큰 사용량
+          </div>
+
+          {/* 진행바 추가 */}
+          <div className={styles.progressSection}>
+            <div className={styles.progressBar}>
+              <div
+                className={styles.progressFill}
+                style={{
+                  width: `${Math.min((getCurrentMonthTokens() / (tokenStats?.tokenLimit || 100000)) * 100, 100)}%`,
+                }}
+              />
+            </div>
+            <div className={styles.progressLabels}>
+              <span>
+                {Math.round(
+                  (getCurrentMonthTokens() /
+                    (tokenStats?.tokenLimit || 100000)) *
+                    100
+                )}
+                % 사용
+              </span>
+              <span>
+                {formatNumber(
+                  (tokenStats?.tokenLimit || 100000) - getCurrentMonthTokens()
+                )}{" "}
+                남음
+              </span>
+            </div>
+
+            {/* 토큰 한도 증가 문의 */}
+            <div className={styles.contactSection}>
+              <p className={styles.contactText}>
+                토큰 한도 증가가 필요하신가요?{" "}
+                <a
+                  href={`mailto:seojunlee27@naver.com?subject=토큰 한도 증가 문의&body=안녕하세요,%0A%0A토큰 한도 증가를 요청드립니다.%0A%0A현재 사용량: ${getCurrentMonthTokens()}토큰%0A현재 한도: ${tokenStats?.tokenLimit || 100000}토큰%0A%0A감사합니다.`}
+                  className={styles.contactBtn}
+                >
+                  관리자에게 문의하기
+                </a>
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {/* 기간 선택 */}
+      <div className={styles.usageSection}>
+        <h3 className={styles.usageSectionTitle}>최근 사용량</h3>
+        <div className={styles.periodSelector}>
+          <div className={styles.periodTabs}>
+            <button
+              className={`${styles.periodTab} ${selectedPeriod === "7d" ? styles.active : ""}`}
+              onClick={() => setSelectedPeriod("7d")}
+            >
+              7일
+            </button>
+            <button
+              className={`${styles.periodTab} ${selectedPeriod === "30d" ? styles.active : ""}`}
+              onClick={() => setSelectedPeriod("30d")}
+            >
+              30일
+            </button>
+            <span className={styles.dateRangeDisplay}>{getDateRange()}</span>
+          </div>
+          <button
+            className={styles.viewUsageBtn}
+            onClick={() => setCurrentView("usage")}
+          >
+            사용량 보기
+          </button>
+        </div>
+      </div>
+
+      {/* Your Analytics */}
+      <div className={styles.analyticsSection}>
+        <h2>사용 통계</h2>
+        <div className={styles.analyticsGrid}>
+          <div className={styles.analyticCard}>
+            <div className={styles.analyticNumber}>
+              {formatNumber(getPeriodStats().corrections)}
+            </div>
+            <div className={styles.analyticLabel}>총 교정 횟수</div>
+          </div>
+          <div className={styles.analyticCard}>
+            <div className={styles.analyticNumber}>
+              {formatNumber(getPeriodStats().tokens)}
+            </div>
+            <div className={styles.analyticLabel}>토큰 사용량</div>
+          </div>
+          <div className={styles.analyticCard}>
+            <div className={styles.analyticNumber}>
+              {formatNumber(getPeriodStats().proUsage)}
+            </div>
+            <div className={styles.analyticLabel}>Pro 모드 사용 횟수</div>
+          </div>
+        </div>
+
+        {/* 차트 */}
+        <div className={styles.chartContainer}>
+          {(() => {
+            const filteredData = getFilteredData();
+            console.log("Filtered data:", filteredData);
+            console.log("Selected period:", selectedPeriod);
+
+            if (
+              !tokenStats ||
+              filteredData.length === 0 ||
+              !filteredData.some((d) => d.tokens > 0)
+            ) {
+              return (
+                <div className={styles.noChartData}>
+                  <p>선택한 기간에 데이터가 없습니다.</p>
+                </div>
+              );
+            }
+
+            // Recharts에 맞는 데이터 형태로 변환
+            const chartData = filteredData.map((item, index) => ({
+              name: item.date,
+              tokens: item.tokens,
+              inputTokens: item.inputTokens,
+              outputTokens: item.outputTokens,
+              index,
+            }));
+
+            console.log("Chart data with tokens:", chartData);
+            console.log("Sample item:", filteredData[0]);
+
+            return (
+              <div className={styles.rechartsContainer}>
+                <ResponsiveContainer
+                  width="100%"
+                  height="100%"
+                >
+                  <LineChart
+                    data={chartData}
+                    margin={{ top: 20, right: 30, left: 20, bottom: 20 }}
+                  >
+                    <XAxis
+                      dataKey="name"
+                      axisLine={false}
+                      tickLine={false}
+                      tick={{ fontSize: 12, fill: "#9ca3af" }}
+                      interval={0}
+                      angle={0}
+                      textAnchor="middle"
+                    />
+                    <YAxis
+                      axisLine={false}
+                      tickLine={false}
+                      tick={{ fontSize: 12, fill: "#9ca3af" }}
+                      tickFormatter={(value) =>
+                        value === 0 ? "0" : `${Math.round(value / 1000)}k`
+                      }
+                    />
+                    <Tooltip
+                      labelFormatter={(label) => `${label}`}
+                      formatter={(value: number, name: string) => {
+                        if (name === "tokens") return null; // 총 토큰은 별도로 표시
+                        return null;
+                      }}
+                      content={({ active, payload, label }) => {
+                        if (active && payload && payload.length) {
+                          const data = payload[0].payload;
+                          console.log("Tooltip data:", data);
+
+                          return (
+                            <div
+                              style={{
+                                backgroundColor: "#ffffff",
+                                border: "1px solid #e5e7eb",
+                                borderRadius: "8px",
+                                boxShadow: "0 4px 6px -1px rgba(0, 0, 0, 0.1)",
+                                fontSize: "14px",
+                                padding: "12px",
+                              }}
+                            >
+                              <p
+                                style={{
+                                  color: "#374151",
+                                  fontWeight: "600",
+                                  margin: "0 0 8px 0",
+                                }}
+                              >
+                                {label}
+                              </p>
+                              <p
+                                style={{
+                                  margin: "0 0 4px 0",
+                                  color: "#6b7280",
+                                }}
+                              >
+                                입력 토큰:{" "}
+                                {(data.inputTokens || 0).toLocaleString()}개
+                              </p>
+                              <p
+                                style={{
+                                  margin: "0 0 4px 0",
+                                  color: "#6b7280",
+                                }}
+                              >
+                                출력 토큰:{" "}
+                                {(data.outputTokens || 0).toLocaleString()}개
+                              </p>
+                              <p
+                                style={{
+                                  margin: "0",
+                                  color: "#374151",
+
+                                  fontWeight: "600",
+                                }}
+                              >
+                                총 토큰: {(data.tokens || 0).toLocaleString()}개
+                              </p>
+                            </div>
+                          );
+                        }
+                        return null;
+                      }}
+                    />
+                    <Line
+                      type="linear"
+                      dataKey="tokens"
+                      stroke="#10b981"
+                      strokeWidth={1.5}
+                      dot={{
+                        fill: "#10b981",
+                        strokeWidth: 2,
+                        stroke: "#ffffff",
+                        r: 3,
+                      }}
+                      activeDot={{
+                        r: 4,
+                        fill: "#10b981",
+                        stroke: "#ffffff",
+                        strokeWidth: 2,
+                      }}
+                      animationDuration={300}
+                    />
+                  </LineChart>
+                </ResponsiveContainer>
+              </div>
+            );
+          })()}
+        </div>
+      </div>
+    </>
+  );
+
+  // Usage 뷰 렌더링 (기존 표 형식)
+  const renderUsage = () => (
+    <div className={styles.tableSection}>
+      <div className={styles.tableHeader}>
+        <h2>최근 토큰 사용 내역</h2>
+        <div className={styles.tableControls}>
+          <button
+            className={styles.backBtn}
+            onClick={() => setCurrentView("overview")}
+          >
+            ← 개요로 돌아가기
+          </button>
+        </div>
+      </div>
+
+      <div className={styles.tableContainer}>
+        <table className={styles.usageTable}>
+          <thead>
+            <tr>
+              <th>날짜</th>
+              <th>워크스페이스</th>
+              <th>모드</th>
+              <th>요청 내용</th>
+              <th>입력 토큰</th>
+              <th>출력 토큰</th>
+              <th>총 토큰</th>
+            </tr>
+          </thead>
+          <tbody>
+            {tokenStats?.recentUsage.map((usage) => (
+              <tr key={usage.id}>
+                <td className={styles.dateCell}>{formatDate(usage.date)}</td>
+                <td className={styles.workspaceCell}>{usage.workspace}</td>
+                <td>
+                  <span
+                    className={`${styles.planBadge} ${usage.kind === "Pro" ? styles.proBadge : styles.basicBadge}`}
+                  >
+                    {usage.kind}
+                  </span>
+                </td>
+                <td className={styles.requestCell}>{usage.userRequest}</td>
+                <td className={styles.numberCell}>
+                  {formatNumber(usage.inputTokens)}
+                </td>
+                <td className={styles.numberCell}>
+                  {formatNumber(usage.outputTokens)}
+                </td>
+                <td className={styles.numberCell}>
+                  {formatNumber(usage.totalTokens)}
+                </td>
+              </tr>
+            )) || []}
+          </tbody>
+        </table>
+
+        {(!tokenStats?.recentUsage || tokenStats.recentUsage.length === 0) && (
+          <div className={styles.noData}>
+            <p>선택한 기간에 데이터가 없습니다.</p>
+          </div>
+        )}
+      </div>
+
+      {tokenStats?.recentUsage && tokenStats.recentUsage.length > 0 && (
+        <div className={styles.tableFooter}>
+          <span>1 - {tokenStats.recentUsage.length}개 항목 표시 중</span>
+          <div className={styles.pagination}>
+            <button
+              className={styles.pageBtn}
+              disabled
+            >
+              이전
+            </button>
+            <span className={styles.pageInfo}>페이지 1 / 1</span>
+            <button
+              className={styles.pageBtn}
+              disabled
+            >
+              다음
+            </button>
+          </div>
+        </div>
+      )}
+    </div>
+  );
+
   return (
-    <div className="min-h-screen bg-slate-50">
-      {/* 헤더 배경 이미지 */}
+    <div className={styles.container}>
+      {/* 헤더 섹션 */}
       <div className={styles.header}>
-        <div className="absolute -bottom-16 left-8">
+        <div className={styles.profileSection}>
           <Image
             src="/images/profile-temp/profile.jpg"
-            alt={profileInfo?.userId ?? "----"}
-            width={120}
-            height={120}
+            alt={profileInfo.userId}
+            width={60}
+            height={60}
             className={styles.profileImage}
             priority={true}
           />
+          <div className={styles.profileInfo}>
+            <div className={styles.nameSection}>
+              <h1 className={styles.profileName}>{profileInfo.userId}</h1>
+              <Badge
+                variant="pro"
+                size="sm"
+              >
+                Pro
+              </Badge>
+            </div>
+          </div>
         </div>
       </div>
 
-      {/* 메인 콘텐츠 */}
-      <div className={styles.container}>
-        <div className={styles.content}>
-          {/* 왼쪽 컬럼 - 사용자 정보 */}
-          <div className="space-y-6">
-            <div className={styles.profileCard}>
-              <div>
-                <h1 className={styles.profileName}>
-                  {profileInfo?.userId ?? "----"}
-                </h1>
-                <div className={styles.profileLocation}>
-                  <MapIcon className={styles.icon} />
-                  <span>{profileInfo?.location ?? "------"}</span>
-                </div>
-                <div className={styles.badgeContainer}>
-                  <span className={`${styles.badge} ${styles.badgePrimary}`}>
-                    픽션
-                  </span>
-                  <span className={`${styles.badge} ${styles.badgeSecondary}`}>
-                    미스터리
-                  </span>
-                </div>
-                <div className={styles.followerInfo}>
-                  <button className={styles.followerItem}>
-                    <span className={styles.followerCount}>
-                      {profileInfo?.followCount.following ?? "--"}
-                    </span>
-                    <span className={styles.followerLabel}>팔로워</span>
-                  </button>
-                  <button className={styles.followerItem}>
-                    <span className={styles.followerCount}>
-                      {profileInfo?.followCount.follower ?? "--"}
-                    </span>
-                    <span className={styles.followerLabel}>팔로잉</span>
-                  </button>
-                </div>
-              </div>
-
-              <div className={styles.divider} />
-
-              <div>
-                <h2 className={styles.cardTitle}>소개</h2>
-                <p className={styles.aboutText}>
-                  {profileInfo?.about ?? "-".repeat(150)}
-                </p>
-              </div>
-
-              <div className={styles.divider} />
-
-              <div>
-                <h2 className={styles.cardTitle}>통계</h2>
-                <div className={styles.statsGrid}>
-                  <div className={styles.statItem}>
-                    <div className={styles.statLabel}>작품</div>
-                    <div className={styles.statValue}>
-                      {profileInfo?.stats.novelCount ?? "--"}
-                    </div>
-                  </div>
-                  <div className={styles.statItem}>
-                    <div className={styles.statLabel}>독자</div>
-                    <div className={styles.statValue}>
-                      {profileInfo?.stats.readerCount ?? "--"}
-                    </div>
-                  </div>
-                  <div className={styles.statItem}>
-                    <div className={styles.statLabel}>리뷰</div>
-                    <div className={styles.statValue}>
-                      {profileInfo?.stats.reviewCount ?? "--"}
-                    </div>
-                  </div>
-                  <div className={styles.statItem}>
-                    <div className={styles.statLabel}>평점</div>
-                    <div className={styles.statValue}>
-                      {profileInfo?.stats.averageRating ?? "--"}
-                    </div>
-                  </div>
-                </div>
-              </div>
-
-              <div className={styles.divider} />
-
-              <div>
-                <h2 className={styles.cardTitle}>연결하기</h2>
-                <div className={styles.socialLinks}>
-                  <button className={styles.socialButton}>
-                    <TwitterIcon className={styles.icon} />
-                  </button>
-                  <button className={styles.socialButton}>
-                    <LinkedinIcon className={styles.icon} />
-                  </button>
-                  <button className={styles.socialButton}>
-                    <GithubIcon className={styles.icon} />
-                  </button>
-                  <button className={styles.socialButton}>
-                    <InstagramIcon className={styles.icon} />
-                  </button>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          {/* 오른쪽 컬럼 - 작품 */}
-          <div className={styles.publicationsCard}>
-            <div className={styles.publicationsHeader}>
-              <h2 className={styles.publicationsTitle}>작품</h2>
-              <p className={styles.publicationsSubtitle}>
-                작가의 작품과 추천 도서
-              </p>
-            </div>
-
-            <div className={styles.tabsContainer}>
-              <div className={styles.tabsList}>
-                <div
-                  className={`${styles.tabItem} ${activeTab === "works" ? styles.tabItemActive : ""}`}
-                  onClick={() => setActiveTab("works")}
-                >
-                  내 작품
-                </div>
-                <div
-                  className={`${styles.tabItem} ${activeTab === "liked" ? styles.tabItemActive : ""}`}
-                  onClick={() => setActiveTab("liked")}
-                >
-                  좋아요 표시한 작품
-                </div>
-              </div>
-            </div>
-
-            <WorkViewer
-              activeTab={activeTab}
-              novelLibrary={novelLibrary}
-            />
-          </div>
-        </div>
-      </div>
+      {/* 현재 뷰에 따라 렌더링 */}
+      {currentView === "overview" ? renderOverview() : renderUsage()}
     </div>
-  );
-}
-
-// 아이콘 컴포넌트
-function MapIcon({ className }: { className?: string }) {
-  return (
-    <svg
-      xmlns="http://www.w3.org/2000/svg"
-      width="24"
-      height="24"
-      viewBox="0 0 24 24"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth="2"
-      strokeLinecap="round"
-      strokeLinejoin="round"
-      className={className}
-    >
-      <path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0Z" />
-      <circle
-        cx="12"
-        cy="10"
-        r="3"
-      />
-    </svg>
-  );
-}
-
-function TwitterIcon({ className }: { className?: string }) {
-  return (
-    <svg
-      xmlns="http://www.w3.org/2000/svg"
-      width="24"
-      height="24"
-      viewBox="0 0 24 24"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth="2"
-      strokeLinecap="round"
-      strokeLinejoin="round"
-      className={className}
-    >
-      <path d="M22 4s-.7 2.1-2 3.4c1.6 10-9.4 17.3-18 11.6 2.2.1 4.4-.6 6-2C3 15.5.5 9.6 3 5c2.2 2.6 5.6 4.1 9 4-.9-4.2 4-6.6 7-3.8 1.1 0 3-1.2 3-1.2z" />
-    </svg>
-  );
-}
-
-function LinkedinIcon({ className }: { className?: string }) {
-  return (
-    <svg
-      xmlns="http://www.w3.org/2000/svg"
-      width="24"
-      height="24"
-      viewBox="0 0 24 24"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth="2"
-      strokeLinecap="round"
-      strokeLinejoin="round"
-      className={className}
-    >
-      <path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z" />
-      <rect
-        width="4"
-        height="12"
-        x="2"
-        y="9"
-      />
-      <circle
-        cx="4"
-        cy="4"
-        r="2"
-      />
-    </svg>
-  );
-}
-
-function GithubIcon({ className }: { className?: string }) {
-  return (
-    <svg
-      xmlns="http://www.w3.org/2000/svg"
-      width="24"
-      height="24"
-      viewBox="0 0 24 24"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth="2"
-      strokeLinecap="round"
-      strokeLinejoin="round"
-      className={className}
-    >
-      <path d="M15 22v-4a4.8 4.8 0 0 0-1-3.5c3 0 6-2 6-5.5.08-1.25-.27-2.48-1-3.5.28-1.15.28-2.35 0-3.5 0 0-1 0-3 1.5-2.64-.5-5.36-.5-8 0C6 2 5 2 5 2c-.3 1.15-.3 2.35 0 3.5A5.403 5.403 0 0 0 4 9c0 3.5 3 5.5 6 5.5-.39.49-.68 1.05-.85 1.65-.17.6-.22 1.23-.15 1.85v4" />
-      <path d="M9 18c-4.51 2-5-2-7-2" />
-    </svg>
-  );
-}
-
-function InstagramIcon({ className }: { className?: string }) {
-  return (
-    <svg
-      xmlns="http://www.w3.org/2000/svg"
-      width="24"
-      height="24"
-      viewBox="0 0 24 24"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth="2"
-      strokeLinecap="round"
-      strokeLinejoin="round"
-      className={className}
-    >
-      <rect
-        width="20"
-        height="20"
-        x="2"
-        y="2"
-        rx="5"
-        ry="5"
-      />
-      <path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z" />
-      <line
-        x1="17.5"
-        x2="17.51"
-        y1="6.5"
-        y2="6.5"
-      />
-    </svg>
   );
 }
