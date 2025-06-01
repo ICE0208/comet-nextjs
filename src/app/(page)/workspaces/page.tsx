@@ -90,6 +90,9 @@ export default function PromptListPage() {
     } else {
       document.body.style.overflow = "auto";
     }
+    return () => {
+      document.body.style.overflow = "auto"; // 컴포넌트 언마운트 시 스크롤 복원
+    };
   }, [showTutorial]);
 
   // ===== React Query 변경 작업 =====
@@ -232,6 +235,9 @@ export default function PromptListPage() {
 
   // 도움말 보기 버튼 클릭
   const handleShowTutorial = async () => {
+    if (view === "list") {
+      setView("grid");
+    }
     await resetUserTutorialStatus();
     queryClient.invalidateQueries({ queryKey: ["user"] });
     setShowTutorial(true);
@@ -315,6 +321,8 @@ export default function PromptListPage() {
 
   return (
     <>
+      {/* 배경 오버레이 */}
+      <div className={styles.backgroundOverlay} />
       <div className={styles.container}>
         <div className={styles.titleContainer}>
           <div className={styles.title}>나의 작업 공간</div>
