@@ -7,6 +7,7 @@ import GridView from "./components/GridView";
 import ListView from "./components/ListView";
 import TopBar from "./components/TopBar";
 import WorkspaceModal from "./components/WorkspaceModal";
+import SkeletonLoader from "./components/SkeletonLoader";
 import TutorialModal from "../../../components/portals/TutorialModal";
 import {
   getWorkspaceList,
@@ -267,13 +268,7 @@ export default function PromptListPage() {
   const renderPageContent = () => {
     // 로딩 중일 때
     if (isLoadingWorkspaces) {
-      return (
-        <div className={styles.emptyStateContainer}>
-          <div className={styles.emptyState}>
-            <p className={styles.loadingText}>작업을 불러오는 중입니다...</p>
-          </div>
-        </div>
-      );
+      return <SkeletonLoader view={view} />;
     }
 
     if (showTutorial && works.length === 0) {

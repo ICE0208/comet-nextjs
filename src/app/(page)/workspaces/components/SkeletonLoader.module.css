@@ -1,0 +1,225 @@
+/* 기본 스켈레톤 애니메이션 */
+@keyframes shimmer {
+  0% {
+    background-position: -200px 0;
+  }
+  100% {
+    background-position: calc(200px + 100%) 0;
+  }
+}
+
+.skeleton {
+  background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 37%, #f0f0f0 63%);
+  background-size: 400px 100%;
+  animation: shimmer 1.5s ease-in-out infinite;
+  border-radius: 4px;
+}
+
+/* 그리드 레이아웃 */
+.skeletonGrid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 28px;
+  width: 100%;
+  max-width: 1200px;
+}
+
+.skeletonCard {
+  position: relative;
+  background: #ffffff;
+  border-radius: 10px;
+  border: 1px solid #f0f0f0;
+  padding: 24px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  min-height: 180px;
+}
+
+/* 그리드 아이템 내부 요소들 */
+.skeletonOptionBtn {
+  position: absolute;
+  top: 12px;
+  right: 12px;
+  width: 28px;
+  height: 28px;
+  border-radius: 4px;
+  composes: skeleton;
+}
+
+.skeletonTitle {
+  margin-top: 8px;
+  margin-bottom: 16px;
+}
+
+.skeletonLine {
+  height: 20px;
+  margin-bottom: 8px;
+  border-radius: 4px;
+  width: 75%;
+  composes: skeleton;
+}
+
+.shortLine {
+  width: 60%;
+}
+
+.skeletonMeta {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  margin-top: auto;
+}
+
+.skeletonMetaItem {
+  display: flex;
+  align-items: center;
+  padding: 2px 0;
+}
+
+.skeletonMetaLabel {
+  min-width: 75px;
+  height: 14px;
+  margin-right: 8px;
+  border-radius: 4px;
+  composes: skeleton;
+}
+
+.skeletonMetaValue {
+  width: 80px;
+  height: 14px;
+  border-radius: 4px;
+  composes: skeleton;
+}
+
+/* 리스트 레이아웃 */
+.skeletonList {
+  width: 100%;
+  max-width: 1200px;
+  display: flex;
+  flex-direction: column;
+}
+
+.skeletonListItem {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 22px;
+  background-color: #fff;
+  border-radius: 10px;
+  margin-bottom: 16px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  border: 1px solid #f0f0f0;
+}
+
+.skeletonListItem:last-child {
+  margin-bottom: 0;
+}
+
+/* 리스트 아이템 내부 요소들 */
+.skeletonContent {
+  flex: 1;
+  min-width: 0;
+  overflow: hidden;
+}
+
+.skeletonListTitle {
+  height: 18px;
+  width: 300px;
+  margin-bottom: 12px;
+  border-radius: 4px;
+  composes: skeleton;
+}
+
+.skeletonListInfo {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 20px;
+}
+
+.skeletonInfoItem {
+  display: flex;
+  align-items: center;
+}
+
+.skeletonInfoLabel {
+  width: 60px;
+  height: 14px;
+  margin-right: 6px;
+  border-radius: 4px;
+  composes: skeleton;
+}
+
+.skeletonInfoValue {
+  width: 70px;
+  height: 14px;
+  border-radius: 4px;
+  composes: skeleton;
+}
+
+.skeletonActions {
+  position: relative;
+  margin-left: 16px;
+}
+
+.skeletonActionBtn {
+  width: 32px;
+  height: 32px;
+  border-radius: 4px;
+  composes: skeleton;
+}
+
+/* 반응형 디자인 */
+@media (max-width: 1024px) {
+  .skeletonGrid {
+    grid-template-columns: repeat(2, 1fr);
+    max-width: 100%;
+  }
+}
+
+@media (max-width: 768px) {
+  .skeletonGrid {
+    max-width: 100%;
+  }
+
+  .skeletonCard {
+    min-height: 160px;
+  }
+
+  .skeletonListInfo {
+    flex-direction: column;
+    gap: 10px;
+  }
+}
+
+@media (max-width: 480px) {
+  .skeletonGrid {
+    grid-template-columns: 1fr;
+    gap: 16px;
+  }
+
+  .skeletonCard {
+    padding: 18px;
+    min-height: 150px;
+  }
+
+  .skeletonListItem {
+    padding: 18px;
+    margin-bottom: 12px;
+  }
+
+  .skeletonListTitle {
+    width: 200px;
+    height: 16px;
+    margin-bottom: 10px;
+  }
+
+  .skeletonActions {
+    margin-left: 10px;
+  }
+
+  .skeletonLine {
+    height: 18px;
+  }
+}
