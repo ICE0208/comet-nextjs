@@ -336,3 +336,10 @@
   word-break: keep-all;
   overflow-wrap: break-word;
 }
+
+/* 타이틀과 뱃지 컨테이너 */
+.titleWithBadge {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}

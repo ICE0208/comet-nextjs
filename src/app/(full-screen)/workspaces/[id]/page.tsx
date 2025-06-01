@@ -1,5 +1,5 @@
 import React from "react";
-import { getQueueStatus, getWorkspaceById } from "./actions";
+import { getQueueStatusAll, getWorkspaceById } from "./actions";
 import { WorkspacePageProps } from "./types";
 import ClientWorkspacePage from "./client-page";
 
@@ -10,7 +10,7 @@ import ClientWorkspacePage from "./client-page";
 const WorkspacePage = async ({ params }: WorkspacePageProps) => {
   // 워크스페이스 데이터 조회
   const workspacePromise = getWorkspaceById((await params).id);
-  const queueStatusPromise = getQueueStatus();
+  const queueStatusPromise = getQueueStatusAll();
 
   const [workspace, queueStatus] = await Promise.allSettled([
     workspacePromise,

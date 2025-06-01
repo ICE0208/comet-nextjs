@@ -1,0 +1,266 @@
+/* 헤더 바 스타일 */
+.headerBar {
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0.75rem 0;
+  margin-top: 4px;
+}
+
+.headerLeft,
+.headerRight {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.backLink {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  color: #4b5563;
+  text-decoration: none;
+  font-weight: 500;
+  font-size: 0.95rem;
+  transition: color 0.2s ease;
+}
+
+.backLink:hover {
+  color: #6366f1;
+}
+
+.iconButton {
+  background: none;
+  border: none;
+  padding: 0.5rem;
+  border-radius: 6px;
+  color: #4b5563;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.iconButton:hover {
+  background-color: rgba(99, 102, 241, 0.1);
+  color: #6366f1;
+}
+
+.iconButton:active {
+  transform: scale(0.95);
+}
+
+/* 뱃지 컨테이너 */
+.queueBadgesContainer {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.25rem 0.5rem;
+  border-radius: 8px;
+  background: rgba(248, 250, 252, 0.8);
+  border: 1px solid rgba(226, 232, 240, 0.6);
+  backdrop-filter: blur(8px);
+}
+
+.queueSectionLabel {
+  font-size: 0.7rem;
+  font-weight: 600;
+  color: #64748b;
+  opacity: 0.8;
+  white-space: nowrap;
+  margin-right: 0.25rem;
+}
+
+/* GitHub Pro 스타일 큐 뱃지 */
+.queueBadge {
+  display: inline-flex;
+  justify-content: center;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.375rem 0.75rem;
+  border-radius: 6px;
+  font-size: 0.75rem;
+  font-weight: 500;
+  border: 1px solid;
+  backdrop-filter: blur(12px);
+  box-shadow:
+    0 1px 2px 0 rgba(0, 0, 0, 0.05),
+    inset 0 1px 0 0 rgba(255, 255, 255, 0.1);
+  width: 75px;
+  height: 26px;
+}
+
+.queueLabel {
+  font-size: 0.75rem;
+  font-weight: 600;
+  opacity: 0.9;
+  flex-shrink: 0;
+}
+
+.queueCount {
+  font-size: 0.75rem;
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+}
+
+/* 뱃지 색상 - GitHub Pro 스타일 */
+.queueBadgeLow {
+  background: rgba(34, 197, 94, 0.1);
+  border-color: rgba(34, 197, 94, 0.2);
+  color: rgb(22, 163, 74);
+}
+
+.queueBadgeMedium {
+  background: rgba(251, 191, 36, 0.1);
+  border-color: rgba(251, 191, 36, 0.2);
+  color: rgb(217, 119, 6);
+}
+
+.queueBadgeHigh {
+  background: rgba(239, 68, 68, 0.1);
+  border-color: rgba(239, 68, 68, 0.2);
+  color: rgb(220, 38, 38);
+}
+
+/* 새로고침 버튼 - 적절한 크기 */
+.queueRefreshButton {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 24px;
+  height: 24px;
+  background: rgba(255, 255, 255, 0.8);
+  border: 1px solid rgba(203, 213, 225, 0.8);
+  border-radius: 6px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  color: #64748b;
+  padding: 0;
+  margin-left: 0.25rem;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+}
+
+.queueRefreshButton:hover:not(:disabled) {
+  color: #475569;
+  background: rgba(255, 255, 255, 0.95);
+  border-color: rgba(148, 163, 184, 0.6);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  transform: translateY(-1px);
+}
+
+.queueRefreshButton:active:not(:disabled) {
+  color: #334155;
+  background: rgba(241, 245, 249, 0.9);
+  transform: translateY(0);
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+}
+
+.queueRefreshButton:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+  background: rgba(248, 250, 252, 0.8);
+}
+
+.refreshSpinner {
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* 스켈레톤 UI 스타일 */
+.queueBadgeSkeleton {
+  background: rgba(156, 163, 175, 0.1);
+  border-color: rgba(156, 163, 175, 0.2);
+  color: transparent;
+  animation: skeletonPulse 2s infinite;
+}
+
+.skeletonText {
+  width: 100%;
+  height: 14px;
+  background: linear-gradient(
+    90deg,
+    rgba(156, 163, 175, 0.2) 25%,
+    rgba(156, 163, 175, 0.4) 50%,
+    rgba(156, 163, 175, 0.2) 75%
+  );
+  background-size: 200% 100%;
+  border-radius: 2px;
+  animation: skeletonWave 1.5s infinite;
+}
+
+@keyframes skeletonWave {
+  0% {
+    background-position: 200% 0;
+  }
+  100% {
+    background-position: -200% 0;
+  }
+}
+
+@keyframes skeletonPulse {
+  0%,
+  100% {
+    opacity: 0.7;
+  }
+  50% {
+    opacity: 0.4;
+  }
+}
+
+/* 커스텀 툴팁 스타일 */
+.customTooltip {
+  position: fixed;
+  background-color: rgba(0, 0, 0, 0.9);
+  color: white;
+  font-size: 0.75rem;
+  font-weight: 500;
+  padding: 0.5rem 0.75rem;
+  border-radius: 6px;
+  white-space: nowrap;
+  z-index: 9999;
+  pointer-events: none;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  max-width: min(300px, 80vw); /* Header 툴팁은 조금 더 작게 */
+}
+
+.tooltipTop {
+  /* 위쪽 배치 시 기본 스타일 */
+}
+
+.tooltipBottom {
+  /* 아래쪽 배치 시 기본 스타일 */
+}
+
+.tooltipArrow {
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+  border-width: 6px;
+  border-style: solid;
+}
+
+.arrowBottom {
+  /* 화살표가 아래쪽을 향함 (툴팁이 위에 있을 때) */
+  top: 100%;
+  border-color: rgba(0, 0, 0, 0.9) transparent transparent transparent;
+  filter: drop-shadow(0 2px 2px rgba(0, 0, 0, 0.15));
+  z-index: 1; /* 툴팁 내용 위에 */
+}
+
+.arrowTop {
+  /* 화살표가 위쪽을 향함 (툴팁이 아래에 있을 때) */
+  bottom: 100%;
+  border-color: transparent transparent rgba(0, 0, 0, 0.9) transparent;
+  filter: drop-shadow(0 -2px 2px rgba(0, 0, 0, 0.15));
+  z-index: 1; /* 툴팁 내용 위에 */
+}

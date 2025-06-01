@@ -6,6 +6,7 @@ import {
   toggleFavorite,
   updateHistoryName,
 } from "../actions";
+import Badge from "@/components/ui/Badge";
 
 // 히스토리 항목의 타입 정의
 type HistoryItem = Awaited<
@@ -55,6 +56,12 @@ const HistorySidebar: React.FC<HistorySidebarProps> = ({
       hour: "2-digit",
       minute: "2-digit",
     });
+  };
+
+  const getHistoryDateColor = (item: HistoryItem) => {
+    if (item.status === "ERROR") return "#ef4444cb";
+    if (item.status === "PENDING") return "#6365f1bf";
+    return "";
   };
 
   // 히스토리 항목 클릭 시 해당 히스토리로 이동하는 핸들러
@@ -258,8 +265,12 @@ const HistorySidebar: React.FC<HistorySidebarProps> = ({
                   )}
                 </div>
                 <div className={styles.historyItemFooter}>
-                  <span className={styles.historyDate}>
-                    {getHistoryDate(item)}
+                  <span
+                    className={styles.historyDate}
+                    style={{ color: getHistoryDateColor(item) }}
+                  >
+                    {getHistoryDate(item)}{" "}
+                    {item.withPro && <Badge variant="pro">Pro</Badge>}
                   </span>
                   <button
                     className={`${styles.starButton} ${item.historyFavorite ? styles.active : ""} ${loadingStates[item.id] ? styles.loading : ""}`}

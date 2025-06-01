@@ -44,9 +44,16 @@
 
 .tooltipContainer {
   position: fixed;
-  transform: translateX(-50%);
   z-index: 9999;
   pointer-events: none;
+}
+
+.tooltipTop {
+  /* 위쪽 배치 시 기본 스타일 */
+}
+
+.tooltipBottom {
+  /* 아래쪽 배치 시 기본 스타일 */
 }
 
 .tooltipContent {
@@ -60,7 +67,8 @@
   white-space: normal;
   text-align: left;
   position: relative;
-  max-width: 300px;
+  max-width: min(400px, 90vw);
+  min-width: 250px;
   line-height: 1.5;
   word-spacing: normal;
 }
@@ -84,13 +92,26 @@
 
 .tooltipArrow {
   position: absolute;
-  top: 100%;
   left: 50%;
   transform: translateX(-50%);
   border-width: 8px;
   border-style: solid;
+}
+
+.arrowBottom {
+  /* 화살표가 아래쪽을 향함 (툴팁이 위에 있을 때) */
+  top: 100%;
   border-color: white transparent transparent transparent;
   filter: drop-shadow(0 2px 2px rgba(0, 0, 0, 0.1));
+  z-index: 1; /* 툴팁 내용 위에 */
+}
+
+.arrowTop {
+  /* 화살표가 위쪽을 향함 (툴팁이 아래에 있을 때) */
+  bottom: 100%;
+  border-color: transparent transparent white transparent;
+  filter: drop-shadow(0 -2px 2px rgba(0, 0, 0, 0.1));
+  z-index: 1; /* 툴팁 내용 위에 */
 }
 
 .normalText {

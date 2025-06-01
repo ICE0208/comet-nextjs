@@ -9,6 +9,7 @@ import useCheckTextStore from "@/store/checkTextStore";
 import useChangedTextStore from "@/store/changedTextStore";
 import CorrectedText from "./CorrectedText";
 import { FiCheckCircle } from "react-icons/fi";
+import Badge from "@/components/ui/Badge";
 
 type WorkspaceHistory = Awaited<
   ReturnType<typeof getWorkspaceById>
@@ -323,7 +324,10 @@ const PromptOutput = ({
     return (
       <div className={styles.promptContent}>
         <div className={styles.promptTitleContainer}>
-          <h3 className={styles.promptTitle}>교정된 문장</h3>
+          <div className={styles.titleWithBadge}>
+            <h3 className={styles.promptTitle}>교정된 문장</h3>
+            {selectedHistory?.withPro && <Badge variant="pro">Pro</Badge>}
+          </div>
           <p className={styles.promptSubtitle}>
             {loadingState === "processing" && "응답 받아오는 중..."}
           </p>

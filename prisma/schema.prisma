@@ -128,12 +128,14 @@ enum MessageStatus {
 }
 
 model WorkspaceHistory {
-  id              String           @id @default(uuid()) @db.Uuid
-  historyName     String?
-  workspaceId     String           @db.Uuid
-  userRequest     String           @db.Text
-  status          MessageStatus    @default(COMPLETED)
-  createdAt       DateTime         @default(now())
+  id          String        @id @default(uuid()) @db.Uuid
+  historyName String?
+  workspaceId String        @db.Uuid
+  userRequest String        @db.Text
+  status      MessageStatus @default(COMPLETED)
+  createdAt   DateTime      @default(now())
+  withPro     Boolean       @default(false)
+
   aiResponse      AIResponse?
   historyFavorite HistoryFavorite?
 

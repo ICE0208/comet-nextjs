@@ -2,6 +2,7 @@ import React, { useState, useRef } from "react";
 import styles from "./CorrectedText.module.css";
 import { Segment } from "@/utils/ai";
 import useCheckTextStore from "@/store/checkTextStore";
+import { useAdaptiveTooltip } from "@/hooks/useAdaptiveTooltip";
 
 interface CorrectedTextProps {
   segment: Segment & { order: number };
@@ -16,9 +17,12 @@ const CorrectedText = ({
   ignoreChangedTexts,
 }: CorrectedTextProps) => {
   const [showTooltip, setShowTooltip] = useState(false);
-  const [tooltipPosition, setTooltipPosition] = useState({ top: 0, left: 0 });
   const textRef = useRef<HTMLSpanElement>(null);
   const tooltipRef = useRef<HTMLDivElement>(null);
+  const { tooltipPosition, handleMouseEnter } = useAdaptiveTooltip({
+    offset: 15,
+  });
+
   const setTargetText = useCheckTextStore(
     (state) => state.actions.setTargetText
   );
@@ -28,19 +32,13 @@ const CorrectedText = ({
     return <span className={styles.normalText}>{segment.text}</span>;
   }
 
-  const handleMouseEnter = () => {
+  const handleMouseEnterText = (event: React.MouseEvent<HTMLSpanElement>) => {
     const originalText = segment.correction?.before;
     if (!originalText) return;
 
     setTargetText(originalText);
     setTextOrder(segment.order);
-    if (textRef.current) {
-      const rect = textRef.current.getBoundingClientRect();
-      setTooltipPosition({
-        top: rect.top,
-        left: rect.left + rect.width / 2,
-      });
-    }
+    handleMouseEnter(event);
     setShowTooltip(true);
   };
 
@@ -62,6 +60,16 @@ const CorrectedText = ({
     });
   };
 
+  const tooltipStyle = {
+    position: "fixed" as const,
+    left: tooltipPosition.left,
+    transform: tooltipPosition.transform,
+    zIndex: 9999,
+    ...(tooltipPosition.placement === "top"
+      ? { bottom: tooltipPosition.bottom }
+      : { top: tooltipPosition.top }),
+  };
+
   return (
     <div
       className={`${styles.correctionContainer} ${
@@ -77,7 +85,7 @@ const CorrectedText = ({
             ? styles.ignoreChangedText
             : ""
         }`}
-        onMouseEnter={handleMouseEnter}
+        onMouseEnter={handleMouseEnterText}
         onMouseLeave={() => {
           setShowTooltip(false);
           setTargetText("");
@@ -93,11 +101,12 @@ const CorrectedText = ({
           ) && (
             <div
               ref={tooltipRef}
-              className={styles.tooltipContainer}
-              style={{
-                left: tooltipPosition.left,
-                bottom: `calc(100vh - ${tooltipPosition.top}px + 15px)`,
-              }}
+              className={`${styles.tooltipContainer} ${
+                tooltipPosition.placement === "bottom"
+                  ? styles.tooltipBottom
+                  : styles.tooltipTop
+              }`}
+              style={tooltipStyle}
             >
               <div className={styles.tooltipContent}>
                 <div className={styles.tooltipItem}>
@@ -108,7 +117,13 @@ const CorrectedText = ({
                   <strong>이유:</strong>
                   <span>{segment.correction.reason}</span>
                 </div>
-                <div className={styles.tooltipArrow} />
+                <div
+                  className={`${styles.tooltipArrow} ${
+                    tooltipPosition.placement === "bottom"
+                      ? styles.arrowTop
+                      : styles.arrowBottom
+                  }`}
+                />
               </div>
             </div>
           )}

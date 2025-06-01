@@ -7,11 +7,10 @@ import PromptOutput from "./components/PromptOutput";
 import Header from "./components/Header";
 import Footer from "./components/Footer";
 import HistorySidebar from "./components/HistorySidebar";
-import { WorkspaceWithHistory } from "./types";
+import { QueueStatusAll, WorkspaceWithHistory } from "./types";
 import { usePromptStore } from "@/store/promptStore";
 import { AIResponse } from "@prisma/client";
 import { useRouter } from "next/navigation";
-import { QueueStatus } from "./types";
 /**
  * ClientWorkspacePage 컴포넌트
  * 워크스페이스의 메인 클라이언트 컴포넌트
@@ -20,7 +19,7 @@ import { QueueStatus } from "./types";
  */
 interface ClientWorkspacePageProps {
   workspace: WorkspaceWithHistory;
-  queueStatus: QueueStatus;
+  queueStatus: QueueStatusAll;
 }
 
 const ClientWorkspacePage = ({
