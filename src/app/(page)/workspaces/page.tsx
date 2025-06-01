@@ -235,6 +235,9 @@ export default function PromptListPage() {
 
   // 도움말 보기 버튼 클릭
   const handleShowTutorial = async () => {
+    if (view === "list") {
+      setView("grid");
+    }
     await resetUserTutorialStatus();
     queryClient.invalidateQueries({ queryKey: ["user"] });
     setShowTutorial(true);
