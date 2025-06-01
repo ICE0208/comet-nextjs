@@ -321,6 +321,8 @@ export default function PromptListPage() {
 
   return (
     <>
+      {/* 배경 오버레이 */}
+      <div className={styles.backgroundOverlay} />
       <div className={styles.container}>
         <div className={styles.titleContainer}>
           <div className={styles.title}>나의 작업 공간</div>
