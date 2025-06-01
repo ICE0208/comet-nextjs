@@ -13,6 +13,7 @@ export async function getWorkspaceList() {
   const workspaceList = await prisma.workspace.findMany({
     where: {
       userId: currentUser.id,
+      isDeleted: false,
     },
     select: {
       id: true,
@@ -141,8 +142,11 @@ export async function deleteWorkspace(id: string) {
     }
 
     // 사용자 검증이 완료되면 삭제 진행
-    await prisma.workspace.delete({
+    await prisma.workspace.update({
       where: { id },
+      data: {
+        isDeleted: true,
+      },
     });
 
     return { success: true };

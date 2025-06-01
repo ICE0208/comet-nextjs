@@ -344,7 +344,7 @@ export default function ProfilePage() {
             className={styles.viewUsageBtn}
             onClick={() => setCurrentView("usage")}
           >
-            사용량 보기
+            사용내역 보기
           </button>
         </div>
       </div>

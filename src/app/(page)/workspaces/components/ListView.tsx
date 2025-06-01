@@ -8,6 +8,7 @@ interface ListViewProps {
   optionOpenId: string | null;
   setOptionOpenId: (id: string | null) => void;
   handleCardClick: (id: string) => void;
+  handleCardHover: (id: string) => void;
   handleRename: (id: string, e: React.MouseEvent) => void;
   handleDelete: (id: string, e: React.MouseEvent) => void;
 }
@@ -17,6 +18,7 @@ export default function ListView({
   optionOpenId,
   setOptionOpenId,
   handleCardClick,
+  handleCardHover,
   handleRename,
   handleDelete,
 }: ListViewProps) {
@@ -27,6 +29,7 @@ export default function ListView({
           className={styles.listItem}
           key={chat.id}
           onClick={() => handleCardClick(chat.id)}
+          onMouseEnter={() => handleCardHover(chat.id)}
         >
           <div className={styles.itemContent}>
             <div className={styles.itemTitle}>{chat.title}</div>

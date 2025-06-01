@@ -235,11 +235,6 @@ export const getTokenStats = async () => {
     });
   }
 
-  console.log(
-    "Daily usage data (real only):",
-    dailyUsage.filter((d) => d.tokens > 0)
-  );
-
   // 5. 주요 통계 (Your Analytics)
   const analytics = {
     linesOfAgentEdits: totalCorrections,

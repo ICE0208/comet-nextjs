@@ -7,6 +7,7 @@ import GridView from "./components/GridView";
 import ListView from "./components/ListView";
 import TopBar from "./components/TopBar";
 import WorkspaceModal from "./components/WorkspaceModal";
+import SkeletonLoader from "./components/SkeletonLoader";
 import TutorialModal from "../../../components/portals/TutorialModal";
 import {
   getWorkspaceList,
@@ -72,6 +73,14 @@ export default function PromptListPage() {
       return response.json();
     },
   });
+
+  // 페이지 로드 시 스크롤 초기화
+  useEffect(() => {
+    document.scrollingElement?.scrollTo({
+      top: 0,
+      behavior: "smooth",
+    });
+  }, []);
 
   // 사용자가 튜토리얼을 보지 않았다면 튜토리얼 표시
   useEffect(() => {
@@ -233,6 +242,11 @@ export default function PromptListPage() {
     router.push(`/workspaces/${id}`);
   };
 
+  // 항목 호버 - prefetch 실행
+  const handleCardHover = (id: string) => {
+    router.prefetch(`/workspaces/${id}`);
+  };
+
   // 도움말 보기 버튼 클릭
   const handleShowTutorial = async () => {
     if (view === "list") {
@@ -252,6 +266,7 @@ export default function PromptListPage() {
       optionOpenId,
       setOptionOpenId,
       handleCardClick,
+      handleCardHover,
       handleRename: handleRenameClick,
       handleDelete,
     };
@@ -267,13 +282,7 @@ export default function PromptListPage() {
   const renderPageContent = () => {
     // 로딩 중일 때
     if (isLoadingWorkspaces) {
-      return (
-        <div className={styles.emptyStateContainer}>
-          <div className={styles.emptyState}>
-            <p className={styles.loadingText}>작업을 불러오는 중입니다...</p>
-          </div>
-        </div>
-      );
+      return <SkeletonLoader view={view} />;
     }
 
     if (showTutorial && works.length === 0) {
@@ -291,6 +300,7 @@ export default function PromptListPage() {
           optionOpenId={null}
           setOptionOpenId={() => {}}
           handleCardClick={() => {}}
+          handleCardHover={() => {}}
           handleRename={() => {}}
           handleDelete={() => {}}
         />
