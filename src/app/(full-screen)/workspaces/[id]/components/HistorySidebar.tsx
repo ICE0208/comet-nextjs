@@ -57,6 +57,12 @@ const HistorySidebar: React.FC<HistorySidebarProps> = ({
     });
   };
 
+  const getHistoryDateColor = (item: HistoryItem) => {
+    if (item.status === "ERROR") return "#ef4444cb";
+    if (item.status === "PENDING") return "#6365f1bf";
+    return "";
+  };
+
   // 히스토리 항목 클릭 시 해당 히스토리로 이동하는 핸들러
   const handleHistoryItemClick = (historyId: string) => {
     if (!historyId) return;
@@ -258,7 +264,10 @@ const HistorySidebar: React.FC<HistorySidebarProps> = ({
                   )}
                 </div>
                 <div className={styles.historyItemFooter}>
-                  <span className={styles.historyDate}>
+                  <span
+                    className={styles.historyDate}
+                    style={{ color: getHistoryDateColor(item) }}
+                  >
                     {getHistoryDate(item)}
                   </span>
                   <button
