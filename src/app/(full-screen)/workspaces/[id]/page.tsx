@@ -1,4 +1,8 @@
-import { getQueueStatusAll, getWorkspaceById } from "./actions";
+import {
+  getIsCorrectionTutorial,
+  getQueueStatusAll,
+  getWorkspaceById,
+} from "./actions";
 import { WorkspacePageProps } from "./types";
 import ClientWorkspacePage from "./client-page";
 
@@ -10,17 +14,24 @@ export default async function WorkspaceContent({ params }: WorkspacePageProps) {
   // 워크스페이스 데이터 조회
   const workspacePromise = getWorkspaceById((await params).id);
   const queueStatusPromise = getQueueStatusAll();
+  const isCorrectionTutorialPromise = getIsCorrectionTutorial();
   const minLoadingTimePromise = new Promise((resolve) =>
     setTimeout(resolve, 500)
   );
 
-  const [workspace, queueStatus] = await Promise.allSettled([
-    workspacePromise,
-    queueStatusPromise,
-    minLoadingTimePromise,
-  ]);
+  const [workspace, queueStatus, isCorrectionTutorial] =
+    await Promise.allSettled([
+      workspacePromise,
+      queueStatusPromise,
+      isCorrectionTutorialPromise,
+      minLoadingTimePromise,
+    ]);
 
-  if (workspace.status === "rejected" || queueStatus.status === "rejected") {
+  if (
+    workspace.status === "rejected" ||
+    queueStatus.status === "rejected" ||
+    isCorrectionTutorial.status === "rejected"
+  ) {
     return <div>Error</div>;
   }
 
@@ -28,6 +39,7 @@ export default async function WorkspaceContent({ params }: WorkspacePageProps) {
     <ClientWorkspacePage
       workspace={workspace.value}
       queueStatus={queueStatus.value}
+      isCorrectionTutorial={isCorrectionTutorial.value}
     />
   );
 }

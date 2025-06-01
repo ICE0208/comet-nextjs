@@ -22,11 +22,13 @@ import { useRouter } from "next/navigation";
 interface ClientWorkspacePageProps {
   workspace: WorkspaceWithHistory;
   queueStatus: QueueStatusAll;
+  isCorrectionTutorial: boolean;
 }
 
 const ClientWorkspacePage = ({
   workspace,
   queueStatus,
+  isCorrectionTutorial,
 }: ClientWorkspacePageProps) => {
   const [isHistorySidebarOpen, setIsHistorySidebarOpen] = useState(false);
   const [selectedHistoryId, setSelectedHistoryId] = useState(
@@ -58,6 +60,12 @@ const ClientWorkspacePage = ({
   );
   const router = useRouter();
   const promptInputRef = useRef<PromptInputHandle>(null);
+
+  useEffect(() => {
+    if (!isCorrectionTutorial) {
+      openTutorial(1);
+    }
+  }, [isCorrectionTutorial, openTutorial]);
 
   useEffect(() => {
     let eventSource: EventSource | null = null;
