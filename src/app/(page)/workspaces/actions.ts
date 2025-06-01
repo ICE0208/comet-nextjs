@@ -7,7 +7,7 @@ import { redirect } from "next/navigation";
 export async function getWorkspaceList() {
   const currentUser = await getCurrentUser();
   if (!currentUser) {
-    redirect("/");
+    redirect("/auth/login");
   }
 
   const workspaceList = await prisma.workspace.findMany({
