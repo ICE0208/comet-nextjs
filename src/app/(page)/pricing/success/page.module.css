@@ -68,7 +68,7 @@
   content: "✓";
   position: absolute;
   left: 0;
-  color: #38b2ac;
+  color: #4f46e5;
   font-weight: bold;
 }
 
@@ -79,7 +79,7 @@
 }
 
 .button {
-  background-color: #38b2ac;
+  background: linear-gradient(to right, #6a43d1, #9474e6);
   color: white;
   border: none;
   border-radius: 8px;
@@ -91,7 +91,8 @@
 }
 
 .button:hover {
-  background-color: #319795;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 15px rgba(106, 67, 209, 0.4);
 }
 
 @keyframes fadeIn {
