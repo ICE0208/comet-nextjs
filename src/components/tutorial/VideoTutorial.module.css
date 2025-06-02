@@ -1,0 +1,433 @@
+/* 모달 오버레이 */
+.overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.6);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 9999;
+  backdrop-filter: blur(4px);
+  animation: fadeIn 0.3s ease-out;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    backdrop-filter: blur(0px);
+  }
+  to {
+    opacity: 1;
+    backdrop-filter: blur(4px);
+  }
+}
+
+/* 메인 튜토리얼 컨테이너 */
+.container {
+  background: #ffffff;
+  border-radius: 12px;
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15);
+  width: 720px;
+  height: 720px;
+  overflow: hidden;
+  animation: slideUp 0.3s ease-out;
+  position: relative;
+  border: 1px solid rgba(0, 0, 0, 0.1);
+  display: flex;
+  flex-direction: column;
+}
+
+@keyframes slideUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* 헤더 */
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 16px 20px;
+  border-bottom: 1px solid #e5e7eb;
+  background: #f9fafb;
+  flex-shrink: 0;
+}
+
+.title {
+  font-size: 18px;
+  font-weight: 600;
+  color: #111827;
+  margin: 0;
+}
+
+.closeButton {
+  background: #ffffff;
+  border: 1px solid #d1d5db;
+  width: 32px;
+  height: 32px;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  color: #6b7280;
+  transition: all 0.2s ease;
+}
+
+.closeButton:hover {
+  background: #f3f4f6;
+  color: #374151;
+}
+
+.closeButton svg {
+  width: 16px;
+  height: 16px;
+}
+
+/* 진행 표시바 */
+.progressBar {
+  height: 3px;
+  background: #e5e7eb;
+  position: relative;
+  flex-shrink: 0;
+}
+
+.progressFill {
+  height: 100%;
+  background: #6b7280;
+  transition: width 0.4s ease;
+}
+
+.progressFill::after {
+  display: none;
+}
+
+/* 비디오 컨테이너 */
+.videoContainer {
+  position: relative;
+  height: 380px;
+  background: #ffffff;
+  overflow: hidden;
+  flex-shrink: 0;
+}
+
+.video {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: opacity 0.3s ease-in-out;
+  opacity: 1;
+}
+
+.video.loading {
+  opacity: 0;
+}
+
+.video::-webkit-media-controls {
+  display: none !important;
+}
+
+.video::-webkit-media-controls-panel {
+  display: none !important;
+}
+
+.video::-webkit-media-controls-play-button {
+  display: none !important;
+}
+
+.video::-webkit-media-controls-volume-slider {
+  display: none !important;
+}
+
+.video::-webkit-media-controls-mute-button {
+  display: none !important;
+}
+
+.video::-webkit-media-controls-timeline {
+  display: none !important;
+}
+
+.video::-webkit-media-controls-current-time-display {
+  display: none !important;
+}
+
+.video::-webkit-media-controls-time-remaining-display {
+  display: none !important;
+}
+
+.videoOverlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  background: rgba(0, 0, 0, 0.1);
+  opacity: 0;
+  transition: opacity 0.2s ease;
+}
+
+.videoOverlay:hover {
+  opacity: 1;
+}
+
+.playButton {
+  background: rgba(0, 0, 0, 0.7);
+  border-radius: 50%;
+  width: 80px;
+  height: 80px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s ease;
+}
+
+.playButton:hover {
+  background: rgba(0, 0, 0, 0.8);
+  transform: scale(1.1);
+}
+
+/* 컨텐츠 영역 */
+.content {
+  padding: 16px 20px 20px;
+  background: #ffffff;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+.stepTitle {
+  font-size: 16px;
+  font-weight: 600;
+  color: #111827;
+  margin: 0 0 8px 0;
+  line-height: 1.4;
+}
+
+.stepDescription {
+  font-size: 14px;
+  color: #6b7280;
+  line-height: 1.5;
+  margin: 0 0 4px 0;
+  white-space: pre-wrap;
+  height: 90px;
+  overflow: hidden;
+  flex-shrink: 0;
+}
+
+.stepInfo {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 12px;
+  flex-shrink: 0;
+}
+
+.stepNumber {
+  background: #6b7280;
+  color: white;
+  font-size: 12px;
+  font-weight: 600;
+  padding: 4px 8px;
+  border-radius: 6px;
+  min-width: fit-content;
+}
+
+.duration {
+  font-size: 12px;
+  color: #6b7280;
+  background: #f3f4f6;
+  border: 1px solid #e5e7eb;
+  padding: 4px 8px;
+  border-radius: 6px;
+  font-weight: 500;
+}
+
+/* 네비게이션 버튼 */
+.navigation {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 12px;
+  flex-shrink: 0;
+  margin-top: auto;
+}
+
+.navButton {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 10px 16px;
+  border: none;
+  border-radius: 8px;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  min-height: 40px;
+  flex: 1;
+}
+
+.navButton:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.prevButton {
+  background: #f3f4f6;
+  color: #6b7280;
+  border: 1px solid #e5e7eb;
+}
+
+.prevButton:hover:not(:disabled) {
+  background: #e5e7eb;
+  color: #374151;
+}
+
+.nextButton {
+  background: #374151;
+  color: white;
+  border: 1px solid #374151;
+}
+
+.nextButton:hover:not(:disabled) {
+  background: #1f2937;
+}
+
+.skipButton {
+  background: none;
+  color: #6b7280;
+  border: none;
+  font-size: 13px;
+  padding: 8px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  font-weight: 500;
+  border-radius: 6px;
+}
+
+.skipButton:hover {
+  color: #374151;
+  background: #f3f4f6;
+}
+
+/* 반응형 디자인 */
+@media (max-width: 640px) {
+  .container {
+    width: 95vw;
+    height: 90vh;
+    margin: 20px;
+    border-radius: 10px;
+  }
+
+  .header {
+    padding: 14px 16px;
+  }
+
+  .title {
+    font-size: 16px;
+  }
+
+  .content {
+    padding: 14px 16px 16px;
+  }
+
+  .stepTitle {
+    font-size: 15px;
+  }
+
+  .navigation {
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  .navButton {
+    width: 100%;
+    justify-content: center;
+    padding: 12px 16px;
+  }
+
+  .videoContainer {
+    height: 240px;
+  }
+
+  .stepDescription {
+    height: 50px;
+  }
+}
+
+/* 로딩 상태 */
+.loading {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 200px;
+  color: #6b7280;
+  flex-direction: column;
+  gap: 12px;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  transition: opacity 0.3s ease-in-out;
+  opacity: 1;
+}
+
+.loading.hidden {
+  opacity: 0;
+  pointer-events: none;
+}
+
+.loadingSpinner {
+  width: 24px;
+  height: 24px;
+  border: 2px solid #e5e7eb;
+  border-top: 2px solid #6b7280;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.loading span {
+  font-weight: 500;
+  font-size: 14px;
+}
+
+/* 비디오 프로그레스바 */
+.videoProgressContainer {
+  margin-bottom: 16px;
+  flex-shrink: 0;
+}
+
+.videoProgressBar {
+  width: 100%;
+  height: 4px;
+  background: #e5e7eb;
+  border-radius: 2px;
+  overflow: hidden;
+}
+
+.videoProgressFill {
+  height: 100%;
+  background: #6b7280;
+  border-radius: 2px;
+}

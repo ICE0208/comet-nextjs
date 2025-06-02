@@ -6,6 +6,43 @@ import prisma from "@/lib/prisma";
 import { revalidatePath } from "next/cache";
 import { QueueStatus } from "./types";
 
+export async function updateIsCorrectionTutorial(
+  isCorrectionTutorial: boolean
+) {
+  const currentUser = await getCurrentUser();
+  if (!currentUser) {
+    redirect("/");
+  }
+
+  await prisma.user.update({
+    where: {
+      id: currentUser.id,
+    },
+    data: {
+      isCorrectionTutorial,
+    },
+  });
+
+  return {
+    success: true,
+  };
+}
+
+export async function getIsCorrectionTutorial() {
+  const currentUser = await getCurrentUser();
+  if (!currentUser) {
+    redirect("/");
+  }
+
+  const isCorrectionTutorial = await prisma.user.findUnique({
+    where: {
+      id: currentUser.id,
+    },
+  });
+
+  return isCorrectionTutorial?.isCorrectionTutorial || false;
+}
+
 export async function getQueueStatusAll() {
   const currentUser = await getCurrentUser();
   if (!currentUser) {

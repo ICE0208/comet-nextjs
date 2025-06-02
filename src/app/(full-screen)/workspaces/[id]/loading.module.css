@@ -1,0 +1,320 @@
+/* 기본 스켈레톤 애니메이션 */
+@keyframes shimmer {
+  0% {
+    background-position: -200px 0;
+  }
+  100% {
+    background-position: calc(200px + 100%) 0;
+  }
+}
+
+.skeleton {
+  background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 37%, #f0f0f0 63%);
+  background-size: 400px 100%;
+  animation: shimmer 1.5s ease-in-out infinite;
+  border-radius: 6px;
+}
+
+/* 컨테이너 - 실제 페이지와 동일 */
+.container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  height: 100vh;
+  gap: 0.5rem;
+  padding: 6px 40px;
+  overflow: hidden;
+  background-color: #f8fafc;
+}
+
+/* 헤더 바 스켈레톤 - 실제 Header.module.css와 동일 */
+.headerBar {
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0.75rem 0;
+  margin-top: 4px;
+}
+
+.headerLeft,
+.headerRight {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.backLinkSkeleton {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.backIconSkeleton {
+  width: 20px;
+  height: 20px;
+  border-radius: 4px;
+  composes: skeleton;
+}
+
+.backTextSkeleton {
+  width: 80px;
+  height: 16px;
+  border-radius: 4px;
+  composes: skeleton;
+}
+
+/* 큐 뱃지 컨테이너 - 실제 스타일과 동일 */
+.queueBadgesContainer {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.25rem 0.5rem;
+  border-radius: 8px;
+  background: rgba(248, 250, 252, 0.8);
+  border: 1px solid rgba(226, 232, 240, 0.6);
+  backdrop-filter: blur(8px);
+}
+
+.queueLabelSkeleton {
+  width: 50px;
+  height: 12px;
+  border-radius: 4px;
+  margin-right: 0.25rem;
+  composes: skeleton;
+}
+
+.queueBadgeSkeleton {
+  width: 75px;
+  height: 26px;
+  border-radius: 6px;
+  composes: skeleton;
+}
+
+.refreshButtonSkeleton {
+  width: 24px;
+  height: 24px;
+  border-radius: 6px;
+  margin-left: 0.25rem;
+  composes: skeleton;
+}
+
+.iconButtonSkeleton {
+  width: 40px;
+  height: 40px;
+  border-radius: 6px;
+  composes: skeleton;
+}
+
+/* 제목 스켈레톤 - 실제 page.module.css와 동일 */
+.header {
+  position: relative;
+  width: 100%;
+  margin-top: 0;
+  overflow: visible;
+  display: flex;
+}
+
+.titleSkeleton {
+  font-size: 1.6rem;
+  font-weight: 500;
+  width: 250px;
+  height: 1.6rem;
+  margin-bottom: 0.5rem;
+  border-radius: 6px;
+  composes: skeleton;
+}
+
+/* 메인 입출력 영역 스켈레톤 - 실제와 동일 */
+.ioComponents {
+  display: flex;
+  flex-direction: row;
+  gap: 1.5rem;
+  width: 100%;
+  max-width: 100%;
+  flex: 1;
+  margin-bottom: 10px;
+  min-height: 0;
+}
+
+.inputContainer,
+.outputContainer {
+  flex: 1;
+  min-width: 0;
+  height: 100%;
+  background-color: white;
+  padding: 1rem;
+  border-radius: 16px;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.04);
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+/* 입력 컴포넌트 스켈레톤 - 실제 PromptInput.module.css와 동일 */
+.inputTitleContainer {
+  display: flex;
+  align-items: flex-end;
+  border-bottom: 1px solid #eaeaea;
+  gap: 0.5rem;
+  padding: 0.5rem 0.8rem;
+  margin-bottom: 0;
+}
+
+.inputTitleSkeleton {
+  width: 80px;
+  height: 18px;
+  border-radius: 4px;
+  composes: skeleton;
+}
+
+.textareaWrapperSkeleton {
+  position: relative;
+  width: 100%;
+  flex: 1;
+  overflow: hidden;
+  display: flex;
+}
+
+.textareaSkeleton {
+  width: 100%;
+  height: 100%;
+  min-height: 200px;
+  border: 1px solid #e4e9f0;
+  border-radius: 12px;
+  background-color: #fdfdfd;
+  composes: skeleton;
+}
+
+.bottomContainer {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+  align-items: center;
+  margin-top: auto;
+  padding: 0.8rem;
+  border-top: 1px dashed #eaeaea;
+  gap: 1rem;
+}
+
+.buttonContainer {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 1rem;
+}
+
+.submitButtonSkeleton {
+  width: 100px;
+  height: 36px;
+  border-radius: 6px;
+  composes: skeleton;
+}
+
+/* 출력 컴포넌트 스켈레톤 */
+.outputTitleContainer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0.5rem 0.8rem;
+  border-bottom: 1px solid #eaeaea;
+}
+
+.outputTitleSkeleton {
+  width: 100px;
+  height: 18px;
+  border-radius: 4px;
+  composes: skeleton;
+}
+
+.outputButtonsSkeleton {
+  display: flex;
+  gap: 8px;
+}
+
+.outputButtonSkeleton {
+  width: 32px;
+  height: 32px;
+  border-radius: 6px;
+  composes: skeleton;
+}
+
+.outputContentSkeleton {
+  flex: 1;
+  padding: 1rem;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.outputTextLineSkeleton {
+  height: 16px;
+  border-radius: 4px;
+  composes: skeleton;
+}
+
+.shortLine {
+  width: 60%;
+}
+
+/* 푸터 스켈레톤 - 실제 Footer와 동일 */
+.footer {
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0.75rem 0;
+  margin-top: auto;
+  margin-bottom: 4px;
+}
+
+.footerLeft,
+.footerCenter {
+  display: flex;
+  align-items: center;
+}
+
+.copyrightSkeleton {
+  width: 120px;
+  height: 14px;
+  border-radius: 4px;
+  composes: skeleton;
+}
+
+.lastEditSkeleton {
+  width: 150px;
+  height: 14px;
+  border-radius: 4px;
+  composes: skeleton;
+}
+
+/* 반응형 디자인 */
+@media (max-width: 768px) {
+  .container {
+    padding: 6px 20px;
+  }
+
+  .ioComponents {
+    flex-direction: column;
+    gap: 1rem;
+  }
+
+  .queueBadgesContainer {
+    display: none;
+  }
+}
+
+@media (max-width: 480px) {
+  .container {
+    padding: 6px 16px;
+  }
+
+  .titleSkeleton {
+    width: 200px;
+    height: 20px;
+  }
+
+  .textareaSkeleton {
+    min-height: 150px;
+  }
+}

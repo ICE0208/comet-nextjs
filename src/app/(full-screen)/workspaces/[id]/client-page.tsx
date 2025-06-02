@@ -7,10 +7,13 @@ import PromptOutput from "./components/PromptOutput";
 import Header from "./components/Header";
 import Footer from "./components/Footer";
 import HistorySidebar from "./components/HistorySidebar";
+import VideoTutorial from "@/components/tutorial/VideoTutorial";
 import { QueueStatusAll, WorkspaceWithHistory } from "./types";
 import { usePromptStore } from "@/store/promptStore";
+import { useTutorial } from "@/hooks/useTutorial";
 import { AIResponse } from "@prisma/client";
 import { useRouter } from "next/navigation";
+import { updateIsCorrectionTutorial } from "./actions";
 /**
  * ClientWorkspacePage 컴포넌트
  * 워크스페이스의 메인 클라이언트 컴포넌트
@@ -20,18 +23,26 @@ import { useRouter } from "next/navigation";
 interface ClientWorkspacePageProps {
   workspace: WorkspaceWithHistory;
   queueStatus: QueueStatusAll;
+  isCorrectionTutorial: boolean;
 }
 
 const ClientWorkspacePage = ({
   workspace,
   queueStatus,
+  isCorrectionTutorial,
 }: ClientWorkspacePageProps) => {
   const [isHistorySidebarOpen, setIsHistorySidebarOpen] = useState(false);
   const [selectedHistoryId, setSelectedHistoryId] = useState(
     workspace.history.length > 0 ? workspace.history[0].id : null
   );
 
-  console.log(queueStatus);
+  // 튜토리얼 상태 관리
+  const {
+    isOpen: isTutorialOpen,
+    startStep,
+    openTutorial,
+    closeTutorial,
+  } = useTutorial();
 
   // 최근 히스토리에서 입력 텍스트와 AI 응답 추출
   const selectedHistory =
@@ -50,6 +61,13 @@ const ClientWorkspacePage = ({
   );
   const router = useRouter();
   const promptInputRef = useRef<PromptInputHandle>(null);
+
+  useEffect(() => {
+    if (!isCorrectionTutorial) {
+      openTutorial(1);
+      updateIsCorrectionTutorial(true);
+    }
+  }, [isCorrectionTutorial, openTutorial]);
 
   useEffect(() => {
     let eventSource: EventSource | null = null;
@@ -126,6 +144,7 @@ const ClientWorkspacePage = ({
     <div className={styles.container}>
       <Header
         onToggleHistory={toggleHistorySidebar}
+        onHelpClick={() => openTutorial(1)}
         queueStatus={queueStatus}
       />
 
@@ -166,6 +185,13 @@ const ClientWorkspacePage = ({
           onClick={() => setIsHistorySidebarOpen(false)}
         />
       )}
+
+      {/* 비디오 튜토리얼 */}
+      <VideoTutorial
+        isOpen={isTutorialOpen}
+        onClose={closeTutorial}
+        startStep={startStep}
+      />
     </div>
   );
 };

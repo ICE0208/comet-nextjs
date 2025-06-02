@@ -13,6 +13,7 @@ import { submitWork } from "../actions";
 import useCheckTextStore from "@/store/checkTextStore";
 import { RichTextarea } from "rich-textarea";
 import useChangedTextStore from "@/store/changedTextStore";
+import useIgnoreChangedTextStore from "@/store/ignoreChangedTextStore";
 import { getWorkspaceById } from "../actions";
 import { FaSpellCheck } from "react-icons/fa";
 
@@ -54,6 +55,10 @@ const PromptInput = forwardRef<PromptInputHandle, PromptInputProps>(
     const textOrder = useCheckTextStore((state) => state.textOrder);
     const textareaRef = useRef<HTMLTextAreaElement>(null);
     const changedText = useChangedTextStore((state) => state.changedText);
+    const ignoreChangedTexts = useIgnoreChangedTextStore(
+      (state) => state.ignoreChangedTexts
+    );
+
     useEffect(() => {
       if (savedText) {
         setText(savedText);
@@ -161,6 +166,13 @@ const PromptInput = forwardRef<PromptInputHandle, PromptInputProps>(
       for (const item of changedText) {
         if (!item.text || !item.text.trim()) continue;
 
+        // ignore된 텍스트인지 확인
+        const textWithOrder = JSON.stringify([item.text, item.textOrder]);
+        const isIgnored = ignoreChangedTexts.has(textWithOrder);
+
+        // ignore된 텍스트는 하이라이트에서 제외
+        if (isIgnored) continue;
+
         // 이 항목이 현재 targetText와 동일한지 확인 (보라색으로 표시할지 여부)
         const isMatching =
           item.text === targetText && item.textOrder === textOrder;
@@ -189,7 +201,7 @@ const PromptInput = forwardRef<PromptInputHandle, PromptInputProps>(
       }
 
       return highlights;
-    }, [changedText, text, targetText, textOrder]);
+    }, [changedText, text, targetText, textOrder, ignoreChangedTexts]);
 
     // 하이라이트 스타일 설정 - 최소한의 스타일만 인라인으로 적용
     const highlightStyle = {
@@ -230,6 +242,7 @@ const PromptInput = forwardRef<PromptInputHandle, PromptInputProps>(
       try {
         setLoadingState("correctionLoading");
         useChangedTextStore.getState().actions.resetStore();
+        useIgnoreChangedTextStore.getState().actions.resetStore();
 
         const {
           newWorkspaceHistoryId,

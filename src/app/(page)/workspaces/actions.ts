@@ -7,12 +7,13 @@ import { redirect } from "next/navigation";
 export async function getWorkspaceList() {
   const currentUser = await getCurrentUser();
   if (!currentUser) {
-    redirect("/");
+    redirect("/auth/login");
   }
 
   const workspaceList = await prisma.workspace.findMany({
     where: {
       userId: currentUser.id,
+      isDeleted: false,
     },
     select: {
       id: true,
@@ -141,8 +142,11 @@ export async function deleteWorkspace(id: string) {
     }
 
     // 사용자 검증이 완료되면 삭제 진행
-    await prisma.workspace.delete({
+    await prisma.workspace.update({
       where: { id },
+      data: {
+        isDeleted: true,
+      },
     });
 
     return { success: true };
@@ -181,4 +185,16 @@ export async function resetUserTutorialStatus() {
       isTutorial: false,
     },
   });
+}
+
+export async function getQueueStatusAll() {
+  const currentUser = await getCurrentUser();
+  if (!currentUser) {
+    redirect("/");
+  }
+
+  const queueStatus = await fetch(
+    `${process.env.NEXT_PUBLIC_NEST_SERVER}/correction/status/all?userId=${currentUser.id}`
+  );
+  return await queueStatus.json();
 }

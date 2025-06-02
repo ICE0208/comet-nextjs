@@ -15,12 +15,13 @@ datasource db {
 }
 
 model User {
-  id           Int      @id @default(autoincrement())
-  userId       String   @unique
-  email        String   @unique
-  hashPassword String
-  createdAt    DateTime @default(now())
-  isTutorial   Boolean  @default(false)
+  id                   Int      @id @default(autoincrement())
+  userId               String   @unique
+  email                String   @unique
+  hashPassword         String
+  createdAt            DateTime @default(now())
+  isTutorial           Boolean  @default(false)
+  isCorrectionTutorial Boolean  @default(false)
 
   following  Follow[]        @relation("FollowingRelation")
   followers  Follow[]        @relation("FollowerRelation")
@@ -113,6 +114,7 @@ model Workspace {
   createdAt  DateTime @default(now())
   updatedAt  DateTime @updatedAt
   lastUsedAt DateTime @default(now())
+  isDeleted  Boolean  @default(false)
 
   userId Int?
   user   User? @relation(fields: [userId], references: [id], onDelete: SetNull)

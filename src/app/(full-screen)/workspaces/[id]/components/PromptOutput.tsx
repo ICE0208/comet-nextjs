@@ -7,6 +7,7 @@ import { CorrectionData, ProcessLiteraryTextResult } from "@/utils/ai";
 import { useRouter } from "next/navigation";
 import useCheckTextStore from "@/store/checkTextStore";
 import useChangedTextStore from "@/store/changedTextStore";
+import useIgnoreChangedTextStore from "@/store/ignoreChangedTextStore";
 import CorrectedText from "./CorrectedText";
 import { FiCheckCircle } from "react-icons/fi";
 import Badge from "@/components/ui/Badge";
@@ -39,8 +40,8 @@ const PromptOutput = ({
   const setMultipleChangedTexts = useChangedTextStore(
     (state) => state.actions.setMultipleChangedTexts
   );
-  const [ignoreChangedTexts, setIgnoreChangedTexts] = useState<Set<string>>(
-    new Set()
+  const ignoreChangedTexts = useIgnoreChangedTextStore(
+    (state) => state.ignoreChangedTexts
   );
   const [changedTextCount, setChangedTextCount] = useState(0);
 
@@ -56,6 +57,7 @@ const PromptOutput = ({
       usePromptStore.getState().actions.resetStore();
       useCheckTextStore.getState().actions.resetStore();
       useChangedTextStore.getState().actions.resetStore();
+      useIgnoreChangedTextStore.getState().actions.resetStore();
     },
     []
   );
@@ -88,7 +90,7 @@ const PromptOutput = ({
       }
     }, 100);
 
-    setIgnoreChangedTexts(new Set());
+    useIgnoreChangedTextStore.getState().actions.resetStore();
 
     if (loadingState === "queueFullError") {
       return;
@@ -199,7 +201,10 @@ const PromptOutput = ({
 
         if (segment.correction) {
           // correction이 있는 경우
-          const textWithOrder = JSON.stringify([segment.text, segment.order]);
+          const textWithOrder = JSON.stringify([
+            segment.correction.before,
+            segment.order,
+          ]);
           const isIgnored = ignoreChangedTexts.has(textWithOrder);
 
           if (isIgnored) {
@@ -347,11 +352,7 @@ const PromptOutput = ({
             >
               {line.segments.map((segment, i) => (
                 <span key={i}>
-                  <CorrectedText
-                    segment={segment}
-                    setIgnoreChangedTexts={setIgnoreChangedTexts}
-                    ignoreChangedTexts={ignoreChangedTexts}
-                  />
+                  <CorrectedText segment={segment} />
                 </span>
               ))}
             </div>

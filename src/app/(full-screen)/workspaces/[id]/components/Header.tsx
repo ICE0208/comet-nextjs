@@ -75,10 +75,15 @@ const QueueStatusBar: React.FC<QueueStatusBarProps> = ({
  */
 interface HeaderProps {
   onToggleHistory?: () => void;
+  onHelpClick?: () => void;
   queueStatus: QueueStatusAll;
 }
 
-const Header: React.FC<HeaderProps> = ({ onToggleHistory, queueStatus }) => {
+const Header: React.FC<HeaderProps> = ({
+  onToggleHistory,
+  onHelpClick,
+  queueStatus,
+}) => {
   const router = useRouter();
   const [isRefreshing, setIsRefreshing] = useState(false);
   const { tooltipPosition, handleMouseEnter } = useAdaptiveTooltip({
@@ -127,8 +132,7 @@ const Header: React.FC<HeaderProps> = ({ onToggleHistory, queueStatus }) => {
           </svg>
           <span>워크스페이스</span>
         </Link>
-      </div>
-      <div className={styles.headerRight}>
+
         <div className={styles.queueBadgesContainer}>
           <span className={styles.queueSectionLabel}>작업 현황</span>
           <QueueStatusBar
@@ -189,6 +193,41 @@ const Header: React.FC<HeaderProps> = ({ onToggleHistory, queueStatus }) => {
             )}
           </button>
         </div>
+      </div>
+      <div className={styles.headerRight}>
+        {/* 도움말 버튼 */}
+        {onHelpClick && (
+          <IconButton
+            title="사용법 가이드"
+            onClick={onHelpClick}
+          >
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              width="20"
+              height="20"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="2"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+            >
+              <circle
+                cx="12"
+                cy="12"
+                r="10"
+              />
+              <path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3" />
+              <line
+                x1="12"
+                y1="17"
+                x2="12.01"
+                y2="17"
+              />
+            </svg>
+          </IconButton>
+        )}
+
         <IconButton
           title={HEADER_BUTTONS.VIEW_LIST.title}
           onClick={onToggleHistory}

@@ -13,32 +13,78 @@ const tutorialSteps: TutorialStep[] = [
   {
     title: "작업 생성하기",
     content:
-      "오른쪽 상단의 '새 작업 만들기' 버튼을 클릭하여 새로운 작업을 시작할 수 있습니다.",
+      "왼쪽 상단의 '새 작업 만들기' 버튼을 클릭하여 새로운 작업을 시작할 수 있습니다.",
     step: 1,
     // 새 작업 만들기 버튼
     targetSelector: "button[class*='createButton']",
   },
   {
+    title: "작업 확인하기",
+    content:
+      "각 작업 카드를 통해 해당 작업의 요약 정보를 확인할 수 있고, 작업 카드를 클릭하여 작업 상세 페이지로 이동할 수 있습니다.",
+    step: 2,
+    position: {
+      top: 125,
+      bottom: 1,
+      left: 1,
+      right: 1400,
+    },
+    // 뷰 토글 버튼들을 하이라이트
+    targetSelector: "div[class*='card']:first-child",
+  },
+  {
     title: "작업 관리하기",
     content:
       "그리드 또는 리스트 뷰로 작업을 확인하고, 정렬 방식을 선택할 수 있습니다.",
-    step: 2,
+    step: 3,
+    position: {
+      top: 125,
+      bottom: 1,
+      left: 1,
+      right: 1400,
+    },
     // 뷰 토글 버튼들을 하이라이트
-    targetSelector: "div[class*='viewToggle']",
+    targetSelector: "div[class*='rightControls']",
   },
   {
     title: "작업 편집하기",
     content:
-      "각 작업 카드의 옵션 메뉴를 통해 이름 변경, 삭제 등의 작업을 수행할 수 있습니다.",
-    step: 3,
+      "각 작업 카드의 옵션 메뉴를 통해 이름 변경과 삭제 작업을 수행할 수 있습니다.",
+    step: 4,
+    position: {
+      top: 225,
+      bottom: 1,
+      left: 1,
+      right: 680,
+    },
     // 작업 카드의 옵션 메뉴 버튼
     targetSelector: "div[class*='card']:first-child button[class*='optionBtn']",
+  },
+  {
+    title: "작업 현황 확인하기",
+    content:
+      "각 모드별 작업 현황을 확인할 수 있습니다. 새로고침 버튼을 클릭하여 작업 현황을 업데이트 할 수 있습니다.",
+    step: 5,
+    position: {
+      top: 225,
+      bottom: 1,
+      left: 1,
+      right: 680,
+    },
+    // 작업 카드의 옵션 메뉴 버튼
+    targetSelector: "div[class*='queueSection']",
   },
   {
     title: "도움말",
     content:
       "도움말 버튼을 클릭하여 튜토리얼을 다시 볼 수 있습니다. 언제든지 도움말을 확인하세요",
-    step: 4,
+    step: 6,
+    position: {
+      top: 95,
+      bottom: 1,
+      left: 1,
+      right: 100,
+    },
     // 도움말 버튼
     targetSelector: "button[class*='helpButton']",
   },
