@@ -61,13 +61,23 @@ export default function ProfileDropdown({ user }: ProfileDropdownProps) {
         className={styles.profile}
         onClick={handleProfileClick}
       >
-        <Image
-          src="/images/profile-temp/profile.jpg"
-          alt="profile"
-          width={30}
-          height={30}
-          className={styles.profileImage}
-        />
+        {user ? (
+          <Image
+            src="/images/profile-temp/profile.jpg"
+            alt="profile"
+            width={30}
+            height={30}
+            className={styles.profileImage}
+          />
+        ) : (
+          <Image
+            src="/images/profile-temp/no-login.png"
+            alt="profile"
+            width={30}
+            height={30}
+            className={styles.profileImage}
+          />
+        )}
       </div>
 
       {isDropdownOpen && (
