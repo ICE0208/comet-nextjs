@@ -12,13 +12,23 @@ const IntroSection = () => (
           창작의 빛나는 순간을 함께하세요. 코멧에서 당신만의 이야기를 발견하고,
           새로운 세계로 떠나는 여정을 시작하세요.
         </p>
-        <div className={styles.buttonGroup}>
-          <Link
-            href="/workspaces"
-            className={`${styles.button} ${styles.secondaryButton}`}
-          >
-            지금 시작하기
-          </Link>
+        <div className={styles.buttonComponent}>
+          <div className={styles.buttonGroup}>
+            <Link
+              href="/workspaces"
+              className={`${styles.button} ${styles.secondaryButton}`}
+            >
+              지금 시작하기
+            </Link>
+          </div>
+          <div className={styles.buttonGroup}>
+            <Link
+              href="/pricing"
+              className={`${styles.button} ${styles.secondaryButton}`}
+            >
+              PRO 구독하기
+            </Link>
+          </div>
         </div>
         <div className={styles.features}>
           <div className={styles.featureItem}>
