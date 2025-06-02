@@ -15,12 +15,24 @@ import {
   updateWorkspaceTitle,
   deleteWorkspace,
   resetUserTutorialStatus,
+  getQueueStatusAll,
 } from "./actions";
 import { useRouter } from "next/navigation";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 
 interface UserData {
   isTutorial: boolean;
+}
+
+interface QueueStatus {
+  totalUserJobs: number;
+  runningJobs: number;
+  availableSlots: number;
+}
+
+interface QueueStatusAll {
+  basic: QueueStatus;
+  pro: QueueStatus;
 }
 
 export default function PromptListPage() {
@@ -73,6 +85,25 @@ export default function PromptListPage() {
       return response.json();
     },
   });
+
+  // 큐 상태 조회
+  const { data: queueStatus, refetch: refetchQueueStatus } =
+    useQuery<QueueStatusAll>({
+      queryKey: ["queueStatus"],
+      queryFn: async () => {
+        try {
+          return await getQueueStatusAll();
+        } catch {
+          return null;
+        }
+      },
+      refetchInterval: 30000, // 30초마다 자동 새로고침
+    });
+
+  // 큐 상태 새로고침 핸들러
+  const handleRefreshQueue = async () => {
+    await refetchQueueStatus();
+  };
 
   // 페이지 로드 시 스크롤 초기화
   useEffect(() => {
@@ -351,6 +382,8 @@ export default function PromptListPage() {
           sort={sort}
           setSort={setSort}
           onCreateClick={handleCreateClick}
+          queueStatus={queueStatus}
+          onRefreshQueue={handleRefreshQueue}
         />
 
         {/* 페이지 내용 */}

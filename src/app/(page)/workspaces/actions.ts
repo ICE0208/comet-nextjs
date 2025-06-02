@@ -186,3 +186,15 @@ export async function resetUserTutorialStatus() {
     },
   });
 }
+
+export async function getQueueStatusAll() {
+  const currentUser = await getCurrentUser();
+  if (!currentUser) {
+    redirect("/");
+  }
+
+  const queueStatus = await fetch(
+    `${process.env.NEXT_PUBLIC_NEST_SERVER}/correction/status/all?userId=${currentUser.id}`
+  );
+  return await queueStatus.json();
+}
