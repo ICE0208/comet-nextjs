@@ -6,20 +6,10 @@ export type TutorialStep = {
   title: string;
   content: string;
   step: number;
-  position: {
-    top: number;
-    bottom: number;
-    left: number;
-    right: number;
-  };
-  targetSelector?: string; // 하이라이트할 요소의 CSS 선택자
+  targetSelector: string; // 하이라이트할 요소의 CSS 선택자
 };
 
-type Props = TutorialStep & {
-  // 네비게이션 버튼이 하단에 고정되므로 여기선 필요없음
-};
-
-const TutorialSteps = ({ title, content, targetSelector }: Props) => {
+const TutorialSteps = ({ title, content, targetSelector }: TutorialStep) => {
   const [tooltipPosition, setTooltipPosition] = useState({
     top: `${-500}px`,
     left: `${-500}px`,
@@ -37,7 +27,9 @@ const TutorialSteps = ({ title, content, targetSelector }: Props) => {
     if (targetSelector) {
       const target = document.querySelector(targetSelector);
       if (target) {
+        // 요소의 크기와 화면내 위치 정보 반환
         const rect = target.getBoundingClientRect();
+        // ex) rect: {"x":40,"y":210.25,"width":98.2265625,"height":34.5,"top":210.25,"right":138.2265625,"bottom":244.75,"left":40}
 
         // 화면 오른쪽에 공간이 있으면 요소 오른쪽에 말풍선 표시, 아니면 왼쪽에 표시
         const spaceOnRight = window.innerWidth - rect.right > 350;
@@ -63,17 +55,6 @@ const TutorialSteps = ({ title, content, targetSelector }: Props) => {
       }
     }
   }, [targetSelector]);
-
-  // useEffect(() => {
-  //   if (!targetSelector) {
-  //     // 타겟 선택자가 없을 경우 초기 position 사용
-  //     setTooltipPosition({
-  //       top: `${position.top}px`,
-  //       left: `${position.right}px`,
-  //       arrowClass: "",
-  //     });
-  //   }
-  // }, [targetSelector, position]);
 
   useEffect(() => {
     // 리사이즈 이벤트 리스너 등록
