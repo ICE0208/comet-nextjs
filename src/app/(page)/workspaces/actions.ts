@@ -190,7 +190,7 @@ export async function resetUserTutorialStatus() {
 export async function getQueueStatusAll() {
   const currentUser = await getCurrentUser();
   if (!currentUser) {
-    redirect("/");
+    redirect("/auth/login");
   }
 
   const queueStatus = await fetch(
