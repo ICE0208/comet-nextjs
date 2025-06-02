@@ -23,12 +23,6 @@ const tutorialSteps: TutorialStep[] = [
     content:
       "각 작업 카드를 통해 해당 작업의 요약 정보를 확인할 수 있고, 작업 카드를 클릭하여 작업 상세 페이지로 이동할 수 있습니다.",
     step: 2,
-    position: {
-      top: 125,
-      bottom: 1,
-      left: 1,
-      right: 1400,
-    },
     // 뷰 토글 버튼들을 하이라이트
     targetSelector: "div[class*='card']:first-child",
   },
@@ -37,12 +31,6 @@ const tutorialSteps: TutorialStep[] = [
     content:
       "그리드 또는 리스트 뷰로 작업을 확인하고, 정렬 방식을 선택할 수 있습니다.",
     step: 3,
-    position: {
-      top: 125,
-      bottom: 1,
-      left: 1,
-      right: 1400,
-    },
     // 뷰 토글 버튼들을 하이라이트
     targetSelector: "div[class*='rightControls']",
   },
@@ -51,12 +39,6 @@ const tutorialSteps: TutorialStep[] = [
     content:
       "각 작업 카드의 옵션 메뉴를 통해 이름 변경과 삭제 작업을 수행할 수 있습니다.",
     step: 4,
-    position: {
-      top: 225,
-      bottom: 1,
-      left: 1,
-      right: 680,
-    },
     // 작업 카드의 옵션 메뉴 버튼
     targetSelector: "div[class*='card']:first-child button[class*='optionBtn']",
   },
@@ -65,12 +47,6 @@ const tutorialSteps: TutorialStep[] = [
     content:
       "각 모드별 작업 현황을 확인할 수 있습니다. 새로고침 버튼을 클릭하여 작업 현황을 업데이트 할 수 있습니다.",
     step: 5,
-    position: {
-      top: 225,
-      bottom: 1,
-      left: 1,
-      right: 680,
-    },
     // 작업 카드의 옵션 메뉴 버튼
     targetSelector: "div[class*='queueSection']",
   },
@@ -79,12 +55,6 @@ const tutorialSteps: TutorialStep[] = [
     content:
       "도움말 버튼을 클릭하여 튜토리얼을 다시 볼 수 있습니다. 언제든지 도움말을 확인하세요",
     step: 6,
-    position: {
-      top: 95,
-      bottom: 1,
-      left: 1,
-      right: 100,
-    },
     // 도움말 버튼
     targetSelector: "button[class*='helpButton']",
   },
