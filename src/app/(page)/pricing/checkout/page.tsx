@@ -9,10 +9,7 @@ const CheckoutPage = () => {
   const router = useRouter();
   const [isLoading, setIsLoading] = useState(false);
   const [formData, setFormData] = useState({
-    cardNumber: "",
-    cardHolder: "",
-    expiryDate: "",
-    cvv: "",
+    email: "",
     agreeTerms: false,
   });
   const [errors, setErrors] = useState<Record<string, string | null>>({});
@@ -33,85 +30,11 @@ const CheckoutPage = () => {
     }
   };
 
-  const formatCardNumber = (value: string) => {
-    // Format card number to groups of 4 digits with spaces
-    const digitsOnly = value.replace(/\D/g, "");
-    const formattedValue = digitsOnly.replace(/(\d{4})(?=\d)/g, "$1 ");
-    return formattedValue.substring(0, 19); // Max length 16 digits + 3 spaces
-  };
-
-  const formatExpiryDate = (value: string) => {
-    // Format expiry date as MM/YY
-    const digitsOnly = value.replace(/\D/g, "");
-    if (digitsOnly.length > 2) {
-      return `${digitsOnly.substring(0, 2)}/${digitsOnly.substring(2, 4)}`;
-    }
-    return digitsOnly;
-  };
-
-  const handleCardNumberChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const formattedValue = formatCardNumber(e.target.value);
-    setFormData({
-      ...formData,
-      cardNumber: formattedValue,
-    });
-
-    if (errors.cardNumber) {
-      setErrors({
-        ...errors,
-        cardNumber: null,
-      });
-    }
-  };
-
-  const handleExpiryDateChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const formattedValue = formatExpiryDate(e.target.value);
-    setFormData({
-      ...formData,
-      expiryDate: formattedValue,
-    });
-
-    if (errors.expiryDate) {
-      setErrors({
-        ...errors,
-        expiryDate: null,
-      });
-    }
-  };
-
   const validateForm = () => {
     const newErrors: Record<string, string> = {};
 
-    if (
-      !formData.cardNumber.trim() ||
-      formData.cardNumber.replace(/\s/g, "").length < 16
-    ) {
-      newErrors.cardNumber = "유효한 카드 번호를 입력해주세요";
-    }
-
-    if (!formData.cardHolder.trim()) {
-      newErrors.cardHolder = "카드 소유자 이름을 입력해주세요";
-    }
-
-    if (!formData.expiryDate || formData.expiryDate.length < 5) {
-      newErrors.expiryDate = "유효기간을 입력해주세요";
-    } else {
-      const [month, year] = formData.expiryDate.split("/");
-      const currentYear = new Date().getFullYear() % 100;
-      const currentMonth = new Date().getMonth() + 1;
-
-      if (
-        parseInt(month) < 1 ||
-        parseInt(month) > 12 ||
-        parseInt(year) < currentYear ||
-        (parseInt(year) === currentYear && parseInt(month) < currentMonth)
-      ) {
-        newErrors.expiryDate = "유효하지 않은 유효기간입니다";
-      }
-    }
-
-    if (!formData.cvv || formData.cvv.length < 3) {
-      newErrors.cvv = "보안 코드를 입력해주세요";
+    if (!formData.email || !formData.email.includes("@")) {
+      newErrors.email = "유효한 이메일 주소를 입력해주세요";
     }
 
     if (!formData.agreeTerms) {
@@ -132,20 +55,37 @@ const CheckoutPage = () => {
     setIsLoading(true);
 
     try {
-      // 실제 구현 시에는 여기서 결제 API 호출
-      // 예: const response = await fetch('/api/subscribe', { method: 'POST', body: JSON.stringify(formData) });
+      // Stripe 결제 세션 생성 API 호출
+      const response = await fetch("/api/checkout", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          email: formData.email,
+        }),
+      });
 
-      // 성공 시 결제 완료 페이지로 리다이렉트 (3초 후)
-      setTimeout(() => {
-        // 결제 성공 시 리다이렉트할 페이지
-        router.push("/profile");
-      }, 3000);
-    } catch (error) {
-      console.error("결제 처리 중 오류가 발생했습니다:", error);
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+
+      const data = await response.json();
+
+      if (data.url) {
+        // Stripe 결제 페이지로 리다이렉트
+        window.location.href = data.url;
+      } else {
+        setErrors({
+          form: "결제 세션 URL을 받지 못했습니다. 다시 시도해주세요.",
+        });
+        setIsLoading(false);
+      }
+    } catch {
+      // 오류 상태 설정
       setErrors({
         form: "결제 처리 중 오류가 발생했습니다. 다시 시도해주세요.",
       });
-    } finally {
       setIsLoading(false);
     }
   };
@@ -209,90 +149,35 @@ const CheckoutPage = () => {
           <form
             onSubmit={handleSubmit}
             className={styles.paymentForm}
+            noValidate
           >
             <div className={styles.formGroup}>
-              <label htmlFor="cardNumber">카드 번호</label>
-              <div className={styles.inputWithIcon}>
-                <input
-                  type="text"
-                  id="cardNumber"
-                  name="cardNumber"
-                  placeholder="1234 5678 9012 3456"
-                  value={formData.cardNumber}
-                  onChange={handleCardNumberChange}
-                  maxLength={19}
-                  className={errors.cardNumber ? styles.inputError : ""}
-                />
-                <div className={styles.cardIcons}>
-                  <Image
-                    src="/icons/card-visa.svg"
-                    alt="Visa"
-                    width={24}
-                    height={16}
-                  />
-                  <Image
-                    src="/icons/card-mastercard.svg"
-                    alt="Mastercard"
-                    width={24}
-                    height={16}
-                  />
-                </div>
-              </div>
-              {errors.cardNumber && (
-                <div className={styles.errorText}>{errors.cardNumber}</div>
-              )}
-            </div>
-
-            <div className={styles.formGroup}>
-              <label htmlFor="cardHolder">카드 소유자 이름</label>
+              <label htmlFor="email">이메일 주소</label>
               <input
-                type="text"
-                id="cardHolder"
-                name="cardHolder"
-                placeholder="카드에 표시된 이름"
-                value={formData.cardHolder}
+                type="email"
+                id="email"
+                name="email"
+                placeholder="your@email.com"
+                value={formData.email}
                 onChange={handleInputChange}
-                className={errors.cardHolder ? styles.inputError : ""}
+                className={errors.email ? styles.inputError : ""}
+                autoComplete="email"
               />
-              {errors.cardHolder && (
-                <div className={styles.errorText}>{errors.cardHolder}</div>
+              {errors.email && (
+                <div className={styles.errorText}>{errors.email}</div>
               )}
             </div>
 
-            <div className={styles.formRowGroup}>
-              <div className={styles.formGroup}>
-                <label htmlFor="expiryDate">유효기간</label>
-                <input
-                  type="text"
-                  id="expiryDate"
-                  name="expiryDate"
-                  placeholder="MM/YY"
-                  value={formData.expiryDate}
-                  onChange={handleExpiryDateChange}
-                  maxLength={5}
-                  className={errors.expiryDate ? styles.inputError : ""}
-                />
-                {errors.expiryDate && (
-                  <div className={styles.errorText}>{errors.expiryDate}</div>
-                )}
-              </div>
-
-              <div className={styles.formGroup}>
-                <label htmlFor="cvv">보안 코드 (CVV)</label>
-                <input
-                  type="text"
-                  id="cvv"
-                  name="cvv"
-                  placeholder="123"
-                  value={formData.cvv}
-                  onChange={handleInputChange}
-                  maxLength={4}
-                  className={errors.cvv ? styles.inputError : ""}
-                />
-                {errors.cvv && (
-                  <div className={styles.errorText}>{errors.cvv}</div>
-                )}
-              </div>
+            <div className={styles.infoMessage}>
+              <Image
+                src="/icons/info-circle.svg"
+                alt="정보"
+                width={16}
+                height={16}
+              />
+              <span>
+                카드 정보는 다음 단계에서 안전하게 입력하실 수 있습니다.
+              </span>
             </div>
 
             <div className={styles.checkboxGroup}>
@@ -329,10 +214,10 @@ const CheckoutPage = () => {
                 {isLoading ? (
                   <>
                     <div className={styles.loadingSpinner} />
-                    결제 처리 중...
+                    결제 진행 중...
                   </>
                 ) : (
-                  "결제 완료"
+                  "결제 계속하기"
                 )}
               </button>
             </div>
