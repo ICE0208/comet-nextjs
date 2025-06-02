@@ -14,6 +14,7 @@ const ReactPortal = ({
 
   useEffect(() => {
     let element = document.getElementById(containerId);
+    // layout에 해당 ID의 요소가 없으면 새로 생성
     if (!element) {
       element = document.createElement("div");
       element.id = containerId;
@@ -21,6 +22,7 @@ const ReactPortal = ({
     }
     setContainer(element);
 
+    // 컴포넌트 언마운트 시 포털 요소 제거
     return () => {
       if (element && element.parentNode) {
         element.parentNode.removeChild(element);

@@ -15,12 +15,6 @@ const tutorialSteps: TutorialStep[] = [
     content:
       "오른쪽 상단의 '새 작업 만들기' 버튼을 클릭하여 새로운 작업을 시작할 수 있습니다.",
     step: 1,
-    position: {
-      top: 125,
-      bottom: 1,
-      left: 1,
-      right: 420,
-    },
     // 새 작업 만들기 버튼
     targetSelector: "button[class*='createButton']",
   },
@@ -29,12 +23,6 @@ const tutorialSteps: TutorialStep[] = [
     content:
       "그리드 또는 리스트 뷰로 작업을 확인하고, 정렬 방식을 선택할 수 있습니다.",
     step: 2,
-    position: {
-      top: 125,
-      bottom: 1,
-      left: 1,
-      right: 1400,
-    },
     // 뷰 토글 버튼들을 하이라이트
     targetSelector: "div[class*='viewToggle']",
   },
@@ -43,12 +31,6 @@ const tutorialSteps: TutorialStep[] = [
     content:
       "각 작업 카드의 옵션 메뉴를 통해 이름 변경, 삭제 등의 작업을 수행할 수 있습니다.",
     step: 3,
-    position: {
-      top: 225,
-      bottom: 1,
-      left: 1,
-      right: 680,
-    },
     // 작업 카드의 옵션 메뉴 버튼
     targetSelector: "div[class*='card']:first-child button[class*='optionBtn']",
   },
@@ -57,12 +39,6 @@ const tutorialSteps: TutorialStep[] = [
     content:
       "도움말 버튼을 클릭하여 튜토리얼을 다시 볼 수 있습니다. 언제든지 도움말을 확인하세요",
     step: 4,
-    position: {
-      top: 95,
-      bottom: 1,
-      left: 1,
-      right: 100,
-    },
     // 도움말 버튼
     targetSelector: "button[class*='helpButton']",
   },
