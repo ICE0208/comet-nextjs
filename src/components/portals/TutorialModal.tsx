@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { useQueryClient } from "@tanstack/react-query";
 import styles from "./TutorialModal.module.css";
 import ReactPortal from "./ReactPortal";
 import TutorialSteps, { TutorialStep } from "../tutorial/TutorialSteps";
@@ -7,6 +8,11 @@ import { updateUserTutorialStatus } from "@/app/(page)/workspaces/actions";
 interface TutorialModalProps {
   isOpen: boolean;
   onClose: () => void;
+}
+
+interface UserData {
+  isTutorial: boolean;
+  [key: string]: unknown; // 다른 사용자 데이터 필드들
 }
 
 const tutorialSteps: TutorialStep[] = [
@@ -62,6 +68,7 @@ const tutorialSteps: TutorialStep[] = [
 
 const TutorialModal = ({ isOpen, onClose }: TutorialModalProps) => {
   const [step, setStep] = useState<number>(1);
+  const queryClient = useQueryClient();
 
   const currentStep =
     tutorialSteps.find((s) => s.step === step) || tutorialSteps[0];
@@ -72,6 +79,13 @@ const TutorialModal = ({ isOpen, onClose }: TutorialModalProps) => {
     } else {
       // 튜토리얼 완료 시 isTutorial 상태 업데이트
       await updateUserTutorialStatus();
+
+      // 사용자 데이터 캐시 업데이트
+      queryClient.setQueryData(["user"], (oldData: UserData | undefined) => ({
+        ...oldData,
+        isTutorial: true,
+      }));
+
       onClose();
     }
   };

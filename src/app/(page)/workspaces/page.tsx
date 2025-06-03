@@ -84,6 +84,8 @@ export default function PromptListPage() {
       }
       return response.json();
     },
+    staleTime: 0, // 항상 최신 데이터 사용
+    refetchOnMount: true, // 컴포넌트 마운트 시 항상 새로고침
   });
 
   // 큐 상태 조회
