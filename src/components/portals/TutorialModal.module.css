@@ -10,19 +10,22 @@
 /* 고정 네비게이션 버튼 */
 .fixedNavigation {
   position: fixed;
-  bottom: 0;
-  left: 0;
-  right: 0;
+  bottom: 20px;
+  left: 50%;
+  transform: translateX(-50%);
   display: flex;
   justify-content: center;
   align-items: center;
   gap: 20px;
   z-index: 1003;
-  padding: 16px;
-  background-color: rgba(0, 0, 0, 0.7);
+  padding: 12px;
+  background-color: rgba(0, 0, 0, 0.25);
   backdrop-filter: blur(8px);
   border-top: 1px solid rgba(255, 255, 255, 0.1);
   animation: slideUp 0.3s ease;
+  border-radius: 24px;
+  width: auto;
+  max-width: 90%;
 }
 
 .fixedNavigation button {
@@ -30,7 +33,7 @@
   font-size: 14px;
   font-weight: 600;
   border: none;
-  border-radius: 6px;
+  border-radius: 18px;
   cursor: pointer;
   transition: all 0.2s ease;
   letter-spacing: 0.3px;
@@ -49,12 +52,12 @@
 }
 
 .fixedNextButton {
-  background-color: #4dabf7;
+  background-color: #3356f0;
   color: white;
 }
 
 .fixedNextButton:hover {
-  background-color: #339af0;
+  background-color: #3356f0;
   transform: translateY(-2px);
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
 }
@@ -70,11 +73,11 @@
 
 @keyframes slideUp {
   from {
-    transform: translateY(100%);
+    transform: translate(-50%, 100%);
     opacity: 0;
   }
   to {
-    transform: translateY(0);
+    transform: translate(-50%, 0);
     opacity: 1;
   }
 }
