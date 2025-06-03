@@ -4,10 +4,13 @@ import React, { useState } from "react";
 import { useRouter } from "next/navigation";
 import Image from "next/image";
 import styles from "./page.module.css";
+import { useAuth } from "@/hooks/useAuth";
 
 const CheckoutPage = () => {
   const router = useRouter();
   const [isLoading, setIsLoading] = useState(false);
+  // requireAuth를 true로 설정하여 로그인하지 않은 사용자는 자동으로 로그인 페이지로 리다이렉트
+  useAuth(true, "/auth/login");
   const [formData, setFormData] = useState({
     email: "",
     agreeTerms: false,
