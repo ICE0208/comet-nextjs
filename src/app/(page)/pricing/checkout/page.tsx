@@ -115,7 +115,6 @@ const CheckoutPage = () => {
             <ul>
               <li>고급 AI 모델 접근 권한</li>
               <li>무제한 작업 생성</li>
-              <li>우선 처리 및 빠른 응답 시간</li>
               <li>고급 분석 및 인사이트</li>
               <li>우선 고객 지원</li>
             </ul>
@@ -125,13 +124,9 @@ const CheckoutPage = () => {
               <span>월 구독료</span>
               <span>₩19,900</span>
             </div>
-            <div className={styles.totalRow}>
-              <span>세금</span>
-              <span>₩1,990</span>
-            </div>
             <div className={styles.totalAmount}>
               <span>총 결제 금액</span>
-              <span>₩21,890</span>
+              <span>₩19,900</span>
             </div>
           </div>
           <div className={styles.guaranteeInfo}>
