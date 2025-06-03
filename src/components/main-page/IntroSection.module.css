@@ -83,6 +83,15 @@
   box-shadow: 0 6px 16px rgba(0, 0, 0, 0.1);
 }
 
+.proButton {
+  background-color: #3182ce;
+  color: white;
+  border: solid 2px #3182ce;
+}
+.proButton:hover {
+  border-color: #2b6cb0;
+}
+
 .features {
   display: flex;
   flex-wrap: wrap;

@@ -52,61 +52,24 @@ const PricingPage = () => {
             </p>
           </div>
 
-          <div className={styles.planFeatures}>
-            <div className={styles.feature}>
-              <div className={styles.featureIcon}>
-                <Image
-                  src="/icons/magic.svg"
-                  alt="Check"
-                  width={20}
-                  height={20}
-                />
-              </div>
-              <span>고급 AI 모델 접근 권한</span>
+          <div className={styles.planComparison}>
+            <div className={styles.freeFeatures}>
+              <h3>무료 계정에 포함된 기능</h3>
+              <ul>
+                <li>기본 AI 기능 접근</li>
+                <li>기본 AI 모델 (GEMINI)</li>
+                <li>일 50개 작업 제한</li>
+                <li>기본 고객 지원</li>
+              </ul>
             </div>
-            <div className={styles.feature}>
-              <div className={styles.featureIcon}>
-                <Image
-                  src="/icons/magic.svg"
-                  alt="Check"
-                  width={20}
-                  height={20}
-                />
-              </div>
-              <span>무제한 작업 생성</span>
-            </div>
-            <div className={styles.feature}>
-              <div className={styles.featureIcon}>
-                <Image
-                  src="/icons/magic.svg"
-                  alt="Check"
-                  width={20}
-                  height={20}
-                />
-              </div>
-              <span>우선 처리 및 빠른 응답 시간</span>
-            </div>
-            <div className={styles.feature}>
-              <div className={styles.featureIcon}>
-                <Image
-                  src="/icons/magic.svg"
-                  alt="Check"
-                  width={20}
-                  height={20}
-                />
-              </div>
-              <span>고급 분석 및 인사이트</span>
-            </div>
-            <div className={styles.feature}>
-              <div className={styles.featureIcon}>
-                <Image
-                  src="/icons/magic.svg"
-                  alt="Check"
-                  width={20}
-                  height={20}
-                />
-              </div>
-              <span>우선 고객 지원</span>
+            <div className={styles.proFeatures}>
+              <h3>PRO 계정에만 포함된 기능</h3>
+              <ul>
+                <li>고급 AI 모델 (자사 모델)</li>
+                <li>무제한 작업 생성</li>
+                <li>상세한 작업 분석 및 인사이트</li>
+                <li>24/7 우선 고객 지원</li>
+              </ul>
             </div>
           </div>
 
@@ -117,28 +80,6 @@ const PricingPage = () => {
           >
             {isLoading ? "처리 중..." : "구독하기"}
           </button>
-        </div>
-
-        <div className={styles.planComparison}>
-          <div className={styles.freeFeatures}>
-            <h3>무료 계정에 포함된 기능</h3>
-            <ul>
-              <li>기본 AI 기능 접근</li>
-              <li>월 10개 작업 제한</li>
-              <li>기본 고객 지원</li>
-            </ul>
-          </div>
-          <div className={styles.proFeatures}>
-            <h3>PRO 계정에만 포함된 기능</h3>
-            <ul>
-              <li>고급 AI 모델 (GPT-4 기반)</li>
-              <li>무제한 작업 생성</li>
-              <li>우선 처리 및 빠른 응답</li>
-              <li>상세한 작업 분석 및 인사이트</li>
-              <li>24/7 우선 고객 지원</li>
-              <li>데이터 내보내기 기능</li>
-            </ul>
-          </div>
         </div>
       </div>
 
@@ -165,8 +106,8 @@ const PricingPage = () => {
         <div className={styles.faqItem}>
           <h3>결제는 어떻게 진행되나요?</h3>
           <p>
-            신용카드, 체크카드, 또는 계좌이체를 통해 안전하게 결제할 수
-            있습니다. 모든 결제는 암호화되어 처리됩니다.
+            신용카드, 체크카드 를 통해 안전하게 결제할 수 있습니다. 모든 결제는
+            암호화되어 처리됩니다.
           </p>
         </div>
         <div className={styles.faqItem}>
