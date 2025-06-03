@@ -4,15 +4,25 @@ import React, { useState } from "react";
 import styles from "./page.module.css";
 import { useRouter } from "next/navigation";
 import Image from "next/image";
+import { useAuth } from "@/hooks/useAuth";
 
 const PricingPage = () => {
   const router = useRouter();
   const [isLoading, setIsLoading] = useState(false);
+  const { isLoggedIn, isLoading: authLoading } = useAuth();
 
   const handleSubscribe = async () => {
     setIsLoading(true);
     try {
-      // 실제 구현 시에는 API 호출로 결제 과정을 시작
+      // 로그인 상태 확인
+      if (!isLoggedIn) {
+        // 현재 경로를 저장하여 로그인 후 돌아올 수 있도록 함
+        const returnUrl = encodeURIComponent("/pricing/checkout");
+        router.push(`/auth/login?returnUrl=${returnUrl}`);
+        return;
+      }
+
+      // 로그인된 경우 체크아웃 페이지로 이동
       router.push("/pricing/checkout");
     } catch (error) {
       console.error("결제 과정에서 오류가 발생했습니다:", error);
@@ -103,7 +113,7 @@ const PricingPage = () => {
           <button
             className={styles.subscribeButton}
             onClick={handleSubscribe}
-            disabled={isLoading}
+            disabled={isLoading || authLoading}
           >
             {isLoading ? "처리 중..." : "구독하기"}
           </button>
