@@ -13,6 +13,7 @@ import {
 import styles from "./page.module.css";
 import { profileInfoAction, getTokenStats, getQueueStatusAll } from "./actions";
 import Badge from "@/components/ui/Badge";
+import Link from "next/link";
 
 // 큐 상태 타입 정의
 type QueueStatus = {
@@ -351,12 +352,12 @@ export default function ProfilePage() {
             <div className={styles.contactSection}>
               <p className={styles.contactText}>
                 토큰 한도 증가가 필요하신가요?{" "}
-                <a
-                  href={`mailto:seojunlee27@naver.com?subject=토큰 한도 증가 문의&body=안녕하세요,%0A%0A토큰 한도 증가를 요청드립니다.%0A%0A현재 사용량: ${getCurrentMonthTokens()}토큰%0A현재 한도: ${tokenStats?.tokenLimit || 100000}토큰%0A%0A감사합니다.`}
+                <Link
+                  href={`/pricing`}
                   className={styles.contactBtn}
                 >
-                  관리자에게 문의하기
-                </a>
+                  Pro 구독하기
+                </Link>
               </p>
             </div>
           </div>
