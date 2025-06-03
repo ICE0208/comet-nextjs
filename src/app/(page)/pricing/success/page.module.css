@@ -1,0 +1,136 @@
+.container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+  padding: 2rem;
+  background-color: #f5f7fa;
+}
+
+.card {
+  background-color: white;
+  border-radius: 16px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+  padding: 3rem;
+  max-width: 700px;
+  width: 100%;
+  text-align: center;
+  animation: fadeIn 0.6s ease-out;
+}
+
+.successIcon {
+  margin: 0 auto 2rem;
+  animation: pulse 1.2s ease-in-out;
+}
+
+.title {
+  font-size: 2.5rem;
+  font-weight: 700;
+  color: #2c3e50;
+  margin-bottom: 1.5rem;
+}
+
+.message {
+  font-size: 1.25rem;
+  color: #5a6b7b;
+  line-height: 1.6;
+  margin-bottom: 2rem;
+}
+
+.benefits {
+  background-color: #f0f9ff;
+  border-radius: 12px;
+  padding: 1.5rem 2rem;
+  margin-bottom: 2rem;
+  text-align: left;
+}
+
+.benefits h2 {
+  font-size: 1.4rem;
+  color: #2c3e50;
+  margin-bottom: 1rem;
+}
+
+.benefits ul {
+  list-style-type: none;
+  padding: 0;
+}
+
+.benefits li {
+  position: relative;
+  padding-left: 1.8rem;
+  margin-bottom: 0.8rem;
+  font-size: 1.1rem;
+  color: #4a5568;
+}
+
+.benefits li::before {
+  content: "✓";
+  position: absolute;
+  left: 0;
+  color: #4f46e5;
+  font-weight: bold;
+}
+
+.redirect {
+  font-size: 1rem;
+  color: #718096;
+  margin-bottom: 1.5rem;
+}
+
+.button {
+  background: linear-gradient(to right, #6a43d1, #9474e6);
+  color: white;
+  border: none;
+  border-radius: 8px;
+  padding: 1rem 2rem;
+  font-size: 1.1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+
+.button:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 15px rgba(106, 67, 209, 0.4);
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes pulse {
+  0% {
+    transform: scale(0.9);
+    opacity: 0.7;
+  }
+  50% {
+    transform: scale(1.1);
+    opacity: 1;
+  }
+  100% {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+
+@media (max-width: 768px) {
+  .card {
+    padding: 2rem;
+  }
+
+  .title {
+    font-size: 2rem;
+  }
+
+  .message {
+    font-size: 1.1rem;
+  }
+}

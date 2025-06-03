@@ -7,9 +7,9 @@ export default function Logo() {
     <div className={styles.logo}>
       <Link href="/">
         <Image
-          src="/images/header-logo.svg"
+          src="/images/header-logo.png"
           alt="logo"
-          width={159}
+          width={80}
           height={35}
           className={styles.logoImage}
         />
