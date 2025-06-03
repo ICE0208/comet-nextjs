@@ -29,7 +29,6 @@ export default function PaymentSuccessPage() {
           <ul>
             <li>고급 AI 모델 접근 권한</li>
             <li>무제한 작업 생성</li>
-            <li>우선 처리 및 빠른 응답 시간</li>
             <li>고급 분석 및 인사이트</li>
             <li>우선 고객 지원</li>
           </ul>

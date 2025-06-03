@@ -90,6 +90,12 @@ const TutorialModal = ({ isOpen, onClose }: TutorialModalProps) => {
     }
   };
 
+  const handleSkipTutorial = async () => {
+    // Skip tutorial by updating user status and closing the modal
+    await updateUserTutorialStatus();
+    onClose();
+  };
+
   const handlePrevStep = () => {
     if (step > 1) {
       setStep(step - 1);
@@ -103,6 +109,15 @@ const TutorialModal = ({ isOpen, onClose }: TutorialModalProps) => {
       <div className={styles.overlay} />
       <TutorialSteps {...currentStep} />
 
+      {/* 건너뛰기 버튼 - 우측 하단에 고정 */}
+      <button
+        className={styles.skipButton}
+        onClick={handleSkipTutorial}
+        title="튜토리얼 건너뛰기"
+      >
+        Skip
+      </button>
+
       {/* 하단에 고정된 네비게이션 버튼 */}
       <div className={styles.fixedNavigation}>
         <button
@@ -112,7 +127,7 @@ const TutorialModal = ({ isOpen, onClose }: TutorialModalProps) => {
             cursor: step === 1 ? "not-allowed" : "pointer",
           }}
           disabled={step === 1}
-          onClick={step === 1 ? undefined : handlePrevStep}
+          onClick={handlePrevStep}
         >
           이전
         </button>
