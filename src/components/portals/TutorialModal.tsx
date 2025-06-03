@@ -93,6 +93,13 @@ const TutorialModal = ({ isOpen, onClose }: TutorialModalProps) => {
   const handleSkipTutorial = async () => {
     // Skip tutorial by updating user status and closing the modal
     await updateUserTutorialStatus();
+
+    // 사용자 데이터 캐시 업데이트
+    queryClient.setQueryData(["user"], (oldData: UserData | undefined) => ({
+      ...oldData,
+      isTutorial: true,
+    }));
+
     onClose();
   };
 
