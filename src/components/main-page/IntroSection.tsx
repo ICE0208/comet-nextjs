@@ -39,7 +39,7 @@ const IntroSection = async () => {
             <div className={styles.buttonGroup}>
               <Link
                 href="/pricing"
-                className={`${styles.button} ${styles.secondaryButton}`}
+                className={`${styles.button} ${styles.secondaryButton} ${styles.proButton}`}
               >
                 PRO 구독하기
               </Link>

@@ -35,94 +35,140 @@
 }
 
 .plan {
-  background-color: #ffffff;
-  border-radius: 12px;
-  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
-  padding: 2rem;
+  background: linear-gradient(135deg, #ffffff, #f8f9ff);
+  border-radius: 16px;
+  box-shadow:
+    0 10px 30px rgba(0, 0, 0, 0.12),
+    0 0 0 1px rgba(106, 67, 209, 0.1);
+  padding: 2.5rem;
   display: flex;
   flex-direction: column;
   align-items: center;
+  position: relative;
+  overflow: hidden;
+  transition:
+    transform 0.3s ease,
+    box-shadow 0.3s ease;
+}
+
+.plan::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 6px;
+  background: linear-gradient(90deg, #6a43d1, #9474e6);
 }
 
 .planHeader {
   text-align: center;
-  margin-bottom: 2rem;
+  position: relative;
+  z-index: 1;
+  width: 100%;
 }
 
 .planTitle {
-  font-size: 1.8rem;
+  font-size: 2rem;
   font-weight: 700;
   color: #2c3e50;
-  margin-bottom: 1rem;
+  margin-bottom: 1.2rem;
+  letter-spacing: -0.5px;
+  position: relative;
+  display: inline-block;
 }
 
 .planPrice {
   display: flex;
   align-items: baseline;
   justify-content: center;
-  margin-bottom: 1rem;
+  margin-bottom: 1.5rem;
+  position: relative;
 }
 
 .currency {
-  font-size: 1.5rem;
+  font-size: 1.8rem;
   font-weight: 600;
-  color: #333;
+  color: #2c3e50;
+  margin-right: 4px;
 }
 
 .amount {
-  font-size: 3rem;
-  font-weight: 700;
-  color: #333;
+  font-size: 3.5rem;
+  font-weight: 800;
+  background: linear-gradient(90deg, #6a43d1, #9474e6);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
   margin: 0 0.2rem;
 }
 
 .period {
   font-size: 1.2rem;
   color: #666;
+  margin-left: 4px;
 }
 
 .planDescription {
-  font-size: 1.1rem;
-  color: #666;
-  margin-bottom: 1.5rem;
-}
-
-.planFeatures {
-  width: 100%;
+  font-size: 1.2rem;
+  color: #555;
   margin-bottom: 2rem;
+  font-weight: 500;
+  position: relative;
+  padding-bottom: 1.5rem;
 }
 
-.feature {
-  display: flex;
-  align-items: center;
-  margin-bottom: 1rem;
-  font-size: 1.1rem;
-}
-
-.featureIcon {
-  margin-right: 1rem;
-  display: flex;
-  align-items: center;
-  justify-content: center;
+.planDescription::after {
+  content: "";
+  position: absolute;
+  bottom: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 100%;
+  height: 1px;
+  background-color: rgba(0, 0, 0, 0.1);
 }
 
 .subscribeButton {
   background: linear-gradient(to right, #6a43d1, #9474e6);
   color: white;
   border: none;
-  padding: 1rem 2.5rem;
-  font-size: 1.1rem;
+  padding: 1.2rem 2.8rem;
+  font-size: 1.15rem;
   font-weight: 600;
   border-radius: 30px;
   cursor: pointer;
   transition: all 0.3s ease;
-  width: 80%;
+  width: 85%;
   max-width: 300px;
+  letter-spacing: 0.5px;
+  position: relative;
+  overflow: hidden;
+  box-shadow: 0 4px 15px rgba(106, 67, 209, 0.3);
+}
+
+.subscribeButton::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(
+    90deg,
+    rgba(255, 255, 255, 0) 0%,
+    rgba(255, 255, 255, 0.2) 50%,
+    rgba(255, 255, 255, 0) 100%
+  );
+  transition: left 0.7s ease;
 }
 
 .subscribeButton:hover {
   transform: translateY(-3px);
-  box-shadow: 0 4px 15px rgba(106, 67, 209, 0.4);
+  box-shadow: 0 8px 20px rgba(106, 67, 209, 0.5);
+}
+
+.subscribeButton:hover::before {
+  left: 100%;
 }
 
 .subscribeButton:disabled {
@@ -135,40 +181,71 @@
 .planComparison {
   display: grid;
   grid-template-columns: 1fr 1fr;
-  gap: 2rem;
-  background-color: #f8f9fa;
-  border-radius: 12px;
-  padding: 2rem;
-  margin-top: 2rem;
+  gap: 2.5rem;
+  background: linear-gradient(135deg, #f8f9ff, #f0f2ff);
+  border-radius: 16px;
+  padding: 2.5rem;
+  margin-bottom: 2rem;
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.07);
+  position: relative;
+  overflow: hidden;
+  border: 1px solid rgba(106, 67, 209, 0.1);
 }
 
 .freeFeatures,
 .proFeatures {
-  padding: 1rem;
+  padding: 1.5rem;
+  position: relative;
 }
 
 .freeFeatures h3,
 .proFeatures h3 {
-  font-size: 1.3rem;
-  font-weight: 600;
-  margin-bottom: 1.5rem;
-  color: #333;
+  font-size: 1.4rem;
+  font-weight: 700;
+  margin-bottom: 1.8rem;
+  color: #2c3e50;
+  position: relative;
+  display: inline-block;
+  padding-bottom: 8px;
+}
+
+.freeFeatures h3::after,
+.proFeatures h3::after {
+  content: "";
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 40px;
+  height: 3px;
+  background: linear-gradient(90deg, #6a43d1, #9474e6);
+  border-radius: 3px;
 }
 
 .freeFeatures ul,
 .proFeatures ul {
-  list-style: disc;
-  padding-left: 1.5rem;
+  list-style: none;
+  padding-left: 0.5rem;
 }
 
 .freeFeatures li,
 .proFeatures li {
-  margin-bottom: 0.8rem;
-  line-height: 1.4;
+  margin-bottom: 1rem;
+  line-height: 1.5;
+  padding-left: 1.5rem;
+  position: relative;
+}
+
+.freeFeatures li::before,
+.proFeatures li::before {
+  content: "✓";
+  position: absolute;
+  left: 0;
+  color: #6a43d1;
+  font-weight: bold;
 }
 
 .proFeatures {
-  border-left: 1px solid #e0e0e0;
+  border-left: 1px solid rgba(106, 67, 209, 0.15);
 }
 
 .guarantee {
@@ -214,35 +291,39 @@
 
 .faqItem {
   background-color: #ffffff;
-  border-radius: 8px;
-  padding: 1.5rem;
-  margin-bottom: 1rem;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+  border-radius: 12px;
+  padding: 1.8rem;
+  margin-bottom: 1.2rem;
+  box-shadow: 0 3px 12px rgba(0, 0, 0, 0.06);
+  transition: all 0.3s ease;
+  border-left: 4px solid transparent;
 }
 
 .faqItem h3 {
-  font-size: 1.2rem;
+  font-size: 1.25rem;
   font-weight: 600;
-  margin-bottom: 0.8rem;
-  color: #333;
+  margin-bottom: 1rem;
+  color: #2c3e50;
 }
 
 .faqItem p {
-  font-size: 1rem;
-  color: #666;
-  line-height: 1.5;
+  font-size: 1.05rem;
+  color: #555;
+  line-height: 1.6;
 }
 
 /* Responsive styles */
 @media (max-width: 768px) {
   .planComparison {
     grid-template-columns: 1fr;
+    padding: 2rem 1.5rem;
   }
 
   .proFeatures {
     border-left: none;
-    border-top: 1px solid #e0e0e0;
-    padding-top: 1.5rem;
+    border-top: 1px solid rgba(106, 67, 209, 0.15);
+    padding-top: 2rem;
+    margin-top: 1rem;
   }
 
   .guarantee {
@@ -253,5 +334,22 @@
   .guaranteeIcon {
     margin-right: 0;
     margin-bottom: 1rem;
+  }
+
+  .plan {
+    padding: 2rem 1.5rem;
+  }
+
+  .planTitle {
+    font-size: 1.8rem;
+  }
+
+  .amount {
+    font-size: 3rem;
+  }
+
+  .subscribeButton {
+    width: 100%;
+    padding: 1rem 2rem;
   }
 }

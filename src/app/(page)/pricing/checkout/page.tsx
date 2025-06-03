@@ -172,12 +172,6 @@ const CheckoutPage = () => {
             </div>
 
             <div className={styles.infoMessage}>
-              <Image
-                src="/icons/info-circle.svg"
-                alt="정보"
-                width={16}
-                height={16}
-              />
               <span>
                 카드 정보는 다음 단계에서 안전하게 입력하실 수 있습니다.
               </span>
