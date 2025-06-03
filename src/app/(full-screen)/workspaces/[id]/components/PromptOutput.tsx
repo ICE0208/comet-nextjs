@@ -267,7 +267,7 @@ const PromptOutput = ({
               <span />
               <span />
             </div>
-            <p className={styles.loadingText}>텍스트를 교정하는 중입니다...</p>
+            <p className={styles.loadingText}>소설을 교정하는 중입니다...</p>
             <p className={styles.loadingSubtext}>잠시만 기다려주세요</p>
           </div>
         </div>
