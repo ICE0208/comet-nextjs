@@ -19,6 +19,7 @@ import {
 } from "./actions";
 import { useRouter } from "next/navigation";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
+import { useAuth } from "@/hooks/useAuth";
 
 interface UserData {
   isTutorial: boolean;
@@ -51,6 +52,18 @@ export default function PromptListPage() {
 
   const router = useRouter();
   const queryClient = useQueryClient();
+
+  // useAuth 훅을 사용하여 로그인 상태 확인
+  const { isLoggedIn, isLoading: authLoading } = useAuth();
+
+  // 로그인 상태 확인 및 리다이렉트
+  useEffect(() => {
+    if (!authLoading && !isLoggedIn) {
+      // 현재 경로를 저장하여 로그인 후 돌아올 수 있도록 함
+      const returnUrl = encodeURIComponent(window.location.pathname);
+      router.push(`/auth/login?returnUrl=${returnUrl}`);
+    }
+  }, [isLoggedIn, authLoading, router]);
 
   // 튜토리얼 닫기
   const handleTutorialClose = () => {
