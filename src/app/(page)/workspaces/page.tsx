@@ -14,7 +14,6 @@ import {
   createWorkspace,
   updateWorkspaceTitle,
   deleteWorkspace,
-  resetUserTutorialStatus,
   getQueueStatusAll,
 } from "./actions";
 import { useRouter } from "next/navigation";
@@ -285,8 +284,12 @@ export default function PromptListPage() {
     if (view === "list") {
       setView("grid");
     }
-    await resetUserTutorialStatus();
-    queryClient.invalidateQueries({ queryKey: ["user"] });
+
+    // 실제 데이터가 아닌, 튜토리얼 모달 표시 여부만 업데이트
+    queryClient.setQueryData(["user"], (oldData: UserData | undefined) => ({
+      ...oldData,
+      isTutorial: true,
+    }));
     setShowTutorial(true);
     setTutorialKey(Date.now());
   };
