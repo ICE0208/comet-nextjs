@@ -11,6 +11,10 @@ export async function POST(request: Request) {
     // 요청 본문에서 이메일 추출
     const { email } = await request.json();
 
+    // 요청 헤더에서 host 정보 가져오기
+    const host = request.headers.get("host");
+    const protocol = request.headers.get("x-forwarded-proto") || "http";
+    const baseUrl = `${protocol}://${host}`;
     // Stripe 결제 세션 생성
     const session = await stripe.checkout.sessions.create({
       payment_method_types: ["card"],
@@ -32,9 +36,9 @@ export async function POST(request: Request) {
         },
       ],
       customer_email: email, // 고객 이메일 설정
-      success_url: `${process.env.NEXT_PUBLIC_BASE_URL || "/"}/pricing/success?subscription=success`,
+      success_url: `${baseUrl}/pricing/success?subscription=success`,
 
-      cancel_url: `${process.env.NEXT_PUBLIC_BASE_URL || "/"}/pricing?subscription=canceled`,
+      cancel_url: `${baseUrl}/pricing?subscription=canceled`,
       metadata: {
         // 필요한 경우 메타데이터 추가
         plan: "pro",
