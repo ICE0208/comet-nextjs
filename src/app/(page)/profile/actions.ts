@@ -65,17 +65,7 @@ export const getTokenStats = async () => {
               status: true,
               withPro: true,
               userRequest: true,
-              aiResponse: {
-                select: {
-                  text: true,
-                  details: {
-                    select: {
-                      type: true,
-                      text: true,
-                    },
-                  },
-                },
-              },
+              aiResponse: true,
             },
             orderBy: {
               createdAt: "desc",
