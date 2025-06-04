@@ -37,10 +37,14 @@ export default function PaymentSuccessPage() {
         <div className={styles.redirect}>
           <p>결제가 완료되었습니다</p>
         </div>
-
-        <Link href="/workspaces">
-          <button className={styles.button}>작업 공간으로 이동</button>
-        </Link>
+        <div className={styles.buttons}>
+          <Link href="/workspaces">
+            <button className={styles.button}>홈으로 이동</button>
+          </Link>
+          <Link href="/workspaces">
+            <button className={styles.button}>작업 공간으로 이동</button>
+          </Link>
+        </div>
       </div>
     </div>
   );

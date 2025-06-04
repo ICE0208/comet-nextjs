@@ -77,6 +77,11 @@
   color: #718096;
   margin-bottom: 1.5rem;
 }
+.buttons {
+  display: flex;
+  justify-content: center;
+  gap: 1rem;
+}
 
 .button {
   background: linear-gradient(to right, #6a43d1, #9474e6);
