@@ -71,39 +71,10 @@ model HistoryFavorite {
 }
 
 model AIResponse {
-  id                 Int                @id @default(autoincrement())
-  text               String             @db.Text
-  createdAt          DateTime           @default(now())
-  workspaceHistoryId String             @unique @db.Uuid
-  details            AIResponseDetail[]
+  id                 Int      @id @default(autoincrement())
+  text               String   @db.Text
+  createdAt          DateTime @default(now())
+  workspaceHistoryId String   @unique @db.Uuid
 
   workspaceHistory WorkspaceHistory @relation(fields: [workspaceHistoryId], references: [id], onDelete: Cascade)
-}
-
-model AIResponseDetail {
-  id           Int      @id @default(autoincrement())
-  type         String
-  text         String   @db.Text
-  createdAt    DateTime @default(now())
-  aiResponseId Int
-
-  aiResponse AIResponse @relation(fields: [aiResponseId], references: [id], onDelete: Cascade)
-}
-
-model Prompt {
-  id        Int            @id @default(autoincrement())
-  text      String
-  createdAt DateTime       @default(now())
-  options   PromptOption[]
-}
-
-model PromptOption {
-  id         Int     @id @default(autoincrement())
-  optionId   String
-  optionName String
-  isSelected Boolean @default(false)
-  prompt     Prompt  @relation(fields: [promptId], references: [id], onDelete: Cascade)
-  promptId   Int
-
-  @@unique([promptId, optionId])
 }
