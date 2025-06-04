@@ -11,15 +11,6 @@ export const profileInfoAction = async () => {
 
   const user = await prisma.user.findUnique({
     where: { id: userInfo.id },
-    select: {
-      _count: {
-        select: {
-          followers: true,
-          following: true,
-          novels: true,
-        },
-      },
-    },
   });
   if (!user) {
     redirect("/");
@@ -29,16 +20,6 @@ export const profileInfoAction = async () => {
     userId: userInfo.userId,
     location: "-------",
     about: "-".repeat(150),
-    followCount: {
-      following: user._count.following,
-      follower: user._count.followers,
-    },
-    stats: {
-      novelCount: user._count.novels,
-      readerCount: "--",
-      reviewCount: "--",
-      averageRating: "--",
-    },
   };
 
   return profileInfo;
@@ -52,39 +33,6 @@ export const novelLibraryAction = async () => {
 
   const novelLibrary = await prisma.user.findUnique({
     where: { id: userInfo.id },
-    select: {
-      novels: {
-        select: {
-          id: true,
-          title: true,
-          description: true,
-          createdAt: true,
-          imageUrl: true,
-          _count: {
-            select: {
-              episodes: true,
-              novelLike: true,
-            },
-          },
-        },
-      },
-      novelLikes: {
-        select: {
-          novelId: true,
-          novel: {
-            select: {
-              title: true,
-              imageUrl: true,
-              author: {
-                select: {
-                  userId: true,
-                },
-              },
-            },
-          },
-        },
-      },
-    },
   });
   if (!novelLibrary) {
     redirect("/");
