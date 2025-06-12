@@ -20,11 +20,12 @@
 ## 📑 목차
 
 - [🎨 프로젝트 소개](#-프로젝트-소개)
+- [🔗 관련 레포지토리](#-관련-레포지토리)
 - [✍️ 팀원 소개](#️-팀원-소개)
 - [🚀 주요 기능 미리보기](#-주요-기능-미리보기)
-- [🎬 시연 영상 하이라이트](#-시연-영상-하이라이트)
 - [🧰 사용 기술 스택](#-사용-기술-스택)
 - [💡 기술 설계 및 선택 이유](#-기술-설계-및-선택-이유)
+- [🎬 시연 영상](#-시연-영상)
 
 ---
 
@@ -49,11 +50,11 @@
 
 <div align="center">
 
-|     **구분**     |                                          **메인 프레임워크**                                           |                            **레포지토리**                            | **주요 기술 스택**             |
-| :--------------: | :----------------------------------------------------------------------------------------------------: | :------------------------------------------------------------------: | :----------------------------- |
-| 🖥️ **Frontend**  | ![Next.js](https://img.shields.io/badge/Next.js-000000?style=flat-square&logo=next.js&logoColor=white) |                          📍 **현재 저장소**                          | Next.js • TypeScript • Zustand |
-|  🧩 **Backend**  |  ![NestJS](https://img.shields.io/badge/NestJS-E0234E?style=flat-square&logo=nestjs&logoColor=white)   |                         🔒 **비공개 저장소**                         | NestJS • Redis • PostgreSQL    |
-| 🤖 **AI Server** |    ![Flask](https://img.shields.io/badge/Flask-092E20?style=flat-square&logo=flask&logoColor=white)    | 🔗 **[dev-iroha/AI-Server](https://github.com/dev-iroha/AI-Server)** | Flask • PyTorch • Gemma        |
+|     **구분**     |                                             **프레임워크**                                             |                            **레포지토리**                            | **기술 스택**        |
+| :--------------: | :----------------------------------------------------------------------------------------------------: | :------------------------------------------------------------------: | :------------------- |
+| 🖥️ **Frontend**  | ![Next.js](https://img.shields.io/badge/Next.js-000000?style=flat-square&logo=next.js&logoColor=white) |                          📍 **현재 저장소**                          | TypeScript • Zustand |
+|  🧩 **Backend**  |  ![NestJS](https://img.shields.io/badge/NestJS-E0234E?style=flat-square&logo=nestjs&logoColor=white)   |                         🔒 **비공개 저장소**                         | Redis • PostgreSQL   |
+| 🤖 **AI Server** |    ![Flask](https://img.shields.io/badge/Flask-092E20?style=flat-square&logo=flask&logoColor=white)    | 🔗 **[dev-iroha/AI-Server](https://github.com/dev-iroha/AI-Server)** | PyTorch • Gemma      |
 
 </div>
 
@@ -200,17 +201,17 @@
 
 ---
 
-## 🎬 시연 영상 하이라이트
+## 🎬 시연 영상
 
 <div align="center">
 
-> 🎥 **유저가 직접 소설을 입력하고, 교정되는 과정을 스트리밍으로 경험해보세요!**
+> 🎥 **유저가 직접 소설을 입력하고, 교정되는 과정을 경험해보세요!**
 
 [![Comet 프로젝트 시연](https://user-images.githubusercontent.com/username/video-id/thumbnail.jpg)](https://github.com/user-attachments/assets/8ed6941a-414c-47f2-97ed-eddb495b947a)
 
 </div>
 
-**🌟 시연 영상 하이라이트:**
+**🌟 시연 영상 요약:**
 
 - **📝 워크스페이스 생성** • 새 작업 공간 생성 및 설정
 - **⚡ 실시간 AI 교정** • 스트리밍 기반 교정 과정 시연
