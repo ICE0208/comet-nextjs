@@ -50,11 +50,11 @@
 
 <div align="center">
 
-|     **구분**     |                                             **프레임워크**                                             |                            **레포지토리**                            | **기술 스택**        |
-| :--------------: | :----------------------------------------------------------------------------------------------------: | :------------------------------------------------------------------: | :------------------- |
-| 🖥️ **Frontend**  | ![Next.js](https://img.shields.io/badge/Next.js-000000?style=flat-square&logo=next.js&logoColor=white) |                          📍 **현재 저장소**                          | TypeScript • Zustand |
-|  🧩 **Backend**  |  ![NestJS](https://img.shields.io/badge/NestJS-E0234E?style=flat-square&logo=nestjs&logoColor=white)   |                         🔒 **비공개 저장소**                         | Redis • PostgreSQL   |
-| 🤖 **AI Server** |    ![Flask](https://img.shields.io/badge/Flask-092E20?style=flat-square&logo=flask&logoColor=white)    | 🔗 **[dev-iroha/AI-Server](https://github.com/dev-iroha/AI-Server)** | PyTorch • Gemma      |
+|     **구분**     |                                             **프레임워크**                                             |                                     **레포지토리**                                     | **기술 스택**        |
+| :--------------: | :----------------------------------------------------------------------------------------------------: | :------------------------------------------------------------------------------------: | :------------------- |
+| 🖥️ **Frontend**  | ![Next.js](https://img.shields.io/badge/Next.js-000000?style=flat-square&logo=next.js&logoColor=white) |                                   📍 **현재 저장소**                                   | TypeScript • Zustand |
+|  🧩 **Backend**  |  ![NestJS](https://img.shields.io/badge/NestJS-E0234E?style=flat-square&logo=nestjs&logoColor=white)   | 🔗 **[ICE0208/comet-backend-for-ai](https://github.com/ICE0208/comet-backend-for-ai)** | Redis • PostgreSQL   |
+| 🤖 **AI Server** |    ![Flask](https://img.shields.io/badge/Flask-092E20?style=flat-square&logo=flask&logoColor=white)    |          🔗 **[dev-iroha/AI-Server](https://github.com/dev-iroha/AI-Server)**          | PyTorch • Gemma      |
 
 </div>
 
