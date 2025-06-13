@@ -207,7 +207,7 @@
 
 > 🎥 **유저가 직접 소설을 입력하고, 교정되는 과정을 경험해보세요!**
 
-[![Comet 프로젝트 시연](https://user-images.githubusercontent.com/username/video-id/thumbnail.jpg)](https://github.com/user-attachments/assets/8ed6941a-414c-47f2-97ed-eddb495b947a)
+https://github.com/user-attachments/assets/ea38b746-534a-43fa-9055-4df0edcfd2e3
 
 </div>
 
